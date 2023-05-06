@@ -1,0 +1,1 @@
+﻿#include "EnumStrucs/FunctionalStrucs.h"
