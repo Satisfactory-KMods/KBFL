@@ -16,7 +16,7 @@ public class KBFL : ModuleRules
 				"DeveloperSettings",
 				"PhysicsCore",
 				"InputCore",
-				"OnlineSubsystem", "OnlineSubsystemNull", "OnlineSubsystemUtils",
+				"OnlineSubsystem", "OnlineSubsystemUtils",
 				"SignificanceManager",
 				"GeometryCollectionEngine",
 				"ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
