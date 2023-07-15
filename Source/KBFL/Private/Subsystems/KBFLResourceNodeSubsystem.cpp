@@ -12,40 +12,36 @@
 #include "Subsystems/ResourceNodes/KBFLActorSpawnDescriptor.h"
 #include "Subsystems/ResourceNodes/KBFLSubLevelSpawning.h"
 
-DECLARE_LOG_CATEGORY_EXTERN( ResourceNodeSubsystem, Log, All )
+DECLARE_LOG_CATEGORY_EXTERN(ResourceNodeSubsystem, Log, All)
 
-DEFINE_LOG_CATEGORY( ResourceNodeSubsystem )
+DEFINE_LOG_CATEGORY(ResourceNodeSubsystem)
 
-void UKBFLResourceNodeSubsystem::Initialize( FSubsystemCollectionBase& Collection )
-{
-	Collection.InitializeDependency( USubsystemActorManager::StaticClass() );
+void UKBFLResourceNodeSubsystem::Initialize(FSubsystemCollectionBase& Collection) {
+	Collection.InitializeDependency(USubsystemActorManager::StaticClass());
 	//Collection.InitializeDependency(UKBFLAssetDataSubsystem::StaticClass());
 
 #if WITH_EDITOR
 	return;
 #endif
 
-	if( GetWorld()->GetMapName().Contains( "Untitled" ) )
-	{
-		Super::Initialize( Collection );
+	if(GetWorld()->GetMapName().Contains("Untitled")) {
+		Super::Initialize(Collection);
 		return;
 	}
 
 	UWorld* OuterWorld = GetWorld();
-	OuterWorld->OnWorldBeginPlay.AddUObject( this, &UKBFLResourceNodeSubsystem::OnWorldBeginPlay );
-	UE_LOG( ResourceNodeSubsystem, Log, TEXT("Initialize Subsystem") );
+	OuterWorld->OnWorldBeginPlay.AddUObject(this, &UKBFLResourceNodeSubsystem::OnWorldBeginPlay);
+	UE_LOG(ResourceNodeSubsystem, Log, TEXT("Initialize Subsystem"));
 
 	mCalledModules.Empty();
 	SpawnSubLevel();
 
-	Super::Initialize( Collection );
+	Super::Initialize(Collection);
 }
 
-void UKBFLResourceNodeSubsystem::Deinitialize()
-{
+void UKBFLResourceNodeSubsystem::Deinitialize() {
 	mCalledModules.Empty();
-	for( UKBFLSubLevelSpawning* SubLevelSpawning : mCalledSubLevelSpawning )
-	{
+	for(UKBFLSubLevelSpawning* SubLevelSpawning: mCalledSubLevelSpawning) {
 		SubLevelSpawning->Reset();
 	}
 	mCalledSubLevelSpawning.Empty();
@@ -54,52 +50,42 @@ void UKBFLResourceNodeSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UKBFLResourceNodeSubsystem::OnWorldBeginPlay()
-{
-	if( !Initialized )
-	{
-		UE_LOG( ResourceNodeSubsystem, Log, TEXT("ResourceNodeSubsystem > GatherInterfaces") );
+void UKBFLResourceNodeSubsystem::OnWorldBeginPlay() {
+	if(!Initialized) {
+		UE_LOG(ResourceNodeSubsystem, Log, TEXT("ResourceNodeSubsystem > GatherInterfaces"));
 		GatherInterfaces();
 
 		Initialized = true;
 	}
 }
 
-void UKBFLResourceNodeSubsystem::SpawnSubLevel()
-{
-	TSet< TSubclassOf< UKBFLSubLevelSpawning > > SpawnerClasses;
-	GetAllSubLevel( SpawnerClasses );
+void UKBFLResourceNodeSubsystem::SpawnSubLevel() {
+	TSet<TSubclassOf<UKBFLSubLevelSpawning>> SpawnerClasses;
+	GetAllSubLevel(SpawnerClasses);
 
-	for( TSubclassOf< UKBFLSubLevelSpawning > SpawnerClass : SpawnerClasses )
-	{
-		if( UKBFLSubLevelSpawning* Default = SpawnerClass.GetDefaultObject() )
-		{
-			if( !Default->mNeedAuth || GetWorld()->GetAuthGameMode() )
-			{
-				if( Default->ExecuteAllowed() )
-				{
+	for(TSubclassOf<UKBFLSubLevelSpawning> SpawnerClass: SpawnerClasses) {
+		if(UKBFLSubLevelSpawning* Default = SpawnerClass.GetDefaultObject()) {
+			if(!Default->mNeedAuth || GetWorld()->GetAuthGameMode()) {
+				if(Default->ExecuteAllowed()) {
 					Default->mSubsystem = this;
 					Default->InitSpawning();
-					mCalledSubLevelSpawning.Add( Default );
+					mCalledSubLevelSpawning.Add(Default);
 				}
 			}
 		}
 	}
 }
 
-void UKBFLResourceNodeSubsystem::GetAllSubLevel( TSet< TSubclassOf< UKBFLSubLevelSpawning > >& Out ) const
-{
-	UKBFLAssetDataSubsystem* AssetSubsystem = UKBFLAssetDataSubsystem::Get( GetWorld() );
-	if( AssetSubsystem )
-	{
+void UKBFLResourceNodeSubsystem::GetAllSubLevel(TSet<TSubclassOf<UKBFLSubLevelSpawning>>& Out) const {
+	UKBFLAssetDataSubsystem* AssetSubsystem = UKBFLAssetDataSubsystem::Get(GetWorld());
+	if(AssetSubsystem) {
 		AssetSubsystem->DoScan();
 		Out = AssetSubsystem->mAllSubLevelSpawningClasses;
-		UE_LOG( ResourceNodeSubsystem, Log, TEXT("Found %d UKBFLSubLevelSpawning"), Out.Num() );
+		UE_LOG(ResourceNodeSubsystem, Log, TEXT("Found %d UKBFLSubLevelSpawning"), Out.Num());
 	}
 }
 
-void UKBFLResourceNodeSubsystem::GatherInterfaces()
-{
+void UKBFLResourceNodeSubsystem::GatherInterfaces() {
 #if !WITH_EDITOR
 	UWorldModuleManager* Subsystem = Cast< UWorldModuleManager >( GetWorld()->GetSubsystem< UWorldModuleManager >() );
 	for ( const auto Module : Subsystem->RootModuleList )
@@ -112,52 +98,39 @@ void UKBFLResourceNodeSubsystem::GatherInterfaces()
 #endif
 }
 
-void UKBFLResourceNodeSubsystem::BeginSpawningForModule( UWorldModule* Module )
-{
-	if( UKismetSystemLibrary::DoesImplementInterface( Module, UKBFLResourceNodeInterface::StaticClass() ) )
-	{
-		TArray< TSubclassOf< UKBFLActorSpawnDescriptorBase > > ActorSpawner;
-		ActorSpawner.Append( IKBFLResourceNodeInterface::Execute_GetActorSpawnDescriptors( Module ) );
+void UKBFLResourceNodeSubsystem::BeginSpawningForModule(UWorldModule* Module) {
+	if(UKismetSystemLibrary::DoesImplementInterface(Module, UKBFLResourceNodeInterface::StaticClass())) {
+		TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>> ActorSpawner;
+		ActorSpawner.Append(IKBFLResourceNodeInterface::Execute_GetActorSpawnDescriptors(Module));
 
-		for( TSubclassOf< UKBFLActorSpawnDescriptorBase > Desc : ActorSpawner )
-		{
-			if( Desc )
-			{
-				UE_LOG( ResourceNodeSubsystem, Log, TEXT("Call UKBFLActorSpawnDescriptorBase: %s"), *Desc->GetName() );
+		for(TSubclassOf<UKBFLActorSpawnDescriptorBase> Desc: ActorSpawner) {
+			if(Desc) {
+				UE_LOG(ResourceNodeSubsystem, Log, TEXT("Call UKBFLActorSpawnDescriptorBase: %s"), *Desc->GetName());
 				UKBFLActorSpawnDescriptorBase* Default = Desc.GetDefaultObject();
-				if( !Default->mNeedAuth || GetWorld()->GetAuthGameMode() )
-				{
-					if( Default->ExecuteAllowed() )
-					{
+				if(!Default->mNeedAuth || GetWorld()->GetAuthGameMode()) {
+					if(Default->ExecuteAllowed()) {
 						Default->mSubsystem = this;
 						Default->BeginSpawning();
 					}
-				}
-				else
-				{
-					UE_LOG( ResourceNodeSubsystem, Log, TEXT("Skip UKBFLActorSpawnDescriptorBase: %s because no auth!"), *Desc->GetName() );
+				} else {
+					UE_LOG(ResourceNodeSubsystem, Log, TEXT("Skip UKBFLActorSpawnDescriptorBase: %s because no auth!"), *Desc->GetName());
 				}
 			}
 		}
 
-		BeginRemoveActors( IKBFLResourceNodeInterface::Execute_GetRemoveClasses( Module ) );
+		BeginRemoveActors(IKBFLResourceNodeInterface::Execute_GetRemoveClasses(Module));
 
 		Server_FinishedSpawningNodes();
-		mCalledModules.AddUnique( Module );
+		mCalledModules.AddUnique(Module);
 	}
 }
 
-void UKBFLResourceNodeSubsystem::Server_FinishedSpawningNodes_Implementation()
-{
-	for( FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator )
-	{
-		if( const APlayerController* PC = Iterator->Get() )
-		{
-			if( AFGCharacterPlayer* Player = Cast< AFGCharacterPlayer >( PC->GetPawn() ) )
-			{
-				if( AFGResourceScanner* scanner = Player->GetResourceScanner() )
-				{
-					UE_LOG( ResourceNodeSubsystem, Log, TEXT("GenerateNodeClusters") );
+void UKBFLResourceNodeSubsystem::Server_FinishedSpawningNodes_Implementation() {
+	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator) {
+		if(const APlayerController*    PC = Iterator->Get()) {
+			if(AFGCharacterPlayer*     Player = Cast<AFGCharacterPlayer>(PC->GetPawn())) {
+				if(AFGResourceScanner* scanner = Player->GetResourceScanner()) {
+					UE_LOG(ResourceNodeSubsystem, Log, TEXT("GenerateNodeClusters"));
 
 					scanner->mNodeClusters.Empty();
 					scanner->GenerateNodeClusters();
@@ -167,30 +140,24 @@ void UKBFLResourceNodeSubsystem::Server_FinishedSpawningNodes_Implementation()
 	}
 }
 
-bool UKBFLResourceNodeSubsystem::Server_FinishedSpawningNodes_Validate()
-{
+bool UKBFLResourceNodeSubsystem::Server_FinishedSpawningNodes_Validate() {
 	return true;
 }
 
 // NEW System!
 
-bool UKBFLResourceNodeSubsystem::WasCalled( UWorldModule* Module ) const
-{
-	return mCalledModules.Contains( Module );
+bool UKBFLResourceNodeSubsystem::WasCalled(UWorldModule* Module) const {
+	return mCalledModules.Contains(Module);
 }
 
-void UKBFLResourceNodeSubsystem::BeginRemoveActors( TArray< TSubclassOf< AActor > > ActorClasses )
-{
-	UE_LOG( ResourceNodeSubsystem, Log, TEXT("BeginRemoveActors, %d"), ActorClasses.Num() );
-	for( TSubclassOf< AActor > Class : ActorClasses )
-	{
-		TArray< AActor* > OutActors;
-		UGameplayStatics::GetAllActorsOfClass( GetWorld(), Class, OutActors );
-		for( AActor* Node : OutActors )
-		{
-			if( Node )
-			{
-				UE_LOG( ResourceNodeSubsystem, Log, TEXT("BeginRemoveActors, Remove: %s"), *Node->GetName() );
+void UKBFLResourceNodeSubsystem::BeginRemoveActors(TArray<TSubclassOf<AActor>> ActorClasses) {
+	UE_LOG(ResourceNodeSubsystem, Log, TEXT("BeginRemoveActors, %d"), ActorClasses.Num());
+	for(TSubclassOf<AActor> Class: ActorClasses) {
+		TArray<AActor*> OutActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), Class, OutActors);
+		for(AActor* Node: OutActors) {
+			if(Node) {
+				UE_LOG(ResourceNodeSubsystem, Log, TEXT("BeginRemoveActors, Remove: %s"), *Node->GetName());
 				Node->K2_DestroyActor();
 			}
 		}

@@ -16,72 +16,58 @@
 #include "Subsystems/KBFLCustomizerSubsystem.h"
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
 
-DECLARE_LOG_CATEGORY_EXTERN( KBFLMenuModuleLog, Log, All );
+DECLARE_LOG_CATEGORY_EXTERN(KBFLMenuModuleLog, Log, All);
 
-DEFINE_LOG_CATEGORY( KBFLMenuModuleLog );
+DEFINE_LOG_CATEGORY(KBFLMenuModuleLog);
 
-UKBFLMenuModule::UKBFLMenuModule()
-{
+UKBFLMenuModule::UKBFLMenuModule() {
 	bRootModule = false;
 }
 
-void UKBFLMenuModule::DispatchLifecycleEvent( ELifecyclePhase Phase )
-{
-	if( Phase == ELifecyclePhase::CONSTRUCTION )
-	{
+void UKBFLMenuModule::DispatchLifecycleEvent(ELifecyclePhase Phase) {
+	if(Phase == ELifecyclePhase::CONSTRUCTION) {
 		ConstructionPhase();
 
-		Binding.BindUFunction( this, TEXT( "MenuWidgetHooked" ) );
+		Binding.BindUFunction(this, TEXT("MenuWidgetHooked"));
 
-		if( !mMenuWidgetClass )
-		{
+		if(!mMenuWidgetClass) {
 			return;
 		}
-		UFunction* ConstructFunction = mMenuWidgetClass->FindFunctionByName( mFunctionName );
-		if( !ConstructFunction || ConstructFunction->IsNative() )
-		{
+		UFunction* ConstructFunction = mMenuWidgetClass->FindFunctionByName(mFunctionName);
+		if(!ConstructFunction || ConstructFunction->IsNative()) {
 			return;
 		}
-		UBlueprintHookManager* HookManager = GEngine->GetEngineSubsystem< UBlueprintHookManager >();
-		HookManager->HookBlueprintFunction( ConstructFunction, [&]( FBlueprintHookHelper& HookHelper )
-		{
-			Binding.ExecuteIfBound( Cast< UUserWidget >( HookHelper.GetContext() ) );
-		}, EPredefinedHookOffset::Return );
+		UBlueprintHookManager*                                                          HookManager = GEngine->GetEngineSubsystem<UBlueprintHookManager>();
+		HookManager->HookBlueprintFunction(ConstructFunction, [&](FBlueprintHookHelper& HookHelper) {
+			Binding.ExecuteIfBound(Cast<UUserWidget>(HookHelper.GetContext()));
+		}, Return);
 	}
 
-	if( Phase == ELifecyclePhase::INITIALIZATION )
-	{
+	if(Phase == ELifecyclePhase::INITIALIZATION) {
 		InitPhase();
 	}
 
-	if( Phase == ELifecyclePhase::POST_INITIALIZATION )
-	{
+	if(Phase == ELifecyclePhase::POST_INITIALIZATION) {
 		PostInitPhase();
 	}
 
-	Super::DispatchLifecycleEvent( Phase );
+	Super::DispatchLifecycleEvent(Phase);
 }
 
-void UKBFLMenuModule::MenuWidgetHooked( UUserWidget* WidgetClass )
-{
-	if( IsValid( WidgetClass ) )
-	{
-		OnMenuWidgetHooked( WidgetClass );
+void UKBFLMenuModule::MenuWidgetHooked(UUserWidget* WidgetClass) {
+	if(IsValid(WidgetClass)) {
+		OnMenuWidgetHooked(WidgetClass);
 	}
 }
 
-void UKBFLMenuModule::OnMenuWidgetHooked_Implementation( UUserWidget* WidgetClass )
-{
+void UKBFLMenuModule::OnMenuWidgetHooked_Implementation(UUserWidget* WidgetClass) {
 }
 
-void UKBFLMenuModule::InitPhase_Implementation()
-{
+void UKBFLMenuModule::InitPhase_Implementation() {
 }
 
-void UKBFLMenuModule::ConstructionPhase_Implementation()
-{
+void UKBFLMenuModule::ConstructionPhase_Implementation() {
 }
 
-void UKBFLMenuModule::PostInitPhase_Implementation()
-{
+void UKBFLMenuModule::PostInitPhase_Implementation() {
 }

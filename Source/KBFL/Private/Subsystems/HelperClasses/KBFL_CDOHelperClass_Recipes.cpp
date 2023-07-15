@@ -4,30 +4,23 @@
 #include "FGItemCategory.h"
 
 
-DECLARE_LOG_CATEGORY_EXTERN( CDOHelperRecipesLog, Log, All )
+DECLARE_LOG_CATEGORY_EXTERN(CDOHelperRecipesLog, Log, All)
 
-DEFINE_LOG_CATEGORY( CDOHelperRecipesLog )
+DEFINE_LOG_CATEGORY(CDOHelperRecipesLog)
 
-void UKBFL_CDOHelperClass_Recipes::DoCDO()
-{
-	UE_LOG( CDOHelperRecipesLog, Log, TEXT("CDOHelperRecipes > Called %s"), *this->GetName() );
-	for( TSubclassOf< UFGRecipe > Class : GetClasses() )
-	{
-		if( UFGRecipe* DefaultObject = Class.GetDefaultObject() )
-		{
+void UKBFL_CDOHelperClass_Recipes::DoCDO() {
+	UE_LOG(CDOHelperRecipesLog, Log, TEXT("CDOHelperRecipes > Called %s"), *this->GetName());
+	for(TSubclassOf<UFGRecipe> Class: GetClasses()) {
+		if(UFGRecipe* DefaultObject = Class.GetDefaultObject()) {
 			//DefaultObject->AddToRoot();
-			UE_LOG( CDOHelperRecipesLog, Log, TEXT("CDOHelperRecipes > DoSchematicCDO > %s"), *DefaultObject->GetName() );
-			if( mDisplayNameOverride )
-			{
+			UE_LOG(CDOHelperRecipesLog, Log, TEXT("CDOHelperRecipes > DoSchematicCDO > %s"), *DefaultObject->GetName());
+			if(mDisplayNameOverride) {
 				DefaultObject->mDisplayName = mDisplayName;
 			}
 
-			if( mIngredientsOverride )
-			{
-				for( FItemAmount Ingredient : mIngredients )
-				{
-					if( IsValid( Ingredient.ItemClass ) )
-					{
+			if(mIngredientsOverride) {
+				for(FItemAmount Ingredient: mIngredients) {
+					if(IsValid(Ingredient.ItemClass)) {
 						//Ingredient.ItemClass->AddToRoot();
 					}
 				}
@@ -35,12 +28,9 @@ void UKBFL_CDOHelperClass_Recipes::DoCDO()
 				DefaultObject->mIngredients = mIngredients;
 			}
 
-			if( mProductOverride )
-			{
-				for( FItemAmount Ingredient : mProduct )
-				{
-					if( IsValid( Ingredient.ItemClass ) )
-					{
+			if(mProductOverride) {
+				for(FItemAmount Ingredient: mProduct) {
+					if(IsValid(Ingredient.ItemClass)) {
 						//Ingredient.ItemClass->AddToRoot();
 					}
 				}
@@ -48,53 +38,43 @@ void UKBFL_CDOHelperClass_Recipes::DoCDO()
 				DefaultObject->mProduct = mProduct;
 			}
 
-			if( mOverriddenCategoryOverride )
-			{
-				if( IsValid( mOverriddenCategory ) )
-				{
+			if(mOverriddenCategoryOverride) {
+				if(IsValid(mOverriddenCategory)) {
 					//mOverriddenCategory->AddToRoot();
 				}
 
 				DefaultObject->mOverriddenCategory = mOverriddenCategory;
 			}
 
-			if( mManufacturingMenuPriorityOverride )
-			{
+			if(mManufacturingMenuPriorityOverride) {
 				DefaultObject->mManufacturingMenuPriority = mManufacturingMenuPriority;
 			}
 
-			if( mManufactoringDurationOverride )
-			{
+			if(mManufactoringDurationOverride) {
 				DefaultObject->mManufactoringDuration = mManufactoringDuration;
 			}
 
-			if( mManualManufacturingMultiplierOverride )
-			{
+			if(mManualManufacturingMultiplierOverride) {
 				DefaultObject->mManualManufacturingMultiplier = mManualManufacturingMultiplier;
 			}
 
-			if( mProducedInOverride )
-			{
+			if(mProducedInOverride) {
 				DefaultObject->mProducedIn = mProducedIn;
 			}
 
-			if( mMaterialCustomizationRecipeOverride )
-			{
+			if(mMaterialCustomizationRecipeOverride) {
 				DefaultObject->mMaterialCustomizationRecipe = mMaterialCustomizationRecipe;
 			}
 
-			if( mRelevantEventsOverride )
-			{
+			if(mRelevantEventsOverride) {
 				DefaultObject->mRelevantEvents = mRelevantEvents;
 			}
 
-			if( mVariablePowerConsumptionConstantOverride )
-			{
+			if(mVariablePowerConsumptionConstantOverride) {
 				DefaultObject->mVariablePowerConsumptionConstant = mVariablePowerConsumptionConstant;
 			}
 
-			if( mVariablePowerConsumptionFactorOverride )
-			{
+			if(mVariablePowerConsumptionFactorOverride) {
 				DefaultObject->mVariablePowerConsumptionFactor = mVariablePowerConsumptionFactor;
 			}
 		}
@@ -103,15 +83,12 @@ void UKBFL_CDOHelperClass_Recipes::DoCDO()
 	Super::DoCDO();
 }
 
-TArray< UClass* > UKBFL_CDOHelperClass_Recipes::GetClasses()
-{
-	TArray< UClass* > Re;
+TArray<UClass*> UKBFL_CDOHelperClass_Recipes::GetClasses() {
+	TArray<UClass*> Re;
 
-	for( TSoftClassPtr< UFGRecipe > Class : mRecipes )
-	{
-		if( IsValidSoftClass( Class ) )
-		{
-			Re.Add( Class.LoadSynchronous() );
+	for(TSoftClassPtr<UFGRecipe> Class: mRecipes) {
+		if(IsValidSoftClass(Class)) {
+			Re.Add(Class.LoadSynchronous());
 		}
 	}
 

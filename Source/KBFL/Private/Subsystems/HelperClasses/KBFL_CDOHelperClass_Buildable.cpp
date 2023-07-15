@@ -5,93 +5,73 @@
 #include "Buildables/FGBuildable.h"
 #include "Hologram/FGHologram.h"
 
-void UKBFL_CDOHelperClass_Buildable::DoCDO()
-{
-	for( TSubclassOf< AFGBuildable > Class : GetClasses() )
-	{
-		if( Class )
-		{
-			if( AFGBuildable* DefaultObject = Class.GetDefaultObject() )
-			{
+void UKBFL_CDOHelperClass_Buildable::DoCDO() {
+	for(TSubclassOf<AFGBuildable> Class: GetClasses()) {
+		if(Class) {
+			if(AFGBuildable* DefaultObject = Class.GetDefaultObject()) {
 				//DefaultObject->AddToRoot();
 
-				if( mDisplayNameOverride )
-				{
+				if(mDisplayNameOverride) {
 					DefaultObject->mDisplayName = this->mDisplayName;
 				}
 
-				if( mDescriptionOverride )
-				{
+				if(mDescriptionOverride) {
 					DefaultObject->mDescription = this->mDescription;
 				}
 
-				if( mHologramClassOverride )
-				{
-					if( IsValid( mHologramClass ) )
-					{
+				if(mHologramClassOverride) {
+					if(IsValid(mHologramClass)) {
 						//mHologramClass->AddToRoot();
 					}
 
 					DefaultObject->mHologramClass = this->mHologramClass;
 				}
 
-				if( mDecoratorClassOverride )
-				{
-					if( IsValid( mDecoratorClass ) )
-					{
+				if(mDecoratorClassOverride) {
+					if(IsValid(mDecoratorClass)) {
 						//mDefaultSwatchCustomizationOverride->AddToRoot();
 					}
 
 					DefaultObject->mDecoratorClass = this->mDecoratorClass;
 				}
 
-				if( mDefaultSwatchCustomizationOverrideOverride )
-				{
-					if( IsValid( mDefaultSwatchCustomizationOverride ) )
-					{
+				if(mDefaultSwatchCustomizationOverrideOverride) {
+					if(IsValid(mDefaultSwatchCustomizationOverride)) {
 						//mDefaultSwatchCustomizationOverride->AddToRoot();
 					}
 
 					DefaultObject->mDefaultSwatchCustomizationOverride = this->mDefaultSwatchCustomizationOverride;
 				}
 
-				if( mSwatchGroupOverride )
-				{
-					if( IsValid( mSwatchGroup ) )
-					{
+				if(mSwatchGroupOverride) {
+					if(IsValid(mSwatchGroup)) {
 						//mSwatchGroup->AddToRoot();
 					}
 
 					DefaultObject->mSwatchGroup = this->mSwatchGroup;
 				}
 
-				if( mAllowColoringOverride )
-				{
+				if(mAllowColoringOverride) {
 					DefaultObject->mAllowColoring = this->mAllowColoring;
 				}
 
-				if( mAllowPatterningOverride )
-				{
+				if(mAllowPatterningOverride) {
 					DefaultObject->mAllowPatterning = this->mAllowPatterning;
 				}
 
-				if( mFactorySkinClassOverride )
-				{
-					if( IsValid( mFactorySkinClass ) )
-					{
+				if(mFactorySkinClassOverride) {
+					if(IsValid(mFactorySkinClass)) {
 						//mFactorySkinClass->AddToRoot();
 					}
 
 					DefaultObject->mFactorySkinClass = this->mFactorySkinClass;
 				}
 
-				if( mSkipBuildEffectOverride )
-				{
+				if(mSkipBuildEffectOverride) {
 					DefaultObject->mSkipBuildEffect = this->mSkipBuildEffect;
 				}
 
-				if( mBuildEffectSpeedOverride )
-				{
+				if(mBuildEffectSpeedOverride) {
 					DefaultObject->mBuildEffectSpeed = this->mBuildEffectSpeed;
 				}
 			}
@@ -101,15 +81,12 @@ void UKBFL_CDOHelperClass_Buildable::DoCDO()
 	Super::DoCDO();
 }
 
-TArray< UClass* > UKBFL_CDOHelperClass_Buildable::GetClasses()
-{
-	TArray< UClass* > Re;
+TArray<UClass*> UKBFL_CDOHelperClass_Buildable::GetClasses() {
+	TArray<UClass*> Re;
 
-	for( TSoftClassPtr< AFGBuildable > Class : mClasses )
-	{
-		if( IsValidSoftClass( Class ) )
-		{
-			Re.Add( Class.LoadSynchronous() );
+	for(TSoftClassPtr<AFGBuildable> Class: mClasses) {
+		if(IsValidSoftClass(Class)) {
+			Re.Add(Class.LoadSynchronous());
 		}
 	}
 

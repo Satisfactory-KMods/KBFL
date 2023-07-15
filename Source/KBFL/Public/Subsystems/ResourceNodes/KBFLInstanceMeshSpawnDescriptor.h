@@ -6,29 +6,27 @@
 #include "KBFLActorSpawnDescriptor.h"
 #include "KBFLInstanceMeshSpawnDescriptor.generated.h"
 
-USTRUCT( BlueprintType )
-struct FMeshInformationSpawn
-{
+USTRUCT(BlueprintType)
+struct FMeshInformationSpawn {
 	GENERATED_BODY()
 
-	UPROPERTY( EditDefaultsOnly, BlueprintReadWrite )
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	UStaticMesh* mStaticMesh;
 
-	UPROPERTY( EditDefaultsOnly, BlueprintReadWrite )
-	TArray< FTransform > mLocations;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TArray<FTransform> mLocations;
 };
 
 /**
  * 
  */
 UCLASS()
-class KBFL_API UKBFLInstanceMeshSpawnDescriptor : public UKBFLActorSpawnDescriptorBase
-{
+class KBFL_API UKBFLInstanceMeshSpawnDescriptor: public UKBFLActorSpawnDescriptorBase {
 	GENERATED_BODY()
 
-	virtual void ForeachLocations( TArray< AActor* >& ActorArray ) override;
+	virtual void ForeachLocations(TArray<AActor*>& ActorArray) override;
 
-public:
-	UPROPERTY( BlueprintReadWrite, EditDefaultsOnly )
-	TArray< FMeshInformationSpawn > mInstanceInfos;
+	public:
+		UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+		TArray<FMeshInformationSpawn> mInstanceInfos;
 };

@@ -15,52 +15,49 @@
 * DoCDO
 * ExecuteBlueprintCDO
 */
-UCLASS( Blueprintable, EditInlineNew, abstract, DefaultToInstanced )
-class KBFL_API UKBFL_CDOHelperClass_Base : public UObject
-{
+UCLASS(Blueprintable, EditInlineNew, abstract, DefaultToInstanced)
+class KBFL_API UKBFL_CDOHelperClass_Base: public UObject {
 	GENERATED_BODY()
 
-public:
+	public:
 #if WITH_ENGINE
-	virtual UWorld* GetWorld() const override;
+		virtual UWorld* GetWorld() const override;
 #endif
 
-	UFUNCTION( BlueprintCallable )
-	virtual void DoCDO();
+		UFUNCTION(BlueprintCallable)
+		virtual void DoCDO();
 
-	UFUNCTION( BlueprintCallable )
-	virtual TArray< UClass* > GetClasses();
+		UFUNCTION(BlueprintCallable)
+		virtual TArray<UClass*> GetClasses();
 
-	UFUNCTION( BlueprintCallable )
-	virtual void GetDefaultObjects( TArray< UObject* >& CDOs );
+		UFUNCTION(BlueprintCallable)
+		virtual void GetDefaultObjects(TArray<UObject*>& CDOs);
 
-	UFUNCTION( BlueprintPure )
-	static bool IsValidSoftClass( TSoftClassPtr< UObject > Class );
+		UFUNCTION(BlueprintPure)
+		static bool IsValidSoftClass(TSoftClassPtr<UObject> Class);
 
-	UFUNCTION( BlueprintPure )
-	bool HasAuth();
+		UFUNCTION(BlueprintPure)
+		bool HasAuth();
 
-	UFUNCTION( BlueprintPure )
-	static bool ContainBuildGun( TSubclassOf< UFGRecipe > Subclass );
+		UFUNCTION(BlueprintPure)
+		static bool ContainBuildGun(TSubclassOf<UFGRecipe> Subclass);
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	bool ExecuteAllowed() const;
-	virtual bool ExecuteAllowed_Implementation() const;
+		UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		bool         ExecuteAllowed() const;
+		virtual bool ExecuteAllowed_Implementation() const;
 
-	UFUNCTION( BlueprintNativeEvent )
-	void ExecuteBlueprintCDO();
+		UFUNCTION(BlueprintNativeEvent)
+		void ExecuteBlueprintCDO();
 
-	virtual void ExecuteBlueprintCDO_Implementation()
-	{
-	}
+		virtual void ExecuteBlueprintCDO_Implementation() {
+		}
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void ModifyValues();
+		UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+		void ModifyValues();
 
-	virtual void ModifyValues_Implementation()
-	{
-	}
+		virtual void ModifyValues_Implementation() {
+		}
 
-	UPROPERTY( BlueprintReadWrite )
-	class UKBFLContentCDOHelperSubsystem* mSubsystem = nullptr;
+		UPROPERTY(BlueprintReadWrite)
+		class UKBFLContentCDOHelperSubsystem* mSubsystem = nullptr;
 };

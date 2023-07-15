@@ -11,285 +11,258 @@
 #include "KBFLUtilSubsystem.generated.h"
 
 UCLASS()
-class KBFL_API AKBFLUtilSubsystem : public AModSubsystem, public IFGSaveInterface
-{
+class KBFL_API AKBFLUtilSubsystem: public AModSubsystem, public IFGSaveInterface {
 	GENERATED_BODY()
 
-public:
-	AKBFLUtilSubsystem();
+	public:
+		AKBFLUtilSubsystem();
 
-	UFUNCTION( BlueprintPure, Category="Time", DisplayName="GetKBFLUtilSubsystem", meta=(DefaultToSelf="worldContext") )
-	static AKBFLUtilSubsystem* Get( UObject* worldContext );
+		UFUNCTION(BlueprintPure, Category="Time", DisplayName="GetKBFLUtilSubsystem", meta=(DefaultToSelf="worldContext"))
+		static AKBFLUtilSubsystem* Get(UObject* worldContext);
 
-	virtual void BeginPlay() override;
-	virtual void GetLifetimeReplicatedProps( TArray< FLifetimeProperty >& OutLifetimeProps ) const override;
+		virtual void BeginPlay() override;
+		virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	// Handle Cheats Per Tick!
-	virtual void Tick( float DeltaSeconds ) override;
+		// Handle Cheats Per Tick!
+		virtual void Tick(float DeltaSeconds) override;
 
-	/***** IFGSaveInterface *****/
-	virtual bool ShouldSave_Implementation() const override { return true; };
+		/***** IFGSaveInterface *****/
+		virtual bool ShouldSave_Implementation() const override { return true; };
 
-	/***** Functions *****/
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleCheat();
+		/***** Functions *****/
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleCheat();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void SetCheatModeByHost( bool NewValue );
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void SetCheatModeByHost(bool NewValue);
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleGhost();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleGhost();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleFly();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleFly();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void UnlockAll();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void UnlockAll();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ResetAll();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ResetAll();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleNoPower();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleNoPower();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleNoCost();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleNoCost();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleNoFuel();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleNoFuel();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleNoMessages();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleNoMessages();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void ToggleNoDamage();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void ToggleNoDamage();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void FinishResearch();
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void FinishResearch();
 
-	UFUNCTION( BlueprintCallable, Category="Util Subsystem" )
-	void SetTime( float NewTime );
+		UFUNCTION(BlueprintCallable, Category="Util Subsystem")
+		void SetTime(float NewTime);
 
-	UPROPERTY( Transient, Replicated )
-	UFGCheatManager* mCheatManager;
+		UPROPERTY(Transient, Replicated)
+		UFGCheatManager* mCheatManager;
 
-	UPROPERTY( Transient, Replicated )
-	AFGTimeOfDaySubsystem* mTimeSubsystem;
+		UPROPERTY(Transient, Replicated)
+		AFGTimeOfDaySubsystem* mTimeSubsystem;
 
-	UPROPERTY( Transient )
-	AFGPlayerController* mPlayerController;
+		UPROPERTY(Transient)
+		AFGPlayerController* mPlayerController;
 
-	UPROPERTY( Replicated, BlueprintReadOnly )
-	bool bIsHostEnableCheatMode;
+		UPROPERTY(Replicated, BlueprintReadOnly)
+		bool bIsHostEnableCheatMode;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsCheatEnabled = true;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsCheatEnabled = true;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsFlyEnabled;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsFlyEnabled;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsGhostEnabled;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsGhostEnabled;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsNoPower;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsNoPower;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsNoMessages;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsNoMessages;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsNoCost;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsNoCost;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bIsNoFuel;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bIsNoFuel;
 
-	UPROPERTY( SaveGame, Replicated, BlueprintReadOnly )
-	bool bNoDamage;
+		UPROPERTY(SaveGame, Replicated, BlueprintReadOnly)
+		bool bNoDamage;
 };
 
 
 UCLASS()
-class KBFL_API UKBFLCheatRCO : public UFGRemoteCallObject
-{
+class KBFL_API UKBFLCheatRCO: public UFGRemoteCallObject {
 	GENERATED_BODY()
 
-public:
-	virtual void GetLifetimeReplicatedProps( TArray< FLifetimeProperty >& OutLifetimeProps ) const override
-	{
-		Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+	public:
+		virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override {
+			Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-		DOREPLIFETIME( UKBFLCheatRCO, bDummy );
-	}
-
-	/** Toggle Cheat */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleCheats( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleCheats_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
-
-	void Server_ToggleCheats_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleCheat();
+			DOREPLIFETIME(UKBFLCheatRCO, bDummy);
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Toggle Ghost */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleGhost( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleGhost_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Toggle Cheat */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleCheats(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleCheats_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ToggleGhost_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleGhost();
+		void Server_ToggleCheats_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleCheat();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Toggle Fly */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleFly( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleFly_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Toggle Ghost */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleGhost(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleGhost_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ToggleFly_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleFly();
+		void Server_ToggleGhost_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleGhost();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Unlock All Schematics */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_UnlockAll( AKBFLUtilSubsystem* Subsystem );
-	bool Server_UnlockAll_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Toggle Fly */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleFly(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleFly_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_UnlockAll_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->UnlockAll();
+		void Server_ToggleFly_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleFly();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Unlock All Schematics */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ResetAll( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ResetAll_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Unlock All Schematics */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_UnlockAll(AKBFLUtilSubsystem* Subsystem);
+		bool Server_UnlockAll_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ResetAll_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ResetAll();
+		void Server_UnlockAll_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->UnlockAll();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Toggle NoCost */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleNoCost( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleNoCost_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Unlock All Schematics */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ResetAll(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ResetAll_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ToggleNoCost_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleNoCost();
+		void Server_ResetAll_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ResetAll();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Toggle NoFuel */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleNoFuel( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleNoFuel_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Toggle NoCost */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleNoCost(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleNoCost_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ToggleNoFuel_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleNoFuel();
+		void Server_ToggleNoCost_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleNoCost();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Toggle NoMessages */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleNoMessages( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleNoMessages_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Toggle NoFuel */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleNoFuel(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleNoFuel_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ToggleNoMessages_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleNoMessages();
+		void Server_ToggleNoFuel_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleNoFuel();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Toggle NoPower */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleNoPower( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleNoPower_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Toggle NoMessages */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleNoMessages(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleNoMessages_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_ToggleNoPower_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleNoPower();
+		void Server_ToggleNoMessages_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleNoMessages();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Set Time */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_SetTime( AKBFLUtilSubsystem* Subsystem, float NewTime );
-	bool Server_SetTime_Validate( AKBFLUtilSubsystem* Subsystem, float NewTime ) { return true; }
+		/** Toggle NoPower */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleNoPower(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleNoPower_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_SetTime_Implementation( AKBFLUtilSubsystem* Subsystem, float NewTime )
-	{
-		if( Subsystem )
-		{
-			Subsystem->SetTime( NewTime );
+		void Server_ToggleNoPower_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleNoPower();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** Set NoDamage */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_ToggleNoDamage( AKBFLUtilSubsystem* Subsystem );
-	bool Server_ToggleNoDamage_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Set Time */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_SetTime(AKBFLUtilSubsystem* Subsystem, float NewTime);
+		bool Server_SetTime_Validate(AKBFLUtilSubsystem* Subsystem, float NewTime) { return true; }
 
-	void Server_ToggleNoDamage_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->ToggleNoDamage();
+		void Server_SetTime_Implementation(AKBFLUtilSubsystem* Subsystem, float NewTime) {
+			if(Subsystem) {
+				Subsystem->SetTime(NewTime);
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
 
-	/** FinishResearch */
-	UFUNCTION( Server, WithValidation, Unreliable )
-	void Server_FinishResearch( AKBFLUtilSubsystem* Subsystem );
-	bool Server_FinishResearch_Validate( AKBFLUtilSubsystem* Subsystem ) { return true; }
+		/** Set NoDamage */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_ToggleNoDamage(AKBFLUtilSubsystem* Subsystem);
+		bool Server_ToggleNoDamage_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
 
-	void Server_FinishResearch_Implementation( AKBFLUtilSubsystem* Subsystem )
-	{
-		if( Subsystem )
-		{
-			Subsystem->FinishResearch();
+		void Server_ToggleNoDamage_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->ToggleNoDamage();
+			}
+			Subsystem->ForceNetUpdate();
 		}
-		Subsystem->ForceNetUpdate();
-	}
+
+		/** FinishResearch */
+		UFUNCTION(Server, WithValidation, Unreliable)
+		void Server_FinishResearch(AKBFLUtilSubsystem* Subsystem);
+		bool Server_FinishResearch_Validate(AKBFLUtilSubsystem* Subsystem) { return true; }
+
+		void Server_FinishResearch_Implementation(AKBFLUtilSubsystem* Subsystem) {
+			if(Subsystem) {
+				Subsystem->FinishResearch();
+			}
+			Subsystem->ForceNetUpdate();
+		}
 
 
-	UPROPERTY( Replicated )
-	bool bDummy = true;
+		UPROPERTY(Replicated)
+		bool bDummy = true;
 };

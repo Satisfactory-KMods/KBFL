@@ -13,63 +13,62 @@
  * 
  */
 UCLASS()
-class KBFL_API UKBFLGameInstanceModule : public UGameInstanceModule, public IKBFLContentCDOHelperInterface
-{
+class KBFL_API UKBFLGameInstanceModule: public UGameInstanceModule, public IKBFLContentCDOHelperInterface {
 	GENERATED_BODY()
 
-public:
-	UKBFLGameInstanceModule();
+	public:
+		UKBFLGameInstanceModule();
 
-	virtual void FindAllCDOs();
+		virtual void FindAllCDOs();
 
-	// BEGIN IKBFLContentCDOHelperInterface
-	virtual FKBFLCDOInformation GetCDOInformationFromPhase_Implementation( ELifecyclePhase Phase, bool& HasPhase ) override;
-	// END IKBFLContentCDOHelperInterface
+		// BEGIN IKBFLContentCDOHelperInterface
+		virtual FKBFLCDOInformation GetCDOInformationFromPhase_Implementation(ELifecyclePhase Phase, bool& HasPhase) override;
+		// END IKBFLContentCDOHelperInterface
 
-	// BEGIN UGameInstanceModule
-	virtual void DispatchLifecycleEvent( ELifecyclePhase Phase ) override;
-	// END UGameInstanceModule
+		// BEGIN UGameInstanceModule
+		virtual void DispatchLifecycleEvent(ELifecyclePhase Phase) override;
+		// END UGameInstanceModule
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void ConstructionPhase();
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void ConstructionPhase();
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void InitPhase();
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void InitPhase();
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void PostInitPhase();
-	// END UGameInstanceModule
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void PostInitPhase();
+		// END UGameInstanceModule
 
-	UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
-	virtual void ConstructionPhase_Delayed();
+		UFUNCTION(BlueprintCallable, Category="LifecyclePhase")
+		virtual void ConstructionPhase_Delayed();
 
-	UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
-	virtual void InitPhase_Delayed();
+		UFUNCTION(BlueprintCallable, Category="LifecyclePhase")
+		virtual void InitPhase_Delayed();
 
-	UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
-	virtual void PostInitPhase_Delayed();
+		UFUNCTION(BlueprintCallable, Category="LifecyclePhase")
+		virtual void PostInitPhase_Delayed();
 
-	/** Information for CDO's */
-	// Our CDO map for all Phases
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|CDOHelper" )
-	TMap< ELifecyclePhase, FKBFLCDOInformation > mCDOInformationMap;
+		/** Information for CDO's */
+		// Our CDO map for all Phases
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|CDOHelper")
+		TMap<ELifecyclePhase , FKBFLCDOInformation> mCDOInformationMap;
 
-	// Cached all Called Phases (Delayed) to prevent multi call
-	TArray< ELifecyclePhase > Called;
-	/** Information for CDO's */
+		// Cached all Called Phases (Delayed) to prevent multi call
+		TArray<ELifecyclePhase> Called;
+		/** Information for CDO's */
 
-	UPROPERTY( meta=(NoAutoJson = true) )
-	bool mUseAssetCDOSearch = false;
-	bool bScanForCDOsDone = false;
-	/**
-	* Path for automatic find classes for CDO's
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
-	TArray< FKBFLCdoRegistry > mAssetCdoFinder;
+		UPROPERTY(meta=(NoAutoJson = true))
+		bool mUseAssetCDOSearch = false;
+		bool bScanForCDOsDone = false;
+		/**
+		* Path for automatic find classes for CDO's
+		*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ))
+		TArray<FKBFLCdoRegistry> mAssetCdoFinder;
 
-	/**
-	* Path for automatic find classes to register
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
-	TArray< TSubclassOf< UObject > > mBlacklistedClasses;
+		/**
+		* Path for automatic find classes to register
+		*/
+		UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ))
+		TArray<TSubclassOf<UObject>> mBlacklistedClasses;
 };
