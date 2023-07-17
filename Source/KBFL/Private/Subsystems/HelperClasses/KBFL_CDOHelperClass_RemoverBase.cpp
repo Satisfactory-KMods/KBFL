@@ -8,7 +8,7 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(HelperClassRemoverBaseLog, Log, All)
 
-DEFINE_LOG_CATEGORY(HelperClassRemoverBaseLog)
+DEFINE_LOG_CATEGORY (HelperClassRemoverBaseLog)
 
 bool UKBFL_CDOHelperClass_RemoverBase::RemoveSchematic(TSubclassOf<UFGSchematic> Subclass, AFGRecipeManager* RecipeSubsystem, AFGSchematicManager* SchematicSubsystem, TArray<TSubclassOf<UFGSchematic>> Exclude, TArray<FString> ExcludeStrings, TArray<TSubclassOf<UFGRecipe>> ExcludeRecipes, TArray<FString> ExcludeRecipesStrings, TArray<UClass*>& RemovedClasses) {
 	if(Subclass && RecipeSubsystem && SchematicSubsystem && !Exclude.Contains(Subclass)) {
@@ -18,7 +18,7 @@ bool UKBFL_CDOHelperClass_RemoverBase::RemoveSchematic(TSubclassOf<UFGSchematic>
 				if(Unlock) {
 					UFGUnlockRecipe* RecipeUnlock = Cast<UFGUnlockRecipe>(Unlock);
 					if(RecipeUnlock) {
-						for(auto Recipe: RecipeUnlock->mRecipes) {
+						for(auto Recipe: RecipeUnlock->GetRecipesToUnlock()) {
 							if(Recipe) {
 								UE_LOG(HelperClassRemoverBaseLog, Log, TEXT("RemoveSchematic > Found Recipe try to remove %s"), *Recipe->GetName());
 								RemoveRecipe(Recipe, RecipeSubsystem, ExcludeRecipes, ExcludeRecipesStrings, RemovedClasses);
@@ -153,19 +153,19 @@ bool UKBFL_CDOHelperClass_RemoverBase::RemoveResearchTree(TSubclassOf<UFGResearc
 
 			for(auto Schematic: Schematics) {
 				if(Schematic) {
-					UE_LOG(HelperClassRemoverBaseLog, Log, TEXT( "RemoveResearchTree RemoveSchematic" ));
+					UE_LOG(HelperClassRemoverBaseLog, Log, TEXT("RemoveResearchTree RemoveSchematic"));
 					RemoveSchematic(Schematic, RecipeSubsystem, SchematicSubsystem, ExcludeSchematics, ExcludeSchematicsStrings, ExcludeRecipes, ExcludeRecipesStrings, RemovedClasses);
 				}
 			}
 
 			if(ResearchManager->mAvailableResearchTrees.Contains(Subclass)) {
 				ResearchManager->mAvailableResearchTrees.Remove(Subclass);
-				UE_LOG(HelperClassRemoverBaseLog, Log, TEXT( "RemoveResearchTree mAvailableResearchTrees > %s" ), *Subclass->GetName());
+				UE_LOG(HelperClassRemoverBaseLog, Log, TEXT("RemoveResearchTree mAvailableResearchTrees > %s"), *Subclass->GetName());
 			}
 
 			if(ResearchManager->mUnlockedResearchTrees.Contains(Subclass)) {
 				ResearchManager->mUnlockedResearchTrees.Remove(Subclass);
-				UE_LOG(HelperClassRemoverBaseLog, Log, TEXT( "RemoveResearchTree mUnlockedResearchTrees > %s" ), *Subclass->GetName());
+				UE_LOG(HelperClassRemoverBaseLog, Log, TEXT("RemoveResearchTree mUnlockedResearchTrees > %s"), *Subclass->GetName());
 			}
 
 			//Subclass.GetDefaultObject()->mPreUnlockDisplayName = FText::GetEmpty();
