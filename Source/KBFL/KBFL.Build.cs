@@ -28,7 +28,6 @@ public class KBFL : ModuleRules
 				"AIModule",
 				"GameplayTasks",
 				"SlateCore", "Slate", "UMG",
-				"InstancedSplines",
 				"RenderCore",
 				"CinematicCamera",
 				"Foliage",
