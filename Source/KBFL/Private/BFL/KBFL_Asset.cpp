@@ -11,8 +11,9 @@ DEFINE_LOG_CATEGORY( KBFLAssetLog )
 template< class T >
 bool UKBFL_Asset::GetSubclassFromAsset( FAssetData AssetData, TSubclassOf< T >& OutClass ) {
 	if( AssetData.IsValid( ) ) {
-		if( !AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "BlueprintGeneratedClass" ) ) {
-			UE_LOG( KBFLAssetLog, Log, TEXT("!Blueprint") );
+		// UE_LOG( KBFLAssetLog, Log, TEXT("Test: %s"), *AssetData.AssetClassPath.GetAssetName( ).ToString( ) );
+		if( !AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "BlueprintGeneratedClass" ) && !!AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "Blueprint" ) ) {
+			UE_LOG( KBFLAssetLog, Log, TEXT("!Blueprint, %s > %s"), *AssetData.AssetClassPath.GetAssetName( ).ToString( ), *AssetData.AssetName.ToString( ) );
 			return false;
 		}
 
