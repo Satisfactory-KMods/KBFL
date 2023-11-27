@@ -131,9 +131,10 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 	}
 
 	if( AssetRegistry.GetAssetsByPaths( paths, AssetData, true ) ) {
+		FKBFLAssetData AssetDataStruct = FKBFLAssetData( );
 		for( FAssetData Asset : AssetData ) {
 			// ONLY READ BP!
-			if( !Asset.AssetClassPath.GetAssetName( ).ToString( ).StartsWith( "BlueprintGeneratedClass" ) ) {
+			if( !Asset.AssetClassPath.GetAssetName( ).ToString( ).Contains( "BlueprintGeneratedClass" ) /*&& !Asset.AssetClassPath.GetAssetName( ).ToString( ).Contains( "Blueprint" )*/ ) {
 				continue;
 			}
 			/**
@@ -154,18 +155,17 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 			*/
 			//UE_LOG( AssetDataSubsystemLog, Log, TEXT("GetAssetsByPath: %s, %s"), *Asset.AssetClassPath.GetAssetName( ).ToString(), *Asset.PackagePath.ToString() );
 
-
 			TSubclassOf< UFGSchematic > Schematic;
 			TSubclassOf< UFGRecipe > Recipe;
 			TSubclassOf< UFGItemDescriptor > Item;
 			TSubclassOf< AFGBuildable > Buildable;
-			TSubclassOf< UObject > Object;
 			TSubclassOf< AFGDriveablePawn > DriveablePawn;
 			TSubclassOf< AFGHologram > Holograms;
 			TSubclassOf< UModModule > ModModules;
 			TSubclassOf< UKBFL_CDOHelperClass_Base > CDOHelpers;
 			TSubclassOf< UKBFLActorSpawnDescriptorBase > ResourceDescriptors;
 			TSubclassOf< UKBFLSubLevelSpawning > SubLevelSpawning;
+			TSubclassOf< UFGResearchTree > ResearchTree;
 
 			if( Local_FilterAsset( Asset ) ) {
 				// SubLevelSpawning
@@ -176,12 +176,23 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 					}
 				}
 
+				// ResearchTrees
+				if( UKBFL_Asset::GetSubclassFromAsset( Asset, ResearchTree ) ) {
+					if( ResearchTree ) {
+						mAllFoundResearchTrees.Add( ResearchTree );
+						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Hologram To Subsystem > %s"), *Holograms->GetName());
+						mAssetClassMap.Add( ResearchTree, Asset );
+						setMapClass( ResearchTree, 10 );
+					}
+				}
+
 				// Schematic
 				if( UKBFL_Asset::GetSubclassFromAsset( Asset, Holograms ) ) {
 					if( Holograms ) {
 						mAllFoundedHolograms.Add( Holograms );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Hologram To Subsystem > %s"), *Holograms->GetName());
 						mAssetClassMap.Add( Holograms, Asset );
+						setMapClass( Holograms, 5 );
 					}
 				}
 
@@ -191,6 +202,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedModModules.Add( ModModules );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add ModModule To Subsystem > %s"), *ModModules->GetName());
 						mAssetClassMap.Add( ModModules, Asset );
+						setMapClass( ModModules, 6 );
 					}
 				}
 
@@ -200,6 +212,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedCDOHelpers.Add( CDOHelpers );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add CDOHelper To Subsystem > %s"), *CDOHelpers->GetName());
 						mAssetClassMap.Add( CDOHelpers, Asset );
+						setMapClass( CDOHelpers, 7 );
 					}
 				}
 
@@ -209,6 +222,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedResourceDescriptors.Add( ResourceDescriptors );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add ResourceDescriptor To Subsystem > %s"), *ResourceDescriptors->GetName());
 						mAssetClassMap.Add( ResourceDescriptors, Asset );
+						setMapClass( ResourceDescriptors, 8 );
 					}
 				}
 
@@ -218,6 +232,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedSchematics.Add( Schematic );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Schematic To Subsystem > %s"), *Schematic->GetName());
 						mAssetClassMap.Add( Schematic, Asset );
+						setMapClass( Schematic, 0 );
 					}
 				}
 
@@ -227,6 +242,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedRecipes.Add( Recipe );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Recipe To Subsystem > %s"), *Recipe->GetName());
 						mAssetClassMap.Add( Recipe, Asset );
+						setMapClass( Recipe, 1 );
 					}
 				}
 
@@ -236,6 +252,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedItems.Add( Item );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Item To Subsystem > %s"), *Item->GetName());
 						mAssetClassMap.Add( Item, Asset );
+						setMapClass( Item, 2 );
 					}
 				}
 
@@ -245,6 +262,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedBuildables.Add( Buildable );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Buildable To Subsystem > %s"), *Buildable->GetName());
 						mAssetClassMap.Add( Buildable, Asset );
+						setMapClass( Buildable, 3 );
 					}
 				}
 
@@ -254,6 +272,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder( ) {
 						mAllFoundedDriveablePawns.Add( DriveablePawn );
 						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add DriveablePawn To Subsystem > %s"), *DriveablePawn->GetName());
 						mAssetClassMap.Add( DriveablePawn, Asset );
+						setMapClass( DriveablePawn, 4 );
 					}
 				}
 
@@ -277,7 +296,9 @@ bool UKBFLAssetDataSubsystem::FilterAsset( const FAssetData& AssetData ) {
 
 bool UKBFLAssetDataSubsystem::Local_FilterAsset( const FAssetData& AssetData ) const {
 	for( const auto TagValue : AssetData.TagsAndValues ) {
-		if( TagValue.Value.AsString( ).Contains( "Level" ) ) {
+		if( TagValue.Value.AsString( ).Contains( "LevelScriptActor" ) ) {
+			//AssetData.PrintAssetData( );
+			//UE_LOG( AssetDataSubsystemLog, Log, TEXT("SKIP BECAUSE Tag!!! > %s"), *TagValue.Value.AsString( ) );
 			return false;
 		}
 	}
@@ -285,6 +306,8 @@ bool UKBFLAssetDataSubsystem::Local_FilterAsset( const FAssetData& AssetData ) c
 	FString ExportedPath = AssetData.GetObjectPathString( );
 	for( auto String : mPreventStrings ) {
 		if( ExportedPath.Contains( String ) ) {
+			//AssetData.PrintAssetData( );
+			//UE_LOG( AssetDataSubsystemLog, Log, TEXT("SKIP BECAUSE ExportedPath!!! > %s"), *String );
 			return false;
 		}
 	}
@@ -548,6 +571,19 @@ void UKBFLAssetDataSubsystem::GetCDOHelpersOfChilds( TArray< UClass* > Childs, T
 			}
 		}
 	}
+}
+
+FKBFLAssetData UKBFLAssetDataSubsystem::GetModRelatedData( UModModule* ModModule ) {
+	if( !bWasInit ) {
+		UE_LOG( AssetDataSubsystemLog, Error, TEXT("Try to get classes without Init before the subsytem! Do ForceScan!") );
+		DoScan( );
+	}
+
+	UE_LOG( AssetDataSubsystemLog, Warning, TEXT("GetModRelatedData: %s"), *ModModule->GetOwnerModReference( ).ToString( ).ToLower( ) );
+	if( FKBFLAssetData* AssetData = mDirectoryMappings.Find( FName( ModModule->GetOwnerModReference( ).ToString( ).ToLower( ) ) ) ) {
+		return *AssetData;
+	}
+	return FKBFLAssetData( );
 }
 
 void UKBFLAssetDataSubsystem::GetResourceDescriptorsOfChilds( TArray< UClass* > Childs, TArray< TSubclassOf< UKBFLActorSpawnDescriptorBase > >& Out_Items, bool UseNativeCheck ) {

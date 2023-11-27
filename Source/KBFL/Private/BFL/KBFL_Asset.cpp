@@ -12,8 +12,8 @@ template< class T >
 bool UKBFL_Asset::GetSubclassFromAsset( FAssetData AssetData, TSubclassOf< T >& OutClass ) {
 	if( AssetData.IsValid( ) ) {
 		// UE_LOG( KBFLAssetLog, Log, TEXT("Test: %s"), *AssetData.AssetClassPath.GetAssetName( ).ToString( ) );
-		if( !AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "BlueprintGeneratedClass" ) && !!AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "Blueprint" ) ) {
-			UE_LOG( KBFLAssetLog, Log, TEXT("!Blueprint, %s > %s"), *AssetData.AssetClassPath.GetAssetName( ).ToString( ), *AssetData.AssetName.ToString( ) );
+		if( !AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "BlueprintGeneratedClass" ) && !AssetData.AssetClassPath.GetAssetName( ).ToString( ).Contains( "Blueprint" ) ) {
+			UE_LOG( KBFLAssetLog, Log, TEXT("!Blueprint, %s > %s"), *AssetData.AssetClassPath.GetAssetName( ).ToString( ), *AssetData.GetObjectPathString( ) );
 			return false;
 		}
 
