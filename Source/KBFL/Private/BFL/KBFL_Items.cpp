@@ -11,11 +11,14 @@ TArray< FKBFLDescInfo > UKBFL_Items::GetAllRegisteredDescWithInfos( UObject* Wor
 	TArray< FKBFLDescInfo > ReturnDescriptors = { };
 
 	for( auto ItemDescriptor : ItemDescriptors ) {
-		FKBFLDescInfo Struc;
-		Struc.mMod = ItemDescriptor.OwnedByModReference;
-		Struc.mDesc = TSubclassOf< UFGItemDescriptor >( ItemDescriptor.RegisteredObject->GetClass(  ) );
+		UClass* CastedClass = Cast< UClass >( ItemDescriptor.RegisteredObject );
+		if( ensureAlways( CastedClass ) ) {
+			FKBFLDescInfo Struc;
+			Struc.mMod = ItemDescriptor.OwnedByModReference;
+			Struc.mDesc = TSubclassOf< UFGItemDescriptor >( CastedClass );
 
-		ReturnDescriptors.Add( Struc );
+			ReturnDescriptors.Add( Struc );
+		}
 	}
 
 	return ReturnDescriptors;
