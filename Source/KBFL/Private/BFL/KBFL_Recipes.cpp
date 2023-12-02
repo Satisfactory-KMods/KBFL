@@ -12,7 +12,7 @@ TArray< TSubclassOf< UFGRecipe > > UKBFL_Recipes::GetAllRegisteredRecipes( UObje
 	TArray< TSubclassOf< UFGRecipe > > ReturnRecipes = { };
 
 	for( auto Recipe : Recipes ) {
-		ReturnRecipes.Add( TSubclassOf< UFGRecipe >( Recipe.RegisteredObject->GetClass( ) ) );
+		ReturnRecipes.Add( TSubclassOf< UFGRecipe >( Cast< UClass >( Recipe.RegisteredObject ) ) );
 	}
 
 	return ReturnRecipes;
@@ -26,7 +26,7 @@ TArray< FKBFLRecipeInfo > UKBFL_Recipes::GetAllRegisteredRecipesWithInfo( UObjec
 	for( auto Recipe : Recipes ) {
 		FKBFLRecipeInfo Struc;
 		Struc.mMod = Recipe.OwnedByModReference;
-		Struc.mRecipe = TSubclassOf< UFGRecipe >( Recipe.RegisteredObject->GetClass( ) );
+		Struc.mRecipe = TSubclassOf< UFGRecipe >( Cast< UClass >( Recipe.RegisteredObject ) );
 
 		ReturnRecipes.Add( Struc );
 		// write Struc
@@ -42,7 +42,7 @@ TArray< TSubclassOf< UFGRecipe > > UKBFL_Recipes::GetAllRecipesFromBuilding( UOb
 		auto Recipes = ModContent->GetRegisteredRecipes( );
 
 		for( auto Recipe : Recipes ) {
-			auto RecipeClass = TSubclassOf< UFGRecipe >( Recipe.RegisteredObject->GetClass( ) );
+			auto RecipeClass = TSubclassOf< UFGRecipe >( Cast< UClass >( Recipe.RegisteredObject ) );
 			auto RecipeClassDefault = static_cast< UFGRecipe* >( RecipeClass->GetDefaultObject( ) );
 			check( RecipeClassDefault );
 
@@ -67,7 +67,7 @@ TArray< TSubclassOf< UFGRecipe > > UKBFL_Recipes::GetAllModRecipes( UObject* Wor
 
 	for( auto Recipe : Recipes ) {
 		if( ModName == Recipe.OwnedByModReference ) {
-			ReturnRecipes.Add( TSubclassOf< UFGRecipe >( Recipe.RegisteredObject->GetClass( ) ) );
+			ReturnRecipes.Add( TSubclassOf< UFGRecipe >( Cast< UClass >( Recipe.RegisteredObject ) ) );
 		}
 	}
 
@@ -81,7 +81,7 @@ TArray< TSubclassOf< UFGRecipe > > UKBFL_Recipes::GetAllModsRecipes( UObject* Wo
 
 	for( auto Recipe : Recipes ) {
 		if( ModNames.Contains( Recipe.OwnedByModReference ) ) {
-			ReturnRecipes.Add( TSubclassOf< UFGRecipe >( Recipe.RegisteredObject->GetClass( ) ) );
+			ReturnRecipes.Add( TSubclassOf< UFGRecipe >( Cast< UClass >( Recipe.RegisteredObject ) ) );
 		}
 	}
 
@@ -97,7 +97,7 @@ TArray< FKBFLRecipeInfo > UKBFL_Recipes::GetAllModsRecipesWithInfo( UObject* Wor
 		if( ModNames.Contains( Recipe.OwnedByModReference ) ) {
 			FKBFLRecipeInfo Struc;
 			Struc.mMod = Recipe.OwnedByModReference;
-			Struc.mRecipe = TSubclassOf< UFGRecipe >( Recipe.RegisteredObject->GetClass( ) );
+			Struc.mRecipe = TSubclassOf< UFGRecipe >( Cast< UClass >( Recipe.RegisteredObject ) );
 
 			ReturnRecipes.Add( Struc );
 			// write Struc

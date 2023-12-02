@@ -10,7 +10,7 @@ TArray< TSubclassOf< UFGSchematic > > UKBFL_Schematics::GetAllRegisteredSchemati
 	TArray< TSubclassOf< UFGSchematic > > ReturnSchematics = { };
 
 	for( auto Schematic : Schematics ) {
-		ReturnSchematics.Add( TSubclassOf< UFGSchematic >( Schematic.RegisteredObject->GetClass( ) ) );
+		ReturnSchematics.Add( TSubclassOf< UFGSchematic >( Cast< UClass >( Schematic.RegisteredObject ) ) );
 	}
 
 	return ReturnSchematics;
@@ -24,7 +24,7 @@ TArray< FKBFLSchematicInfo > UKBFL_Schematics::GetAllRegisteredSchematicsWithInf
 	for( auto Schematic : Schematics ) {
 		FKBFLSchematicInfo Struc;
 		Struc.mMod = Schematic.OwnedByModReference;
-		Struc.mSchematic = TSubclassOf< UFGSchematic >( Schematic.RegisteredObject->GetClass( ) );
+		Struc.mSchematic = TSubclassOf< UFGSchematic >( Cast< UClass >( Schematic.RegisteredObject ) );
 
 		ReturnSchematics.Add( Struc );
 	}
@@ -39,7 +39,7 @@ TArray< TSubclassOf< UFGSchematic > > UKBFL_Schematics::GetAllModSchematics( UOb
 
 	for( auto Schematic : Schematics ) {
 		if( ModName == Schematic.OwnedByModReference ) {
-			ReturnSchematics.Add( TSubclassOf< UFGSchematic >( Schematic.RegisteredObject->GetClass( ) ) );
+			ReturnSchematics.Add( TSubclassOf< UFGSchematic >( Cast< UClass >( Schematic.RegisteredObject ) ) );
 		}
 	}
 
@@ -53,7 +53,7 @@ TArray< TSubclassOf< UFGSchematic > > UKBFL_Schematics::GetAllModsSchematics( UO
 
 	for( auto Schematic : Schematics ) {
 		if( ModNames.Contains( Schematic.OwnedByModReference ) ) {
-			ReturnSchematics.Add( TSubclassOf< UFGSchematic >( Schematic.RegisteredObject->GetClass( ) ) );
+			ReturnSchematics.Add( TSubclassOf< UFGSchematic >( Cast< UClass >( Schematic.RegisteredObject ) ) );
 		}
 	}
 
@@ -70,7 +70,7 @@ TArray< FKBFLSchematicInfo > UKBFL_Schematics::GetAllModsSchematicsWithInfo( UOb
 			// write Struc
 			FKBFLSchematicInfo Struc;
 			Struc.mMod = Schematic.OwnedByModReference;
-			Struc.mSchematic = TSubclassOf< UFGSchematic >( Schematic.RegisteredObject->GetClass( ) );
+			Struc.mSchematic = TSubclassOf< UFGSchematic >( Cast< UClass >( Schematic.RegisteredObject ) );
 
 			ReturnSchematics.Add( Struc );
 		}
