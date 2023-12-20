@@ -18,122 +18,71 @@ DECLARE_LOG_CATEGORY_EXTERN( LogKBFLModule, Log, All );
 
 DEFINE_LOG_CATEGORY( LogKBFLModule );
 
-void AFGBuildableResourceExtractorBase_BeginPlay( CallScope< void(*)( AFGBuildableResourceExtractorBase* ) >& scope, AFGBuildableResourceExtractorBase* selfref )
-{
-	//Todo: This is changes with Update 6 we need to refactor this if needed!???
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("AFGBuildableResourceExtractorBase_BeginPlay"));
-	if(!selfref->GetExtractableResource())
-	{
-		if(!selfref->GetName().Contains(TEXT("WaterPump")))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AFGBuildableResourceExtractorBase_BeginPlay > (TRY!) K2_DestroyActor on %s"), *selfref->GetName());
-			selfref->K2_DestroyActor();
-			scope.Cancel();
-		}
-	}*/
-}
-
-void GameModePostLogin( CallScope< void(*)( AFGGameMode*, APlayerController* ) >& scope, AFGGameMode* gm, APlayerController* pc )
-{
-	if( gm->HasAuthority() && !gm->IsMainMenuGameMode() )
-	{
-		//Register RCO
-		gm->RegisterRemoteCallObjectClass( UKBFLDefaultRCO::StaticClass() );
-		gm->RegisterRemoteCallObjectClass( UKBFLCheatRCO::StaticClass() );
-	}
-}
-
-
-void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot(*)( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot )
-{
-	if( GameState )
-	{
-		if( GameState->GetWorld() )
-		{
-			if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld()->GetSubsystem< UKBFLCustomizerSubsystem >() ) )
-			{
-				if( !CustomizerSubsystem->Initialized )
-				{
-					CustomizerSubsystem->GatherInterfaces();
+void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot ) {
+	if( GameState ) {
+		if( GameState->GetWorld( ) ) {
+			if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld( )->GetSubsystem< UKBFLCustomizerSubsystem >( ) ) ) {
+				if( !CustomizerSubsystem->Initialized ) {
+					CustomizerSubsystem->GatherInterfaces( );
 				}
 			}
 		}
 	}
 
-	if( !GameState )
-	{
+	if( !GameState ) {
 		UE_LOG( LogKBFLModule, Log, TEXT("Cancel function GetBuildingColorDataForSlot because GameState is currently INVALID!") );
-		scope.Override( FFactoryCustomizationColorSlot() );
+		scope.Override( FFactoryCustomizationColorSlot( ) );
 	}
-
-	else if( !GameState->GetWorld() )
-	{
+	else if( !GameState->GetWorld( ) ) {
 		UE_LOG( LogKBFLModule, Log, TEXT("Cancel function GetBuildingColorDataForSlot because GameState->GetWorld() is currently INVALID!") );
-		scope.Override( FFactoryCustomizationColorSlot() );
+		scope.Override( FFactoryCustomizationColorSlot( ) );
 	}
 }
 
 
-void PlayerAdjustDamage( CallScope< float(*)( AFGCharacterPlayer*, AActor*, float, const UDamageType*, AController*, AActor* ) >& Scope, AFGCharacterPlayer* Player, AActor* damagedActor, float damageAmount, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser )
-{
-	AFGPlayerController* Controller = Cast< AFGPlayerController >( Player->GetController() );
-	if( Controller )
-	{
-		if( AKBFLUtilSubsystem* Subsystem = AKBFLUtilSubsystem::Get( Player ) )
-		{
-			if( Subsystem->bNoDamage )
-			{
+void PlayerAdjustDamage( CallScope< float( * )( AFGCharacterPlayer*, AActor*, float, const UDamageType*, AController*, AActor* ) >& Scope, AFGCharacterPlayer* Player, AActor* damagedActor, float damageAmount, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser ) {
+	AFGPlayerController* Controller = Cast< AFGPlayerController >( Player->GetController( ) );
+	if( Controller ) {
+		if( AKBFLUtilSubsystem* Subsystem = AKBFLUtilSubsystem::Get( Player ) ) {
+			if( Subsystem->bNoDamage ) {
 				Scope.Override( 0.0f );
 			}
 		}
 	}
 }
 
-void FKBFLModule::StartupModule()
-{
-#if !WITH_EDITOR
+void FKBFLModule::StartupModule( ) {
+	#if !WITH_EDITOR
 	// Config
-	const TArray<FString> ModModuleNames = {
-		"KBFL",
-		"KUI"
-	};
+	const TArray< FString > ModModuleNames = { "KBFL", "KUI" };
 
 	// Logic
 	int32 Added = 0;
-	
-	TArray<FString> NewLocalizationPaths;
-	GConfig->GetArray( TEXT("Internationalization"), TEXT("LocalizationPaths"), NewLocalizationPaths, GGameIni );
-	
-	for (FString ModModuleName : ModModuleNames )
-	{
+
+	TArray< FString > NewLocalizationPaths;
+	GConfig->GetArray( TEXT( "Internationalization" ), TEXT( "LocalizationPaths" ), NewLocalizationPaths, GGameIni );
+
+	for( FString ModModuleName : ModModuleNames ) {
 		FString LocPath = "../../../FactoryGame/Mods/{ModuleName}/Localization/{ModuleName}";
 		LocPath.ReplaceInline( *FString( "{ModuleName}" ), *ModModuleName );
-		if(NewLocalizationPaths.AddUnique( LocPath ) > 0)
-		{
+		if( NewLocalizationPaths.AddUnique( LocPath ) > 0 ) {
 			UE_LOG( LogTemp, Log, TEXT("Module: %s ; Added LocalizationPath: %s"), *FString("KBFL"), *LocPath );
 			Added++;
 		}
 	}
 
-	if( Added > 0 )
-	{
-		GConfig->SetArray( TEXT("Internationalization"), TEXT("LocalizationPaths"), NewLocalizationPaths, GGameIni );
+	if( Added > 0 ) {
+		GConfig->SetArray( TEXT( "Internationalization" ), TEXT( "LocalizationPaths" ), NewLocalizationPaths, GGameIni );
 	}
-#endif
 
-#if !WITH_EDITOR
-	SUBSCRIBE_METHOD_VIRTUAL( AFGCharacterPlayer::AdjustDamage, GetMutableDefault<AFGCharacterPlayer>(), &PlayerAdjustDamage )
+	SUBSCRIBE_METHOD_VIRTUAL( AFGCharacterPlayer::AdjustDamage, GetMutableDefault<AFGCharacterPlayer>(), &PlayerAdjustDamage );
 
-	AFGBuildableResourceExtractorBase* FrackingExtractor = GetMutableDefault< AFGBuildableResourceExtractorBase >();
-
-	SUBSCRIBE_METHOD_VIRTUAL( AFGBuildableResourceExtractorBase::BeginPlay, FrackingExtractor, &AFGBuildableResourceExtractorBase_BeginPlay );
-	SUBSCRIBE_METHOD_VIRTUAL( AFGGameMode::PostLogin, GetMutableDefault<AFGGameMode>(), &GameModePostLogin )
+	AFGBuildableResourceExtractorBase* FrackingExtractor = GetMutableDefault< AFGBuildableResourceExtractorBase >( );
 
 
-	SUBSCRIBE_METHOD_VIRTUAL_AFTER( AFGBuildableWire::BeginPlay, GetMutableDefault<AFGBuildableWire>(), [&](AFGBuildableWire* Wire) { if(ensure(Wire)) { FTimerHandle TimerHandle; Wire->GetWorldTimerManager().SetTimer(TimerHandle, Wire, &AFGBuildableWire::UpdateWireMesh, 1.f, false); } } )
+	//SUBSCRIBE_METHOD_VIRTUAL_AFTER( AFGBuildableWire::BeginPlay, GetMutableDefault<AFGBuildableWire>(), [&](AFGBuildableWire* Wire) { if(ensure(Wire)) { FTimerHandle TimerHandle; Wire->GetWorldTimerManager().SetTimer(TimerHandle, Wire, &AFGBuildableWire::UpdateWireMesh, 1.f, false); } } )
 
-	SUBSCRIBE_METHOD( AFGBuildableWire::UpdateWireMesh, [&](auto& Call, AFGBuildableWire* Wire) { if(ensure(Wire) && ensure(Wire->mWireMesh)) { Call(Wire); Wire->mWireMesh->SetCustomPrimitiveDataFloat(0, Wire->GetLength() / 100); Wire->mWireMesh->SetCustomPrimitiveDataFloat(1, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(2, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(3, -48.f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(4, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(5, 0.703125); Wire->mWireMesh->SetCustomPrimitiveDataFloat(5, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(6, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(7, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(8, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(9, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(10, 0.0f); } } )
+	//SUBSCRIBE_METHOD( AFGBuildableWire::UpdateWireMesh, [&](auto& Call, AFGBuildableWire* Wire) { if(ensure(Wire) && ensure(Wire->mWireMesh)) { Call(Wire); Wire->mWireMesh->SetCustomPrimitiveDataFloat(0, Wire->GetLength() / 100); Wire->mWireMesh->SetCustomPrimitiveDataFloat(1, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(2, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(3, -48.f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(4, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(5, 0.703125); Wire->mWireMesh->SetCustomPrimitiveDataFloat(5, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(6, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(7, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(8, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(9, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(10, 0.0f); } } )
 
 	SUBSCRIBE_METHOD( AFGGameState::GetBuildingColorDataForSlot, &GetBuildingColorDataForSlot );
 
@@ -141,7 +90,7 @@ void FKBFLModule::StartupModule()
 
 	                  // going save that it called not in the registry phase to avoid crashed while CDO!
 	                  for (UWorldModule* RootModule : Manager->RootModuleList) { if(UKBFLWorldModule* WorldModule = Cast<UKBFLWorldModule>(RootModule)) { if(!WorldModule->bScanForCDOsDone) { WorldModule->FindAllCDOs(); } if(CDOHelperSubsystem) CDOHelperSubsystem->BeginCDOForModule(RootModule, Phase); if(CustomizerSubsystem && WorldModule->mCallCustomizerInPhase == Phase) { UE_LOG(LogKBFLModule, Log, TEXT("Starting CustomizerSubsystem for Mod: %s"), *WorldModule->GetOwnerModReference().ToString()); CustomizerSubsystem->BeginForModule(RootModule); } if(NodeSubsystem && WorldModule->mCallNodesInPhase == Phase) { UE_LOG(LogKBFLModule, Log, TEXT("Starting NodeSubsystem for Mod: %s"), *WorldModule->GetOwnerModReference().ToString()); NodeSubsystem->BeginSpawningForModule(RootModule); } } } for (UWorldModule* RootModule : Manager->RootModuleList) { if(ensureAlways(RootModule)) { UE_LOG(LogKBFLModule, Log, TEXT("Dispatching lifecycle event %s to Mod %s"), *UModModule::LifecyclePhaseToString(Phase), *RootModule->GetOwnerModReference().ToString()); RootModule->DispatchLifecycleEvent(Phase); } } Call.Cancel(); } } );
-#endif
+	#endif
 }
 
 IMPLEMENT_GAME_MODULE( FKBFLModule, KBFL );

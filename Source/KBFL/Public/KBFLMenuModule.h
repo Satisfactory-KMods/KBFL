@@ -16,40 +16,39 @@
 /**
  * 
  */
-UCLASS( Blueprintable )
-class KBFL_API UKBFLMenuModule : public UMenuWorldModule, public IKBFLContentCDOHelperInterface
-{
+UCLASS(Blueprintable)
+class KBFL_API UKBFLMenuModule: public UMenuWorldModule, public IKBFLContentCDOHelperInterface {
 	GENERATED_BODY()
 
-public:
-	UKBFLMenuModule();
+	public:
+		UKBFLMenuModule();
 
-	// BEGIN UGameWorldModule
-	virtual void DispatchLifecycleEvent( ELifecyclePhase Phase ) override;
-	// END UGameWorldModule
+		// BEGIN UGameWorldModule
+		virtual void DispatchLifecycleEvent(ELifecyclePhase Phase) override;
+		// END UGameWorldModule
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void ConstructionPhase();
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void ConstructionPhase();
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void InitPhase();
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void InitPhase();
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void PostInitPhase();
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void PostInitPhase();
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void OnMenuWidgetHooked( UUserWidget* WidgetClass );
-	void MenuWidgetHooked( UUserWidget* WidgetClass );
+		UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
+		void OnMenuWidgetHooked(UUserWidget* WidgetClass);
+		void MenuWidgetHooked(UUserWidget* WidgetClass);
 
-private:
-	UPROPERTY( EditDefaultsOnly, Category="KMods|MainMenuHook" )
-	bool mHookMainMenuWidget;
+	private:
+		UPROPERTY(EditDefaultsOnly, Category="KMods|MainMenuHook")
+		bool mHookMainMenuWidget;
 
-	UPROPERTY( EditDefaultsOnly, Category="KMods|MainMenuHook", meta=(EditCondition=mHookMainMenuWidget) )
-	TSubclassOf< UUserWidget > mMenuWidgetClass;
+		UPROPERTY(EditDefaultsOnly, Category="KMods|MainMenuHook", meta=(EditCondition=mHookMainMenuWidget))
+		TSubclassOf<UUserWidget> mMenuWidgetClass;
 
-	UPROPERTY( EditDefaultsOnly, Category="KMods|MainMenuHook", meta=(EditCondition=mHookMainMenuWidget) )
-	FName mFunctionName = "Construct";
+		UPROPERTY(EditDefaultsOnly, Category="KMods|MainMenuHook", meta=(EditCondition=mHookMainMenuWidget))
+		FName mFunctionName = "Construct";
 
-	FOnWidgetCreated Binding;
+		FOnWidgetCreated Binding;
 };

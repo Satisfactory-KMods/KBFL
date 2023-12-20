@@ -11,170 +11,154 @@
 /**
  * 
  */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLSchematicArray
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLSchematicArray {
 	GENERATED_BODY()
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TArray< TSubclassOf< UFGSchematic > > mSchematics = {};
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<TSubclassOf<UFGSchematic>> mSchematics = {};
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLRegistry
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLRegistry {
 	GENERATED_BODY()
 
-	FKBFLRegistry()
-	{
+	FKBFLRegistry() {
 	};
 
-	FKBFLRegistry( FString InPath )
-	{
+	FKBFLRegistry(FString InPath) {
 		Path = InPath;
 	};
 
-	FKBFLRegistry( FString InPath, bool InRecursive )
-	{
+	FKBFLRegistry(FString InPath, bool InRecursive) {
 		Path = InPath;
 		Recursive = InRecursive;
 	};
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString Path = "/<modref>/";
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool Recursive = false;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bRegisterSchematics = true;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bRegisterResearchTrees = true;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bRegisterRecipes = false;
 
-	FName GetPath()
-	{
-		Path.RemoveFromEnd( "/", ESearchCase::IgnoreCase );
-		return FName( Path );
+	FName GetPath() {
+		Path.RemoveFromEnd("/", ESearchCase::IgnoreCase);
+		return FName(Path);
 	}
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLCdoRegistry
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLCdoRegistry {
 	GENERATED_BODY()
 
-	FKBFLCdoRegistry()
-	{
+	FKBFLCdoRegistry() {
 	};
 
-	FKBFLCdoRegistry( FString InPath )
-	{
+	FKBFLCdoRegistry(FString InPath) {
 		Path = InPath;
 	};
 
-	FKBFLCdoRegistry( FString InPath, bool InRecursive )
-	{
+	FKBFLCdoRegistry(FString InPath, bool InRecursive) {
 		Path = InPath;
 		Recursive = InRecursive;
 	};
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString Path = "/<modref>/";
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool Recursive = false;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	ELifecyclePhase bPutInPhase = ELifecyclePhase::CONSTRUCTION;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bFindRemover = true;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bFindCDOHelpers = true;
 
-	FName GetPath()
-	{
-		Path.RemoveFromEnd( "/", ESearchCase::IgnoreCase );
-		return FName( Path );
+	FName GetPath() {
+		Path.RemoveFromEnd("/", ESearchCase::IgnoreCase);
+		return FName(Path);
 	}
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLDescArray
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLDescArray {
 	GENERATED_BODY()
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TArray< TSubclassOf< UFGItemDescriptor > > mDesc = {};
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<TSubclassOf<UFGItemDescriptor>> mDesc = {};
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLDescInfo
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLDescInfo {
 	GENERATED_BODY()
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TSubclassOf< UFGItemDescriptor > mDesc = {};
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<UFGItemDescriptor> mDesc = {};
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName mMod = {};
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLSchematicInfo
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLSchematicInfo {
 	GENERATED_BODY()
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TSubclassOf< UFGSchematic > mSchematic = {};
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<UFGSchematic> mSchematic = {};
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName mMod = {};
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLRecipeInfo
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLRecipeInfo {
 	GENERATED_BODY()
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TSubclassOf< UFGRecipe > mRecipe = {};
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TSubclassOf<UFGRecipe> mRecipe = {};
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName mMod = {};
 };
 
 /**
 * 
 */
-USTRUCT( BlueprintType )
-struct KBFL_API FKBFLRecipeArray
-{
+USTRUCT(BlueprintType)
+struct KBFL_API FKBFLRecipeArray {
 	GENERATED_BODY()
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TArray< TSubclassOf< UFGRecipe > > mRecipes = {};
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<TSubclassOf<UFGRecipe>> mRecipes = {};
 };

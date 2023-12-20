@@ -6,16 +6,15 @@
 #include "KBFLUtilBuildable.generated.h"
 
 UCLASS()
-class KBFL_API AKBFLUtilBuildable : public AFGBuildable
-{
+class KBFL_API AKBFLUtilBuildable: public AFGBuildable {
 	GENERATED_BODY()
 
-public:
-	virtual bool ShouldSave_Implementation() const override { return false; }
-	virtual void BeginPlay() override;
+	public:
+		virtual bool ShouldSave_Implementation() const override { return false; }
+		virtual void BeginPlay() override;
 
-	virtual void EndPlay( const EEndPlayReason::Type EndPlayReason ) override;
+		virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-	UPROPERTY()
-	FVector Scale = FVector( 1 );
+		UPROPERTY()
+		FVector Scale = FVector(1);
 };

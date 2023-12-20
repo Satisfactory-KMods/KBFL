@@ -14,9 +14,8 @@
 #include "KBFLWorldModule.generated.h"
 
 USTRUCT( BlueprintType )
-struct KBFL_API FKBFLPool
-{
-	GENERATED_BODY()
+struct KBFL_API FKBFLPool {
+	GENERATED_BODY( )
 
 	/* Type */
 	UPROPERTY( EditDefaultsOnly )
@@ -78,9 +77,8 @@ struct KBFL_API FKBFLPool
 	int32 mCachedQualityScalabilityValue;
 	bool mIsQualityScalabilityDirty;
 
-	FFGPoolType ToFg() const
-	{
-		FFGPoolType PoolType = FFGPoolType();
+	FFGPoolType ToFg( ) const {
+		FFGPoolType PoolType = FFGPoolType( );
 
 		PoolType.Type = Type;
 		PoolType.mProxyComponent = mProxyComponent;
@@ -104,110 +102,123 @@ struct KBFL_API FKBFLPool
  * 
  */
 UCLASS( Blueprintable )
-class KBFL_API UKBFLWorldModule : public UGameWorldModule, public IKBFLCustomizerInterface, public IKBFLResourceNodeInterface, public IKBFLContentCDOHelperInterface
-{
-	GENERATED_BODY()
+class KBFL_API UKBFLWorldModule : public UGameWorldModule, public IKBFLCustomizerInterface, public IKBFLResourceNodeInterface, public IKBFLContentCDOHelperInterface {
+	GENERATED_BODY( )
 
-public:
-	UKBFLWorldModule();
+	public:
+		UKBFLWorldModule( );
 
-	// BEGIN IKBFLContentCDOHelperInterface
-	virtual FKBFLCDOInformation GetCDOInformationFromPhase_Implementation( ELifecyclePhase Phase, bool& HasPhase ) override;
-	// END IKBFLContentCDOHelperInterface
+		// BEGIN IKBFLContentCDOHelperInterface
+		virtual FKBFLCDOInformation GetCDOInformationFromPhase_Implementation( ELifecyclePhase Phase, bool& HasPhase ) override;
 
-	// BEGIN IKBFLResourceNodeInterface
-	virtual TArray< TSubclassOf< AActor > > GetRemoveClasses_Implementation() override;
-	virtual TArray< TSubclassOf< UKBFLActorSpawnDescriptorBase > > GetActorSpawnDescriptors_Implementation() override;
-	// END IKBFLResourceNodeInterface
+		// END IKBFLContentCDOHelperInterface
 
-	// BEGIN IKBFLCustomizerInterface
-	virtual TMap< TSubclassOf< UFGSwatchGroup >, TSubclassOf< UFGFactoryCustomizationDescriptor_Swatch > > GetSwatchGroups_Implementation() override;
-	virtual TArray< FKBFLSwatchInformation > GetSwatchDescriptionInformation_Implementation() override;
-	virtual TArray< FKBFLMaterialDescriptorInformation > GetMaterialInformation_Implementation() override;
-	// END IKBFLCustomizerInterface
+		// BEGIN IKBFLResourceNodeInterface
+		virtual TArray< TSubclassOf< AActor > > GetRemoveClasses_Implementation( ) override;
 
-	// BEGIN UGameWorldModule
-	virtual void DispatchLifecycleEvent( ELifecyclePhase Phase ) override;
-	// END UGameWorldModule
+		virtual TArray< TSubclassOf< UKBFLActorSpawnDescriptorBase > > GetActorSpawnDescriptors_Implementation( ) override;
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void ConstructionPhase();
+		// END IKBFLResourceNodeInterface
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void InitPhase();
+		// BEGIN IKBFLCustomizerInterface
+		virtual TMap< TSubclassOf< UFGSwatchGroup >, TSubclassOf< UFGFactoryCustomizationDescriptor_Swatch > > GetSwatchGroups_Implementation( ) override;
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void PostInitPhase();
+		virtual TArray< FKBFLSwatchInformation > GetSwatchDescriptionInformation_Implementation( ) override;
 
-	virtual void RegisterKBFLLogicContent();
-	virtual void FindAllCDOs();
+		virtual TArray< FKBFLMaterialDescriptorInformation > GetMaterialInformation_Implementation( ) override;
 
-	virtual void RegisterPoolSettings();
-	virtual bool IsAllowedToRegister( TSubclassOf< UObject > Object ) const;
+		// END IKBFLCustomizerInterface
 
-	static bool IsPoolEntryThere( TArray< FFGPoolType > Source, FKBFLPool CheckStruc );
+		// BEGIN UGameWorldModule
+		virtual void DispatchLifecycleEvent( ELifecyclePhase Phase ) override;
 
-	/** Information for CDO's */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|CDOHelper" )
-	TMap< ELifecyclePhase, FKBFLCDOInformation > mCDOInformationMap;
+		// END UGameWorldModule
 
-	/** Material Information for add to SF Material Desc */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer|Materials" )
-	TArray< FKBFLMaterialDescriptorInformation > mMaterialInformation = {};
+		UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
+		void ConstructionPhase( );
 
-	/** Swatches that should add to the Subsystem */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer|Swatches" )
-	TArray< FKBFLSwatchInformation > mSwatchDescriptionInformation = {};
+		UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
+		void InitPhase( );
 
-	/** Default Swatches for the Swatch Group */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer|Swatches" )
-	TMap< TSubclassOf< UFGSwatchGroup >, TSubclassOf< UFGFactoryCustomizationDescriptor_Swatch > > mSwatchGroups;
+		UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
+		void PostInitPhase( );
 
-	/** Default Swatches for the Swatch Group */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer" )
-	ELifecyclePhase mCallCustomizerInPhase;
+		virtual void RegisterKBFLLogicContent( );
 
-	/** Informations for every Actor to Spawn */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|ActorSpawnSystem" )
-	TArray< TSubclassOf< UKBFLActorSpawnDescriptorBase > > mActorSpawnDescriptors;
+		virtual void FindAllCDOs( );
 
-	/** Resource Nodes that should remove from world */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|ActorSpawnSystem" )
-	TArray< TSubclassOf< AActor > > mActorsToRemove;
+		virtual void RegisterPoolSettings( );
 
-	/** Default Swatches for the Swatch Group */
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|ActorSpawnSystem" )
-	ELifecyclePhase mCallNodesInPhase = ELifecyclePhase::INITIALIZATION;
+		virtual bool IsAllowedToRegister( TSubclassOf< UObject > Object ) const;
 
-	UPROPERTY( meta=(NoAutoJson = true) )
-	bool mUseAssetRegistry = false;
-	/**
-	* Path for automatic find classes to register
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetRegistry ) )
-	TArray< FKBFLRegistry > mAssetRegistryOptions;
+		static bool IsPoolEntryThere( TArray< FFGPoolType > Source, FKBFLPool CheckStruc );
 
-	UPROPERTY( meta=(NoAutoJson = true) )
-	bool mUseAssetCDOSearch = false;
-	bool bScanForCDOsDone = false;
-	/**
-	* Path for automatic find classes for CDO's
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
-	TArray< FKBFLCdoRegistry > mAssetCdoFinder;
+		bool bScanForCDOsDone = false;
+		/** Information for CDO's */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|CDOHelper" )
+		TMap< ELifecyclePhase, FKBFLCDOInformation > mCDOInformationMap;
 
-	UPROPERTY( meta=(NoAutoJson = true) )
-	bool mAddPoolEntry = false;
+		/** Material Information for add to SF Material Desc */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer|Materials" )
+		TArray< FKBFLMaterialDescriptorInformation > mMaterialInformation = { };
 
-	/**
-	* Pool Entrys to add new Light pools
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mAddPoolEntry ) )
-	TArray< FKBFLPool > mPoolEntryToAdd;
+		/** Swatches that should add to the Subsystem */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer|Swatches" )
+		TArray< FKBFLSwatchInformation > mSwatchDescriptionInformation = { };
 
-	/**
-	* Path for automatic find classes to register
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry" )
-	TArray< TSubclassOf< UObject > > mBlacklistedClasses;
+		/** Default Swatches for the Swatch Group */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer|Swatches" )
+		TMap< TSubclassOf< UFGSwatchGroup >, TSubclassOf< UFGFactoryCustomizationDescriptor_Swatch > > mSwatchGroups;
+
+		/** Default Swatches for the Swatch Group */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|Customizer" )
+		ELifecyclePhase mCallCustomizerInPhase;
+
+		/** Informations for every Actor to Spawn */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|ActorSpawnSystem" )
+		TArray< TSubclassOf< UKBFLActorSpawnDescriptorBase > > mActorSpawnDescriptors;
+
+		/** Resource Nodes that should remove from world */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|ActorSpawnSystem" )
+		TArray< TSubclassOf< AActor > > mActorsToRemove;
+
+		/** Default Swatches for the Swatch Group */
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|ActorSpawnSystem" )
+		ELifecyclePhase mCallNodesInPhase = ELifecyclePhase::INITIALIZATION;
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry" )
+		bool mUseAssetRegistry = false;
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetRegistry ) )
+		bool mRegisterCDOs = true;
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetRegistry ) )
+		bool mRegisterRecipes = false;
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetRegistry ) )
+		bool mRegisterSchematics = true;
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetRegistry ) )
+		bool mRegisterResearchTrees = true;
+
+		UPROPERTY( meta=(NoAutoJson = true) )
+		bool mAddPoolEntry = false;
+
+		/**
+		* Pool Entrys to add new Light pools
+		*/
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mAddPoolEntry ) )
+		TArray< FKBFLPool > mPoolEntryToAdd;
+
+		/**
+		* Path for automatic find classes to register
+		*/
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry" )
+		TArray< TSubclassOf< UObject > > mBlacklistedClasses;
+
+		/**
+		* Path for automatic find classes to register
+		*/
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
+		TArray< TSubclassOf< UObject > > mBlacklistedCDOClasses;
 };

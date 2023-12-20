@@ -8,77 +8,75 @@
 #include "KBFLUtilItemCreaterBuildable.generated.h"
 
 UCLASS()
-class KBFL_API AKBFLUtilItemCreaterBuildable : public AFGBuildableStorage
-{
+class KBFL_API AKBFLUtilItemCreaterBuildable: public AFGBuildableStorage {
 	GENERATED_BODY()
 
-public:
-	AKBFLUtilItemCreaterBuildable();
+	public:
+		AKBFLUtilItemCreaterBuildable();
 
-	virtual void Factory_Tick( float dt ) override;
-	virtual void PostInitializeComponents() override;
-	virtual void GetLifetimeReplicatedProps( TArray< FLifetimeProperty >& OutLifetimeProps ) const override;
+		virtual void Factory_Tick(float dt) override;
+		virtual void PostInitializeComponents() override;
+		virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	virtual void BeginPlay() override;
+		virtual void BeginPlay() override;
 
-	void DestroyItems();
-	void CreateItems();
+		void DestroyItems();
+		void CreateItems();
 
-	UFUNCTION( BlueprintCallable )
-	void SetBeltItem( TSubclassOf< UFGItemDescriptor > Item );
+		UFUNCTION(BlueprintCallable)
+		void SetBeltItem(TSubclassOf<UFGItemDescriptor> Item);
 
-	UFUNCTION( BlueprintCallable )
-	void SetPipeItem( TSubclassOf< UFGItemDescriptor > Item );
+		UFUNCTION(BlueprintCallable)
+		void SetPipeItem(TSubclassOf<UFGItemDescriptor> Item);
 
-	UFUNCTION( BlueprintPure )
-	FORCEINLINE TSubclassOf< UFGItemDescriptor > GetBeltItem() const { return mBeltItemClassToGenerate; }
+		UFUNCTION(BlueprintPure)
+		FORCEINLINE TSubclassOf<UFGItemDescriptor> GetBeltItem() const { return mBeltItemClassToGenerate; }
 
-	UFUNCTION( BlueprintPure )
-	FORCEINLINE TSubclassOf< UFGItemDescriptor > GetPipeItem() const { return mPipeItemClassToGenerate; }
+		UFUNCTION(BlueprintPure)
+		FORCEINLINE TSubclassOf<UFGItemDescriptor> GetPipeItem() const { return mPipeItemClassToGenerate; }
 
-private:
-	UPROPERTY( SaveGame, Replicated )
-	TSubclassOf< UFGItemDescriptor > mBeltItemClassToGenerate;
+	private:
+		UPROPERTY(SaveGame, Replicated)
+		TSubclassOf<UFGItemDescriptor> mBeltItemClassToGenerate;
 
-	UPROPERTY( SaveGame, Replicated )
-	TSubclassOf< UFGItemDescriptor > mPipeItemClassToGenerate;
+		UPROPERTY(SaveGame, Replicated)
+		TSubclassOf<UFGItemDescriptor> mPipeItemClassToGenerate;
 
-	UPROPERTY( Transient )
-	UFGPipeConnectionFactory* mPipeInput;
+		UPROPERTY(Transient)
+		UFGPipeConnectionFactory* mPipeInput;
 
-	UPROPERTY( Transient )
-	UFGPipeConnectionFactory* mPipeOutput;
+		UPROPERTY(Transient)
+		UFGPipeConnectionFactory* mPipeOutput;
 
-	UPROPERTY( Transient )
-	UFGFactoryConnectionComponent* mBeltInput;
+		UPROPERTY(Transient)
+		UFGFactoryConnectionComponent* mBeltInput;
 
-	UPROPERTY( Transient )
-	UFGFactoryConnectionComponent* mBeltOutput;
+		UPROPERTY(Transient)
+		UFGFactoryConnectionComponent* mBeltOutput;
 };
 
 
 UCLASS()
-class KBFL_API UKBFLDefaultRCO : public UFGRemoteCallObject
-{
+class KBFL_API UKBFLDefaultRCO: public UFGRemoteCallObject {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION( BlueprintCallable, Server, WithValidation, Unreliable )
-	void Server_CheatBuilding_SetPipeItem( AKBFLUtilItemCreaterBuildable* Building, TSubclassOf< UFGItemDescriptor > ItemToSet );
-	bool Server_CheatBuilding_SetPipeItem_Validate( AKBFLUtilItemCreaterBuildable* Building, TSubclassOf< UFGItemDescriptor > ItemToSet ) { return true; }
+	public:
+		UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
+		void Server_CheatBuilding_SetPipeItem(AKBFLUtilItemCreaterBuildable* Building, TSubclassOf<UFGItemDescriptor> ItemToSet);
+		bool Server_CheatBuilding_SetPipeItem_Validate(AKBFLUtilItemCreaterBuildable* Building, TSubclassOf<UFGItemDescriptor> ItemToSet) { return true; }
 
-	UFUNCTION( BlueprintCallable, Server, WithValidation, Unreliable )
-	void Server_CheatBuilding_SetBeltItem( AKBFLUtilItemCreaterBuildable* Building, TSubclassOf< UFGItemDescriptor > ItemToSet );
-	bool Server_CheatBuilding_SetBeltItem_Validate( AKBFLUtilItemCreaterBuildable* Building, TSubclassOf< UFGItemDescriptor > ItemToSet ) { return true; }
+		UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
+		void Server_CheatBuilding_SetBeltItem(AKBFLUtilItemCreaterBuildable* Building, TSubclassOf<UFGItemDescriptor> ItemToSet);
+		bool Server_CheatBuilding_SetBeltItem_Validate(AKBFLUtilItemCreaterBuildable* Building, TSubclassOf<UFGItemDescriptor> ItemToSet) { return true; }
 
-	UFUNCTION( BlueprintCallable, Server, WithValidation, Unreliable )
-	void Server_AddStackToCharacter( AFGCharacterPlayer* Player, TSubclassOf< UFGItemDescriptor > ItemToAdd );
-	bool Server_AddStackToCharacter_Validate( AFGCharacterPlayer* Player, TSubclassOf< UFGItemDescriptor > ItemToAdd ) { return true; }
+		UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
+		void Server_AddStackToCharacter(AFGCharacterPlayer* Player, TSubclassOf<UFGItemDescriptor> ItemToAdd);
+		bool Server_AddStackToCharacter_Validate(AFGCharacterPlayer* Player, TSubclassOf<UFGItemDescriptor> ItemToAdd) { return true; }
 
-	UFUNCTION( BlueprintCallable, Server, WithValidation, Unreliable )
-	void Server_ClearCharacterInventory( AFGCharacterPlayer* Player );
-	bool Server_ClearCharacterInventory_Validate( AFGCharacterPlayer* Player ) { return true; }
+		UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
+		void Server_ClearCharacterInventory(AFGCharacterPlayer* Player);
+		bool Server_ClearCharacterInventory_Validate(AFGCharacterPlayer* Player) { return true; }
 
-	UPROPERTY( Replicated )
-	bool bDummy = true;
+		UPROPERTY(Replicated)
+		bool bDummy = true;
 };

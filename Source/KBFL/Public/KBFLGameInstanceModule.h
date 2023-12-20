@@ -12,64 +12,66 @@
 /**
  * 
  */
-UCLASS()
-class KBFL_API UKBFLGameInstanceModule : public UGameInstanceModule, public IKBFLContentCDOHelperInterface
-{
-	GENERATED_BODY()
+UCLASS( )
+class KBFL_API UKBFLGameInstanceModule : public UGameInstanceModule, public IKBFLContentCDOHelperInterface {
+	GENERATED_BODY( )
 
-public:
-	UKBFLGameInstanceModule();
+	public:
+		UKBFLGameInstanceModule( );
 
-	virtual void FindAllCDOs();
+		virtual void FindAllCDOs( );
 
-	// BEGIN IKBFLContentCDOHelperInterface
-	virtual FKBFLCDOInformation GetCDOInformationFromPhase_Implementation( ELifecyclePhase Phase, bool& HasPhase ) override;
-	// END IKBFLContentCDOHelperInterface
+		// BEGIN IKBFLContentCDOHelperInterface
+		virtual FKBFLCDOInformation GetCDOInformationFromPhase_Implementation( ELifecyclePhase Phase, bool& HasPhase ) override;
 
-	// BEGIN UGameInstanceModule
-	virtual void DispatchLifecycleEvent( ELifecyclePhase Phase ) override;
-	// END UGameInstanceModule
+		// END IKBFLContentCDOHelperInterface
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void ConstructionPhase();
+		// BEGIN UGameInstanceModule
+		virtual void DispatchLifecycleEvent( ELifecyclePhase Phase ) override;
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void InitPhase();
+		// END UGameInstanceModule
 
-	UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
-	void PostInitPhase();
-	// END UGameInstanceModule
+		UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
+		void ConstructionPhase( );
 
-	UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
-	virtual void ConstructionPhase_Delayed();
+		UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
+		void InitPhase( );
 
-	UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
-	virtual void InitPhase_Delayed();
+		UFUNCTION( BlueprintNativeEvent, Category="LifecyclePhase" )
+		void PostInitPhase( );
 
-	UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
-	virtual void PostInitPhase_Delayed();
+		// END UGameInstanceModule
 
-	/** Information for CDO's */
-	// Our CDO map for all Phases
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|CDOHelper" )
-	TMap< ELifecyclePhase, FKBFLCDOInformation > mCDOInformationMap;
+		UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
+		virtual void ConstructionPhase_Delayed( );
 
-	// Cached all Called Phases (Delayed) to prevent multi call
-	TArray< ELifecyclePhase > Called;
-	/** Information for CDO's */
+		UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
+		virtual void InitPhase_Delayed( );
 
-	UPROPERTY( meta=(NoAutoJson = true) )
-	bool mUseAssetCDOSearch = false;
-	bool bScanForCDOsDone = false;
-	/**
-	* Path for automatic find classes for CDO's
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
-	TArray< FKBFLCdoRegistry > mAssetCdoFinder;
+		UFUNCTION( BlueprintCallable, Category="LifecyclePhase" )
+		virtual void PostInitPhase_Delayed( );
 
-	/**
-	* Path for automatic find classes to register
-	*/
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
-	TArray< TSubclassOf< UObject > > mBlacklistedClasses;
+		/** Information for CDO's */
+		// Our CDO map for all Phases
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "KMods|CDOHelper" )
+		TMap< ELifecyclePhase, FKBFLCDOInformation > mCDOInformationMap;
+
+		// Cached all Called Phases (Delayed) to prevent multi call
+		TArray< ELifecyclePhase > Called;
+		/** Information for CDO's */
+
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry" )
+		bool mUseAssetRegistry = false;
+
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetRegistry ) )
+		bool mRegisterCDOs = true;
+
+		bool bScanForCDOsDone = false;
+
+		/**
+		* Path for automatic find classes to register
+		*/
+		UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry", meta = ( EditCondition = mUseAssetCDOSearch ) )
+		TArray< TSubclassOf< UObject > > mBlacklistedCDOClasses;
 };
