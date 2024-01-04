@@ -1,0 +1,181 @@
+name: build and create release
+
+on:
+    push:
+
+env:
+    # tokens
+    GH_TOKEN: ${{ secrets.PAT }}
+    GITHUB_TOKEN: ${{ secrets.PAT }}
+
+    # paths
+    UE_PATH: "C:\\\"Program Files\"\\\"Unreal Engine - CSS\""
+    SML_CACHE_PATH: "C:\\Users\\Administrator\\Documents\\SML"
+
+    # or use a repo?
+    MAIN_MOD: KBFL
+    PLUGIN_NAMES: '"KUI", "KBFL"'
+    PLUGIN_NAMES_PARAM: '"KUI" "KBFL"'
+
+jobs:
+    build-mod:
+        name: Build Mod and Prepare Releases
+        timeout-minutes: 180
+        runs-on: self-hosted
+        steps:
+            - name: Cleanup
+              run: |
+                $paths = (Get-ChildItem).FullName
+                foreach($filePath in $paths)
+                {
+                  Remove-Item $filePath -Recurse -Force
+                  Write-Host "Path $filePath removed"
+                }
+                Write-Host "Cleared"
+
+            - name: Clone Patcher
+              uses: actions/checkout@v3
+              with:
+                repository: Satisfactory-KMods/WorkflowPatcher
+                path: Patcher
+                token: ${{ secrets.PAT }}
+
+            - name: Use SML Cache
+              run: |
+                $robocopy_process = Start-Process "robocopy" -ArgumentList "${{ env.SML_CACHE_PATH }} $PWD\SML /S /E /R:5 /W:5 /TBD /MT:12 /LOG:copy.log" -PassThru -Wait
+                if ($robocopy_process.ExitCode -ne 1) { exit 1 }
+
+            # uncomment this for Satisfactory Plus!
+            - name: Clone Repos
+              run: |
+                Function Git-Clone{
+                  param ($Repo, $Target, $Branch = '')
+                  Write-Output "Repo $Repo"
+                  Write-Output "Branch $Branch"
+                  Write-Output "Target $Target"
+                  if(Test-Path -Path $Target) {
+                  $current = $PWD
+                  cd $Target
+                  git fetch --all
+                  if(![string]::IsNullOrWhitespace($STR3)) {
+                      Write-Output "use origin/$Branch"
+                      git checkout -f origin/$Branch
+                  } else {
+                      Write-Output "use default branch"
+                  }
+                  git reset --hard FETCH_HEAD
+                  cd $current
+                  } else {
+                  git clone $Repo $Target
+                  $current = $PWD
+                  cd $Target
+                  git fetch --all
+                  if(![string]::IsNullOrWhitespace($STR3)) {
+                      Write-Output "use origin/$Branch"
+                      git checkout -f origin/$Branch
+                  } else {
+                      Write-Output "use default branch"
+                  }
+                  cd $current
+                  }
+                }
+                Git-Clone "https://oauth2:${{ secrets.PAT }}@github.com/Satisfactory-KMods/KBFL.git" "$PWD/SML/Mods/KBFL"
+                Git-Clone "https://oauth2:${{ secrets.PAT }}@github.com/Satisfactory-KMods/KUI.git" "$PWD/SML/Mods/KUI"
+
+            - name: List Mods
+              run: Get-ChildItem -Path "$PWD/SML/Mods" -Directory -Force -ErrorAction SilentlyContinue | Select-Object FullName
+                
+            - name: Run Patcher and Version Updater
+              run: |
+                cd Patcher
+                pnpm i
+                pnpm run Header
+                pnpm run Content
+                pnpm run UpdateUPlugins ${{ env.MAIN_MOD }}
+                cd ..
+
+            - name: Generate project
+              run: |
+                ${{ env.UE_PATH }}\Engine\Build\BatchFiles\Build.bat -projectfiles -project="$PWD\SML\FactoryGame.uproject" -game -rocket -progres
+
+            - name: Build c++ dev editor
+              run: |
+                MSBuild.exe $PWD\SML\FactoryGame.sln /p:Configuration="Development Editor" /p:Platform="Win64" /t:"Games\FactoryGame"
+
+            - name: Build c++ shipping
+              run: |
+                MSBuild.exe $PWD\SML\FactoryGame.sln /p:Configuration="Shipping" /p:Platform="Win64" /t:"Games\FactoryGame"
+
+            - name: Package Mod
+              run: |
+                $plugins = ${{ env.PLUGIN_NAMES }}
+                foreach($PLUGIN in $plugins)
+                {
+                  & ${{ env.UE_PATH }}\Engine\Build\BatchFiles\RunUAT.bat -ScriptsForProject="$PWD\SML\FactoryGame.uproject" PackagePlugin -Project="$PWD\SML\FactoryGame.uproject" -dlcname="$PLUGIN" -build -clientconfig=Shipping -serverconfig=Shipping -platform=Win64 -nocompileeditor -installed
+                }
+
+            - name: Archive Artifact Result
+              uses: actions/upload-artifact@v2
+              with:
+                name: "result.zip"
+                retention-days: 30
+                if-no-files-found: error
+                path: "SML\\Saved\\ArchivedPlugins"
+
+            - name: Create Cache
+              run: | 
+                Remove-Item "${{ env.SML_CACHE_PATH }}" -Recurse -Force
+                $robocopy_process = Start-Process "robocopy" -ArgumentList "$PWD\SML ${{ env.SML_CACHE_PATH }} /S /E /R:5 /W:5 /TBD /MT:12 /LOG:copy.log" -PassThru -Wait
+                if ($robocopy_process.ExitCode -ne 1) { exit 1 }
+                Remove-Item "${{ env.SML_CACHE_PATH }}\Saved\ArchivedPlugins" -Recurse -Force
+
+            - name: Package for Patreon
+              run: |
+                cd Patcher
+                pnpm run PreparePatreon ${{ env.PLUGIN_NAMES_PARAM }}
+                cd ..
+
+            - name: Archive Artifact Patreon
+              uses: actions/upload-artifact@v2
+              with:
+                name: "patreon.zip"
+                retention-days: 30
+                if-no-files-found: error
+                path: "Packages"
+
+            - name: Archive Artifact Compressed Patreon
+              uses: actions/upload-artifact@v2
+              with:
+                name: "compressed.zip"
+                retention-days: 30
+                if-no-files-found: error
+                path: "Zips"
+
+            - name: Cleanup
+              if: always()
+              run: |
+                $paths = (Get-ChildItem).FullName
+                foreach($filePath in $paths)
+                {
+                  Remove-Item $filePath -Recurse -Force
+                  Write-Host "Path $filePath removed"
+                }
+                Write-Host "Cleared"
+
+    release-patreon:
+        needs: build-mod
+        if: github.ref == 'refs/heads/dev'
+        name: Release Patreon Version
+        timeout-minutes: 180
+        runs-on: ubuntu-latest
+        steps:
+          - run: echo hello world!
+
+    release-smr:
+        needs: build-mod
+        if: github.ref == 'refs/heads/main'
+        name: Release SMR Version
+        timeout-minutes: 180
+        runs-on: ubuntu-latest
+        steps:
+          - run: echo hello world!
