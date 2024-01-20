@@ -28,8 +28,7 @@ class KBFL_API UKBFLCustomizerSubsystem: public UWorldSubsystem, public FTickabl
 	virtual void Deinitialize() override;
 
 	public:
-		void OnWorldBeginPlay();
-		void OnActorsInitialized(const UWorld::FActorsInitializedParams&);
+		virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 		bool GatherDefaultCollections();
 		void GatherInterfaces();

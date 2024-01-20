@@ -193,7 +193,7 @@ void AKBFLUtilSubsystem::UnlockAll( ) {
 			AFGSchematicManager* SchematicManager = AFGSchematicManager::Get( GetWorld( ) );
 
 			if( ContentRegistry && SchematicManager ) {
-				for( const FGameObjectRegistration RegisteredSchematic : ContentRegistry->GetRegisteredSchematics( ) ) {
+				for( const FGameObjectRegistration& RegisteredSchematic : ContentRegistry->GetRegisteredSchematics( ) ) {
 					const TSubclassOf< UFGSchematic > Schematic = Cast< UClass >( RegisteredSchematic.RegisteredObject );
 					if( Schematic && !SchematicManager->IsSchematicPurchased( Schematic ) ) {
 						SchematicManager->AddAvailableSchematic( Schematic );

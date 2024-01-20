@@ -18,7 +18,18 @@ DEFINE_LOG_CATEGORY(CustomizerSubsystem)
 void UKBFLCustomizerSubsystem::Tick(float DeltaTime) {
 	if(Initialized && !Gathered) {
 		Initialized = false;
-		OnWorldBeginPlay();
+		AFGGameMode* GameMode = Cast<AFGGameMode>(GetWorld()->GetAuthGameMode());
+		if(!Initialized && !(GameMode != nullptr && GameMode->IsMainMenuGameMode())) {
+			if(!Gathered) {
+				UE_LOG(CustomizerSubsystem, Log, TEXT("CustomizerSubsystem > RegisterCollectionsInSubsystem"));
+				GatherDefaultCollections();
+			}
+
+			UE_LOG(CustomizerSubsystem, Log, TEXT("CustomizerSubsystem > GatherInterfaces"));
+			GatherInterfaces();
+
+			Initialized = true;
+		}
 	}
 }
 
@@ -31,7 +42,7 @@ void UKBFLCustomizerSubsystem::Initialize(FSubsystemCollectionBase& Collection) 
 
 	UWorld* OuterWorld = GetWorld();
 	//OuterWorld->OnActorsInitialized.AddUObject(this, &UKBFLCustomizerSubsystem::OnActorsInitialized);
-	OuterWorld->OnWorldBeginPlay.AddUObject(this, &UKBFLCustomizerSubsystem::OnWorldBeginPlay);
+	//OuterWorld->OnWorldBeginPlay.AddUObject(this, &UKBFLCustomizerSubsystem::OnWorldBeginPlay);
 	UE_LOG(CustomizerSubsystem, Log, TEXT("Initialize Subsystem"));
 
 	Super::Initialize(Collection);
@@ -57,11 +68,7 @@ void UKBFLCustomizerSubsystem::Deinitialize() {
 	Super::Deinitialize();
 }
 
-void UKBFLCustomizerSubsystem::OnActorsInitialized(const UWorld::FActorsInitializedParams&) {
-	//OnWorldBeginPlay();
-}
-
-void UKBFLCustomizerSubsystem::OnWorldBeginPlay() {
+void UKBFLCustomizerSubsystem::OnWorldBeginPlay(UWorld& InWorld) {
 	AFGGameMode* GameMode = Cast<AFGGameMode>(GetWorld()->GetAuthGameMode());
 	if(!Initialized && !(GameMode != nullptr && GameMode->IsMainMenuGameMode())) {
 		if(!Gathered) {

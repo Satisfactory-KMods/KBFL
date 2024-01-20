@@ -165,7 +165,7 @@ public:
 
 	/** Get All Items that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
-	FORCEINLINE TArray<TSubclassOf<UFGItemDescriptor>> GetAllItems();
+	TArray<TSubclassOf<UFGItemDescriptor>> GetAllItems();
 
 	// END Items
 
@@ -182,7 +182,7 @@ public:
 
 	/** Get All Schematics that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
-	FORCEINLINE TArray<TSubclassOf<UFGSchematic>> GetAllSchematics();
+	TArray<TSubclassOf<UFGSchematic>> GetAllSchematics();
 
 	// END Schematics
 
@@ -199,7 +199,7 @@ public:
 
 	/** Get All Recipes that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
-	FORCEINLINE TArray<TSubclassOf<UFGRecipe>> GetAllRecipes();
+	TArray<TSubclassOf<UFGRecipe>> GetAllRecipes();
 
 	// END Recipes
 
@@ -211,7 +211,7 @@ public:
 
 	/** Get All Buildables that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
-	FORCEINLINE TArray<TSubclassOf<AFGBuildable>> GetAllBuildable();
+	TArray<TSubclassOf<AFGBuildable>> GetAllBuildable();
 
 	// END Buildables
 

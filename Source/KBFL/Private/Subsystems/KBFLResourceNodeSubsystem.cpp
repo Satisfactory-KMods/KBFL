@@ -29,8 +29,8 @@ void UKBFLResourceNodeSubsystem::Initialize(FSubsystemCollectionBase& Collection
 		return;
 	}
 
-	UWorld* OuterWorld = GetWorld();
-	OuterWorld->OnWorldBeginPlay.AddUObject(this, &UKBFLResourceNodeSubsystem::OnWorldBeginPlay);
+	//UWorld* OuterWorld = GetWorld();
+	//OuterWorld->OnWorldBeginPlay.AddUObject(this, &UKBFLResourceNodeSubsystem::OnWorldBeginPlay);
 	UE_LOG(ResourceNodeSubsystem, Log, TEXT("Initialize Subsystem"));
 
 	mCalledModules.Empty();
@@ -50,7 +50,8 @@ void UKBFLResourceNodeSubsystem::Deinitialize() {
 	Super::Deinitialize();
 }
 
-void UKBFLResourceNodeSubsystem::OnWorldBeginPlay() {
+void UKBFLResourceNodeSubsystem::OnWorldBeginPlay(UWorld& InWorld) {
+	UE_LOG(ResourceNodeSubsystem, Log, TEXT("Initialize Subsystem"));
 	if(!Initialized) {
 		UE_LOG(ResourceNodeSubsystem, Log, TEXT("ResourceNodeSubsystem > GatherInterfaces"));
 		GatherInterfaces();

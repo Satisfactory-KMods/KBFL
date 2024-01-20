@@ -30,7 +30,7 @@ class KBFL_API UKBFLResourceNodeSubsystem: public UWorldSubsystem {
 	virtual void Deinitialize() override;
 
 	public:
-		void OnWorldBeginPlay();
+		virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 		void SpawnSubLevel();
 		void GetAllSubLevel(TSet<TSubclassOf<class UKBFLSubLevelSpawning>>& Out) const;

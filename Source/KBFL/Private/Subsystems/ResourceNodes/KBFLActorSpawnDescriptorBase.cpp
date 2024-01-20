@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Subsystems/ResourceNodes/KBFLActorSpawnDescriptorBase.h"
 
+#include "Kismet/KismetSystemLibrary.h"
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
 #include "Subsystems/ResourceNodes/ResourceNodesLogging.h"
 
@@ -41,7 +42,7 @@ void UKBFLActorSpawnDescriptorBase::BeginSpawning() {
 
 	// free for garbage collector 
 	this->RemoveFromRoot();
-	this->MarkPendingKill();
+	this->MarkAsGarbage();
 }
 
 void UKBFLActorSpawnDescriptorBase::ForeachLocations(TArray<AActor*>& ActorArray) {
