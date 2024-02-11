@@ -19,7 +19,7 @@ DECLARE_LOG_CATEGORY_EXTERN( LogKBFLModule, Log, All );
 DEFINE_LOG_CATEGORY( LogKBFLModule );
 
 void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot ) {
-	if( GameState ) {
+	if( IsValid(GameState) && IsValid(GameState->GetOuter()) ) {
 		if( GameState->GetWorld( ) ) {
 			if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld( )->GetSubsystem< UKBFLCustomizerSubsystem >( ) ) ) {
 				if( !CustomizerSubsystem->Initialized ) {
@@ -27,15 +27,6 @@ void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )
 				}
 			}
 		}
-	}
-
-	if( !GameState ) {
-		UE_LOG( LogKBFLModule, Log, TEXT("Cancel function GetBuildingColorDataForSlot because GameState is currently INVALID!") );
-		scope.Override( FFactoryCustomizationColorSlot( ) );
-	}
-	else if( !GameState->GetWorld( ) ) {
-		UE_LOG( LogKBFLModule, Log, TEXT("Cancel function GetBuildingColorDataForSlot because GameState->GetWorld() is currently INVALID!") );
-		scope.Override( FFactoryCustomizationColorSlot( ) );
 	}
 }
 
