@@ -28,15 +28,6 @@ void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )
 			}
 		}
 	}
-
-	if( !GameState ) {
-		UE_LOG( LogKBFLModule, Log, TEXT("Cancel function GetBuildingColorDataForSlot because GameState is currently INVALID!") );
-		scope.Override( FFactoryCustomizationColorSlot( ) );
-	}
-	else if( !GameState->GetWorld( ) ) {
-		UE_LOG( LogKBFLModule, Log, TEXT("Cancel function GetBuildingColorDataForSlot because GameState->GetWorld() is currently INVALID!") );
-		scope.Override( FFactoryCustomizationColorSlot( ) );
-	}
 }
 
 
