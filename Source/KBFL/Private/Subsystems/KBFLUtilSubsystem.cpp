@@ -36,12 +36,12 @@ void AKBFLUtilSubsystem::BeginPlay( ) {
 
 	mTimeSubsystem = AFGTimeOfDaySubsystem::Get( this );
 	mPlayerController = UKBFL_Player::GetFGController( this );
-	if( mPlayerController ) {
+	if( IsValid( mPlayerController ) ) {
 		mPlayerController->EnableCheats( );
-	}
 
-	if( HasAuthority( ) ) {
-		mCheatManager = Cast< UFGCheatManager >( mPlayerController->CheatManager );
+		if( HasAuthority( ) && IsValid( mPlayerController->CheatManager ) ) {
+			mCheatManager = Cast< UFGCheatManager >( mPlayerController->CheatManager );
+		}
 	}
 }
 
