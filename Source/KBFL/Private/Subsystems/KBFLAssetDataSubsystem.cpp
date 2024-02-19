@@ -66,6 +66,12 @@ void UKBFLAssetDataSubsystem::Deinitialize()
 	mAllFoundedCDOHelpers.Empty();
 	mAllFoundedResourceDescriptors.Empty();
 	mAllFoundedObjects.Empty();
+
+	for (TTuple<FName, FKBFLAssetData> directoryMapping : mDirectoryMappings)
+	{
+		directoryMapping.Value.cleanup();
+	}
+
 	mDirectoryMappings.Empty();
 
 	bWasInit = false;

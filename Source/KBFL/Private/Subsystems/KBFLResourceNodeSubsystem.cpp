@@ -65,12 +65,13 @@ void UKBFLResourceNodeSubsystem::SpawnSubLevel() {
 	GetAllSubLevel(SpawnerClasses);
 
 	for(TSubclassOf<UKBFLSubLevelSpawning> SpawnerClass: SpawnerClasses) {
-		if(UKBFLSubLevelSpawning* Default = SpawnerClass.GetDefaultObject()) {
-			if(!Default->mNeedAuth || GetWorld()->GetAuthGameMode()) {
-				if(Default->ExecuteAllowed()) {
-					Default->mSubsystem = this;
-					Default->InitSpawning();
-					mCalledSubLevelSpawning.Add(Default);
+		UKBFLSubLevelSpawning* Spawner = NewObject<UKBFLSubLevelSpawning>(this, SpawnerClass);
+		if(Spawner) {
+			if(!Spawner->mNeedAuth || GetWorld()->GetAuthGameMode()) {
+				if(Spawner->ExecuteAllowed()) {
+					Spawner->mSubsystem = this;
+					Spawner->InitSpawning();
+					mCalledSubLevelSpawning.Add(Spawner);
 				}
 			}
 		}
@@ -107,11 +108,11 @@ void UKBFLResourceNodeSubsystem::BeginSpawningForModule(UWorldModule* Module) {
 		for(TSubclassOf<UKBFLActorSpawnDescriptorBase> Desc: ActorSpawner) {
 			if(Desc) {
 				UE_LOG(ResourceNodeSubsystem, Log, TEXT("Call UKBFLActorSpawnDescriptorBase: %s"), *Desc->GetName());
-				UKBFLActorSpawnDescriptorBase* Default = Desc.GetDefaultObject();
-				if(!Default->mNeedAuth || GetWorld()->GetAuthGameMode()) {
-					if(Default->ExecuteAllowed()) {
-						Default->mSubsystem = this;
-						Default->BeginSpawning();
+				UKBFLActorSpawnDescriptorBase* Spawner = NewObject<UKBFLActorSpawnDescriptorBase>(this, Desc);
+				if(!Spawner->mNeedAuth || GetWorld()->GetAuthGameMode()) {
+					if(Spawner->ExecuteAllowed()) {
+						Spawner->mSubsystem = this;
+						Spawner->BeginSpawning();
 					}
 				} else {
 					UE_LOG(ResourceNodeSubsystem, Log, TEXT("Skip UKBFLActorSpawnDescriptorBase: %s because no auth!"), *Desc->GetName());
