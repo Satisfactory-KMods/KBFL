@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 2,
-	"VersionName": "2.2.5",
-	"SemVersion": "2.2.5",
+	"VersionName": "2.2.6",
+	"SemVersion": "2.2.6",
 	"FriendlyName": "KBFL",
 	"Description": "Lib for Kyris Mods",
 	"Category": "Modding",
