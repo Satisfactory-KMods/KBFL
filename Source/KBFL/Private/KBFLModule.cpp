@@ -18,19 +18,17 @@ DECLARE_LOG_CATEGORY_EXTERN( LogKBFLModule, Log, All );
 
 DEFINE_LOG_CATEGORY( LogKBFLModule );
 
-#if !PLATFORM_LINUX
-void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot )
-		if( IsValid(GameState) && IsValid(GameState->GetOuter()) ) {
-			if( GameState->GetWorld( ) ) {
-				if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld( )->GetSubsystem< UKBFLCustomizerSubsystem >( ) ) ) {
-					if( !CustomizerSubsystem->Initialized ) {
-						CustomizerSubsystem->GatherInterfaces( );
-					}
+void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot ) {
+	if( IsValid(GameState) && IsValid(GameState->GetOuter()) ) {
+		if( GameState->GetWorld( ) ) {
+			if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld( )->GetSubsystem< UKBFLCustomizerSubsystem >( ) ) ) {
+				if( !CustomizerSubsystem->Initialized ) {
+					CustomizerSubsystem->GatherInterfaces( );
 				}
 			}
 		}
+	}
 }
-#endif
 
 
 void PlayerAdjustDamage( CallScope< float( * )( AFGCharacterPlayer*, AActor*, float, const UDamageType*, AController*, AActor* ) >& Scope, AFGCharacterPlayer* Player, AActor* damagedActor, float damageAmount, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser ) {
