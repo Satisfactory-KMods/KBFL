@@ -18,17 +18,19 @@ DECLARE_LOG_CATEGORY_EXTERN( LogKBFLModule, Log, All );
 
 DEFINE_LOG_CATEGORY( LogKBFLModule );
 
-void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot ) {
-	if( IsValid(GameState) && IsValid(GameState->GetOuter()) ) {
-		if( GameState->GetWorld( ) ) {
-			if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld( )->GetSubsystem< UKBFLCustomizerSubsystem >( ) ) ) {
-				if( !CustomizerSubsystem->Initialized ) {
-					CustomizerSubsystem->GatherInterfaces( );
+#if !PLATFORM_LINUX
+void GetBuildingColorDataForSlot( CallScope< FFactoryCustomizationColorSlot( * )( AFGGameState*, uint8 ) >& scope, AFGGameState* GameState, uint8 slot )
+		if( IsValid(GameState) && IsValid(GameState->GetOuter()) ) {
+			if( GameState->GetWorld( ) ) {
+				if( UKBFLCustomizerSubsystem* CustomizerSubsystem = Cast< UKBFLCustomizerSubsystem >( GameState->GetWorld( )->GetSubsystem< UKBFLCustomizerSubsystem >( ) ) ) {
+					if( !CustomizerSubsystem->Initialized ) {
+						CustomizerSubsystem->GatherInterfaces( );
+					}
 				}
 			}
 		}
-	}
 }
+#endif
 
 
 void PlayerAdjustDamage( CallScope< float( * )( AFGCharacterPlayer*, AActor*, float, const UDamageType*, AController*, AActor* ) >& Scope, AFGCharacterPlayer* Player, AActor* damagedActor, float damageAmount, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser ) {
@@ -75,7 +77,9 @@ void FKBFLModule::StartupModule( ) {
 
 	//SUBSCRIBE_METHOD( AFGBuildableWire::UpdateWireMesh, [&](auto& Call, AFGBuildableWire* Wire) { if(ensure(Wire) && ensure(Wire->mWireMesh)) { Call(Wire); Wire->mWireMesh->SetCustomPrimitiveDataFloat(0, Wire->GetLength() / 100); Wire->mWireMesh->SetCustomPrimitiveDataFloat(1, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(2, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(3, -48.f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(4, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(5, 0.703125); Wire->mWireMesh->SetCustomPrimitiveDataFloat(5, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(6, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(7, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(8, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(9, 0.0f); Wire->mWireMesh->SetCustomPrimitiveDataFloat(10, 0.0f); } } )
 
-	SUBSCRIBE_METHOD( AFGGameState::GetBuildingColorDataForSlot, &GetBuildingColorDataForSlot );
+	#if !PLATFORM_LINUX
+		SUBSCRIBE_METHOD( AFGGameState::GetBuildingColorDataForSlot, &GetBuildingColorDataForSlot );
+	#endif
 
 	SUBSCRIBE_METHOD( UWorldModuleManager::DispatchLifecycleEvent, [](auto& Call, UWorldModuleManager* Manager, ELifecyclePhase Phase) { if(Manager->RootModuleList.Num() > 0) { UKBFLContentCDOHelperSubsystem* CDOHelperSubsystem = Manager->GetWorld()->GetGameInstance()->GetSubsystem<UKBFLContentCDOHelperSubsystem>(); UKBFLCustomizerSubsystem* CustomizerSubsystem = Manager->GetWorld()->GetSubsystem<UKBFLCustomizerSubsystem>(); UKBFLResourceNodeSubsystem* NodeSubsystem = Manager->GetWorld()->GetSubsystem<UKBFLResourceNodeSubsystem>();
 
