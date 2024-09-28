@@ -3,14 +3,24 @@
 
 #include "C++/KBFLCppActorHelper.h"
 
-bool UKBFLCppActorHelper::ActorsInSphere(UObject* WorldContext, UClass* ActorClass, FVector Location, TArray<AActor*> Ignore, TArray<AActor*>& OutActors, float Range) {
-	const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes = TArray<TEnumAsByte<EObjectTypeQuery>>{ObjectTypeQuery1, ObjectTypeQuery2};
+#include "Kismet/KismetSystemLibrary.h"
 
-	return UKismetSystemLibrary::SphereOverlapActors(WorldContext->GetWorld(), Location, Range, ObjectTypes, ActorClass, Ignore, OutActors);
+bool UKBFLCppActorHelper::ActorsInSphere(UObject* WorldContext, UClass* ActorClass, FVector Location,
+                                         TArray<AActor*> Ignore, TArray<AActor*>& OutActors, float Range)
+{
+	const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes = TArray<TEnumAsByte<EObjectTypeQuery>>{
+		ObjectTypeQuery1, ObjectTypeQuery2
+	};
+
+	return UKismetSystemLibrary::SphereOverlapActors(WorldContext->GetWorld(), Location, Range, ObjectTypes, ActorClass,
+	                                                 Ignore, OutActors);
 }
 
-bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* ActorSource, AActor* ActorTarget, float ZOffsetSource, float ZOffsetTarget) {
-	if(ActorSource && ActorTarget) {
+bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* ActorSource, AActor* ActorTarget,
+                                             float ZOffsetSource, float ZOffsetTarget)
+{
+	if (ActorSource && ActorTarget)
+	{
 		FVector Source = ActorSource->GetActorLocation();
 		FVector Target = ActorTarget->GetActorLocation();
 		Source.Z += ZOffsetSource;
@@ -27,8 +37,12 @@ bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* Acto
 	return false;
 }
 
-bool UKBFLCppActorHelper::HasFreeLineToComponent(UObject* WorldContext, USceneComponent* ComponentSource, USceneComponent* ComponentTarget, float ZOffsetSource, float ZOffsetTarget) {
-	if(ComponentSource && ComponentTarget) {
+bool UKBFLCppActorHelper::HasFreeLineToComponent(UObject* WorldContext, USceneComponent* ComponentSource,
+                                                 USceneComponent* ComponentTarget, float ZOffsetSource,
+                                                 float ZOffsetTarget)
+{
+	if (ComponentSource && ComponentTarget)
+	{
 		FVector Source = ComponentSource->GetComponentLocation();
 		FVector Target = ComponentSource->GetComponentLocation();
 		Source.Z += ZOffsetSource;

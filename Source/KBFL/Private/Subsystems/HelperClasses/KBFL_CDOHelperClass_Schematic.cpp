@@ -9,35 +9,47 @@ DECLARE_LOG_CATEGORY_EXTERN(CDOHelperSchematicLog, Log, All)
 
 DEFINE_LOG_CATEGORY(CDOHelperSchematicLog)
 
-void UKBFL_CDOHelperClass_Schematic::DoCDO() {
+void UKBFL_CDOHelperClass_Schematic::DoCDO()
+{
 	UE_LOG(CDOHelperSchematicLog, Log, TEXT("CDOHelperSchematic > Called %s"), *this->GetName());
-	for(TSubclassOf<UFGSchematic> Class: GetClasses()) {
-		if(UFGSchematic* DefaultObject = Class.GetDefaultObject()) {
+	for (TSubclassOf<UFGSchematic> Class : GetClasses())
+	{
+		if (UFGSchematic* DefaultObject = Class.GetDefaultObject())
+		{
 			//DefaultObject->AddToRoot();
-			UE_LOG(CDOHelperSchematicLog, Log, TEXT("CDOHelperSchematic > DoSchematicCDO > %s"), *DefaultObject->GetName());
-			if(mTypeOverride) {
+			UE_LOG(CDOHelperSchematicLog, Log, TEXT("CDOHelperSchematic > DoSchematicCDO > %s"),
+			       *DefaultObject->GetName());
+			if (mTypeOverride)
+			{
 				DefaultObject->mType = mType;
 			}
 
-			if(mDisplayNameOverride) {
+			if (mDisplayNameOverride)
+			{
 				DefaultObject->mDisplayName = mDisplayName;
 			}
 
-			if(mDescriptionOverride) {
+			if (mDescriptionOverride)
+			{
 				DefaultObject->mDescription = mDescription;
 			}
 
-			if(mSchematicCategoryOverride) {
-				if(IsValid(mSchematicCategory)) {
+			if (mSchematicCategoryOverride)
+			{
+				if (IsValid(mSchematicCategory))
+				{
 					//mSchematicCategory->AddToRoot();
 				}
 
 				DefaultObject->mSchematicCategory = mSchematicCategory;
 			}
 
-			if(mSubCategoriesOverride) {
-				for(UClass* SubCategory: mSubCategories) {
-					if(IsValid(SubCategory)) {
+			if (mSubCategoriesOverride)
+			{
+				for (UClass* SubCategory : mSubCategories)
+				{
+					if (IsValid(SubCategory))
+					{
 						//SubCategory->AddToRoot();
 					}
 				}
@@ -45,29 +57,37 @@ void UKBFL_CDOHelperClass_Schematic::DoCDO() {
 				DefaultObject->mSubCategories = mSubCategories;
 			}
 
-			if(mMenuPriorityOverride) {
+			if (mMenuPriorityOverride)
+			{
 				DefaultObject->mMenuPriority = mMenuPriority;
 			}
 
-			if(mTechTierOverride) {
+			if (mTechTierOverride)
+			{
 				DefaultObject->mTechTier = mTechTier;
 			}
 
-			if(mCostOverride) {
+			if (mCostOverride)
+			{
 				DefaultObject->mCost = mCost;
 			}
 
-			if(mTimeToCompleteOverride) {
+			if (mTimeToCompleteOverride)
+			{
 				DefaultObject->mTimeToComplete = mTimeToComplete;
 			}
 
-			if(mRelevantShopSchematicsOverride) {
+			if (mRelevantShopSchematicsOverride)
+			{
 				DefaultObject->mRelevantShopSchematics = mRelevantShopSchematics;
 			}
 
-			if(mUnlocksOverride) {
-				for(UFGUnlock* Unlock: mUnlocks) {
-					if(IsValid(Unlock)) {
+			if (mUnlocksOverride)
+			{
+				for (UFGUnlock* Unlock : mUnlocks)
+				{
+					if (IsValid(Unlock))
+					{
 						//Unlock->AddToRoot();
 					}
 				}
@@ -75,19 +95,23 @@ void UKBFL_CDOHelperClass_Schematic::DoCDO() {
 				DefaultObject->mUnlocks = mUnlocks;
 			}
 
-			if(mSchematicIconOverride) {
+			if (mSchematicIconOverride)
+			{
 				DefaultObject->mSchematicIcon = mSchematicIcon;
 			}
 
-			if(mSmallSchematicIconOverride) {
-				if(IsValid(mSmallSchematicIcon)) {
+			if (mSmallSchematicIconOverride)
+			{
+				if (IsValid(mSmallSchematicIcon))
+				{
 					//mSmallSchematicIcon->AddToRoot();
 				}
 
 				DefaultObject->mSmallSchematicIcon = mSmallSchematicIcon;
 			}
 
-			if(mSchematicDependenciesOverride) {
+			if (mSchematicDependenciesOverride)
+			{
 				/*for ( UFGAvailabilityDependency* Dependency : mSchematicDependencies)
 				{
 					if(IsValid(Dependency))
@@ -99,11 +123,13 @@ void UKBFL_CDOHelperClass_Schematic::DoCDO() {
 				DefaultObject->mSchematicDependencies = mSchematicDependencies;
 			}
 
-			if(mDependenciesBlocksSchematicAccessOverride) {
+			if (mDependenciesBlocksSchematicAccessOverride)
+			{
 				DefaultObject->mDependenciesBlocksSchematicAccess = mDependenciesBlocksSchematicAccess;
 			}
 
-			if(mRelevantEventsOverride) {
+			if (mRelevantEventsOverride)
+			{
 				DefaultObject->mRelevantEvents = mRelevantEvents;
 			}
 		}
@@ -112,11 +138,14 @@ void UKBFL_CDOHelperClass_Schematic::DoCDO() {
 	Super::DoCDO();
 }
 
-TArray<UClass*> UKBFL_CDOHelperClass_Schematic::GetClasses() {
+TArray<UClass*> UKBFL_CDOHelperClass_Schematic::GetClasses()
+{
 	TArray<UClass*> Re;
 
-	for(TSoftClassPtr<UFGSchematic> Class: mSchematics) {
-		if(IsValidSoftClass(Class)) {
+	for (TSoftClassPtr<UFGSchematic> Class : mSchematics)
+	{
+		if (IsValidSoftClass(Class))
+		{
 			Re.Add(Class.LoadSynchronous());
 		}
 	}

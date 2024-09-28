@@ -14,7 +14,6 @@ struct FKBFLAssetData
 {
 	GENERATED_BODY()
 
-public:
 	void cleanup()
 	{
 		mAllFoundedBuildables.Empty();
@@ -273,42 +272,47 @@ public:
 
 	inline static bool bWasInit = false;
 
+	/** Return the Index where the ItemClass allowed on Slot in Inventory */
+	template <class T>
+	static bool GetAllClassesOfSubclass(TArray<FAssetData> AllAssets, TSet<TSubclassOf<T>>& OutClasses);
+
+
 	UPROPERTY()
 	TSet<TSubclassOf<UKBFLSubLevelSpawning>> mAllSubLevelSpawningClasses;
 
 private:
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedSchematics;
+	TSet<TSubclassOf<UFGSchematic>> mAllFoundedSchematics;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedRecipes;
+	TSet<TSubclassOf<UFGRecipe>> mAllFoundedRecipes;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedItems;
+	TSet<TSubclassOf<UFGItemDescriptor>> mAllFoundedItems;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedBuildables;
+	TSet<TSubclassOf<AFGBuildable>> mAllFoundedBuildables;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedDriveablePawns;
+	TSet<TSubclassOf<AFGDriveablePawn>> mAllFoundedDriveablePawns;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedHolograms;
+	TSet<TSubclassOf<AFGHologram>> mAllFoundedHolograms;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedModModules;
+	TSet<TSubclassOf<UModModule>> mAllFoundedModModules;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedCDOHelpers;
+	TSet<TSubclassOf<UKBFL_CDOHelperClass_Base>> mAllFoundedCDOHelpers;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedResourceDescriptors;
+	TSet<TSubclassOf<UFGResourceDescriptor>> mAllFoundedResourceDescriptors;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundedObjects;
+	TSet<TSubclassOf<UObject>> mAllFoundedObjects;
 
 	UPROPERTY()
-	TSet<UClass*> mAllFoundResearchTrees;
+	TSet<TSubclassOf<UFGResearchTree>> mAllFoundResearchTrees;
 
 	UPROPERTY()
 	TMap<FName, FKBFLAssetData> mDirectoryMappings;
@@ -343,4 +347,46 @@ void UKBFLAssetDataSubsystem::GetObjectsOfChilds_Internal(const TArray<UClass*> 
 			}
 		}
 	}
+}
+
+template <class T>
+bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAssets, TSet<TSubclassOf<T>>& OutClasses)
+{
+	for (const FAssetData& AssetData : AllAssets)
+	{
+		//Make sure found asset is a blueprint
+		if (AssetData.AssetClassPath != FTopLevelAssetPath(UBlueprint::StaticClass()))
+		{
+			continue;
+		}
+
+		//Retrieve GeneratedClass tag containing a text path to generated class
+		FString GeneratedClassExportedPath;
+		if (!AssetData.GetTagValue(FBlueprintTags::GeneratedClassPath, GeneratedClassExportedPath))
+		{
+			continue;
+		}
+
+		//Make sure export path represents a valid path and convert it to pure objectt path
+		FString GeneratedClassPath;
+		if (!FPackageName::ParseExportTextPath(GeneratedClassExportedPath, nullptr, &GeneratedClassPath))
+		{
+			continue;
+		}
+
+		//Load UBlueprintGeneratedClass for provided object and make sure it has been loaded
+		UClass* ClassObject = LoadObject<UClass>(nullptr, *GeneratedClassPath);
+		if (ClassObject == nullptr)
+		{
+			continue;
+		}
+
+		//Verify that generated class is actually a child of the base class, and then add it to the list
+		if (ClassObject->IsChildOf(T::StaticClass()))
+		{
+			OutClasses.Add(ClassObject);
+		}
+	}
+
+	return !OutClasses.IsEmpty();
 }

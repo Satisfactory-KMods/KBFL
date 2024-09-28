@@ -6,7 +6,6 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetRegistry/IAssetRegistry.h"
 #include "BFL/KBFL_Asset.h"
-#include "BFL/KBFL_Player.h"
 #include "Buildables/FGBuildableWire.h"
 #include "Hologram/FGHologram.h"
 
@@ -152,186 +151,58 @@ void UKBFLAssetDataSubsystem::InitAssetFinder()
 
 	if (AssetRegistry.GetAssetsByPaths(paths, AssetData, true))
 	{
-		FKBFLAssetData AssetDataStruct = FKBFLAssetData();
-		for (FAssetData Asset : AssetData)
+		GetAllClassesOfSubclass(AssetData, mAllSubLevelSpawningClasses);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedSchematics);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedRecipes);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedItems);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedBuildables);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedDriveablePawns);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedHolograms);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedModModules);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedCDOHelpers);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedResourceDescriptors);
+		GetAllClassesOfSubclass(AssetData, mAllFoundedObjects);
+		GetAllClassesOfSubclass(AssetData, mAllFoundResearchTrees);
+
+		for (UClass* data : mAllFoundedSchematics)
 		{
-			// ONLY READ BP!
-			if (!Asset.AssetClassPath.GetAssetName().ToString().Contains("BlueprintGeneratedClass")
-				/*&& !Asset.AssetClassPath.GetAssetName( ).ToString( ).Contains( "Blueprint" )*/)
-			{
-				continue;
-			}
-			/**
-			Asset.PrintAssetData( );
-			[2023.09.23-20.51.49:799][  0]LogAssetData:     FAssetData for /Game/FactoryGame/-Shared/PooledComponents/BPC_PoolableLightShaft_CeilingLight_01.BPC_PoolableLightShaft_CeilingLight_01_C
-			[2023.09.23-20.51.49:799][  0]LogAssetData:     =============================
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         PackageName: /Game/FactoryGame/-Shared/PooledComponents/BPC_PoolableLightShaft_CeilingLight_01
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         PackagePath: /Game/FactoryGame/-Shared/PooledComponents
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         AssetName: BPC_PoolableLightShaft_CeilingLight_01_C
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         AssetClassPath: /Script/Engine.BlueprintGeneratedClass
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         TagsAndValues: 4
-			[2023.09.23-20.51.49:799][  0]LogAssetData:             ParentClass : /Script/CoreUObject.Class'/Script/FactoryGame.FGPoolableProxyComponentBase'
-			[2023.09.23-20.51.49:799][  0]LogAssetData:             NativeParentClass : /Script/CoreUObject.Class'/Script/FactoryGame.FGPoolableProxyComponentBase'
-			[2023.09.23-20.51.49:799][  0]LogAssetData:             ClassFlags : 14946308
-			[2023.09.23-20.51.49:799][  0]LogAssetData:             NumReplicatedProperties : 0
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         ChunkIDs: 0
-			[2023.09.23-20.51.49:799][  0]LogAssetData:         PackageFlags: -2147474944
-			*/
-			//UE_LOG( AssetDataSubsystemLog, Log, TEXT("GetAssetsByPath: %s, %s"), *Asset.AssetClassPath.GetAssetName( ).ToString(), *Asset.PackagePath.ToString() );
-
-			TSubclassOf<UFGSchematic> Schematic;
-			TSubclassOf<UFGRecipe> Recipe;
-			TSubclassOf<UFGItemDescriptor> Item;
-			TSubclassOf<AFGBuildable> Buildable;
-			TSubclassOf<AFGDriveablePawn> DriveablePawn;
-			TSubclassOf<AFGHologram> Holograms;
-			TSubclassOf<UModModule> ModModules;
-			TSubclassOf<UKBFL_CDOHelperClass_Base> CDOHelpers;
-			TSubclassOf<UKBFLActorSpawnDescriptorBase> ResourceDescriptors;
-			TSubclassOf<UKBFLSubLevelSpawning> SubLevelSpawning;
-			TSubclassOf<UFGResearchTree> ResearchTree;
-
-			if (Local_FilterAsset(Asset))
-			{
-				// SubLevelSpawning
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, SubLevelSpawning))
-				{
-					if (SubLevelSpawning)
-					{
-						mAllSubLevelSpawningClasses.Add(SubLevelSpawning);
-						mAssetClassMap.Add(SubLevelSpawning, Asset);
-					}
-				}
-
-				// ResearchTrees
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, ResearchTree))
-				{
-					if (ResearchTree)
-					{
-						mAllFoundResearchTrees.Add(ResearchTree);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Hologram To Subsystem > %s"), *Holograms->GetName());
-						mAssetClassMap.Add(ResearchTree, Asset);
-						setMapClass(ResearchTree, 10);
-					}
-				}
-
-				// Schematic
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, Holograms))
-				{
-					if (Holograms)
-					{
-						mAllFoundedHolograms.Add(Holograms);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Hologram To Subsystem > %s"), *Holograms->GetName());
-						mAssetClassMap.Add(Holograms, Asset);
-						setMapClass(Holograms, 5);
-					}
-				}
-
-				// ModModules
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, ModModules))
-				{
-					if (ModModules)
-					{
-						mAllFoundedModModules.Add(ModModules);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add ModModule To Subsystem > %s"), *ModModules->GetName());
-						mAssetClassMap.Add(ModModules, Asset);
-						setMapClass(ModModules, 6);
-					}
-				}
-
-				// CDOHelpers
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, CDOHelpers))
-				{
-					if (CDOHelpers)
-					{
-						mAllFoundedCDOHelpers.Add(CDOHelpers);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add CDOHelper To Subsystem > %s"), *CDOHelpers->GetName());
-						mAssetClassMap.Add(CDOHelpers, Asset);
-						setMapClass(CDOHelpers, 7);
-					}
-				}
-
-				// ResourceDescriptors
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, ResourceDescriptors))
-				{
-					if (ResourceDescriptors)
-					{
-						mAllFoundedResourceDescriptors.Add(ResourceDescriptors);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add ResourceDescriptor To Subsystem > %s"), *ResourceDescriptors->GetName());
-						mAssetClassMap.Add(ResourceDescriptors, Asset);
-						setMapClass(ResourceDescriptors, 8);
-					}
-				}
-
-				// Schematic
-				if (UKBFL_Asset::GetSubclassFromAsset(Asset, Schematic))
-				{
-					if (Schematic)
-					{
-						mAllFoundedSchematics.Add(Schematic);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Schematic To Subsystem > %s"), *Schematic->GetName());
-						mAssetClassMap.Add(Schematic, Asset);
-						setMapClass(Schematic, 0);
-					}
-				}
-
-				// Recipe
-				else if (UKBFL_Asset::GetSubclassFromAsset(Asset, Recipe))
-				{
-					if (Recipe)
-					{
-						mAllFoundedRecipes.Add(Recipe);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Recipe To Subsystem > %s"), *Recipe->GetName());
-						mAssetClassMap.Add(Recipe, Asset);
-						setMapClass(Recipe, 1);
-					}
-				}
-
-				// Item
-				else if (UKBFL_Asset::GetSubclassFromAsset(Asset, Item))
-				{
-					if (Item)
-					{
-						mAllFoundedItems.Add(Item);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Item To Subsystem > %s"), *Item->GetName());
-						mAssetClassMap.Add(Item, Asset);
-						setMapClass(Item, 2);
-					}
-				}
-
-				// Buildable
-				else if (UKBFL_Asset::GetSubclassFromAsset(Asset, Buildable))
-				{
-					if (Buildable)
-					{
-						mAllFoundedBuildables.Add(Buildable);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Buildable To Subsystem > %s"), *Buildable->GetName());
-						mAssetClassMap.Add(Buildable, Asset);
-						setMapClass(Buildable, 3);
-					}
-				}
-
-				// DriveablePawn
-				else if (UKBFL_Asset::GetSubclassFromAsset(Asset, DriveablePawn))
-				{
-					if (DriveablePawn)
-					{
-						mAllFoundedDriveablePawns.Add(DriveablePawn);
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add DriveablePawn To Subsystem > %s"), *DriveablePawn->GetName());
-						mAssetClassMap.Add(DriveablePawn, Asset);
-						setMapClass(DriveablePawn, 4);
-					}
-				}
-
-				// All
-				/*if( UKBFL_Asset::GetSubclassFromAsset( Asset, Object ) ) {
-					if( Object ) {
-						mAllFoundedObjects.Add( Object );
-						//UE_LOG(AssetDataSubsystemLog, Log, TEXT("Add Object To Subsystem > %s"), *Object->GetName());
-						mAssetClassMap.Add( Object, Asset );
-					}
-				}*/
-			}
+			setMapClass(data, 0);
+		}
+		for (UClass* data : mAllFoundedRecipes)
+		{
+			setMapClass(data, 1);
+		}
+		for (UClass* data : mAllFoundedItems)
+		{
+			setMapClass(data, 2);
+		}
+		for (UClass* data : mAllFoundedBuildables)
+		{
+			setMapClass(data, 3);
+		}
+		for (UClass* data : mAllFoundedDriveablePawns)
+		{
+			setMapClass(data, 4);
+		}
+		for (UClass* data : mAllFoundedSchematics)
+		{
+			setMapClass(data, 5);
+		}
+		for (UClass* data : mAllFoundedModModules)
+		{
+			setMapClass(data, 6);
+		}
+		for (UClass* data : mAllFoundedCDOHelpers)
+		{
+			setMapClass(data, 7);
+		}
+		for (UClass* data : mAllFoundedResourceDescriptors)
+		{
+			setMapClass(data, 8);
+		}
+		for (UClass* data : mAllFoundResearchTrees)
+		{
+			setMapClass(data, 10);
 		}
 	}
 	else UE_LOG(AssetDataSubsystemLog, Error, TEXT("FAIL TO FIND ASSET PATH"));

@@ -5,72 +5,92 @@
 #include "CoreMinimal.h"
 //#include "FunctionalStrucs.generated.h"
 
-template<typename T>
+template <typename T>
 USTRUCT()
-struct FSortedComponentDistanceArray {
-	FSortedComponentDistanceArray() {
+struct FSortedComponentDistanceArray
+{
+	FSortedComponentDistanceArray()
+	{
 	};
 
-	FSortedComponentDistanceArray(T* RefObject) {
+	FSortedComponentDistanceArray(T* RefObject)
+	{
 		SetSortRef(RefObject);
 	};
 
 	/** Set our ref for sorting */
-	void SetSortRef(T* Object) {
-		if(Object) {
+	void SetSortRef(T* Object)
+	{
+		if (Object)
+		{
 			mSortRef = Object;
 		}
 	}
 
 	/** Sorting Functions */
-	void Sort() {
-		if(mSortRef.IsValid()) {
+	void Sort()
+	{
+		if (mSortRef.IsValid())
+		{
 			mObjects = SortByTempRef(mSortRef);
 		}
 	}
 
 	/** Getter Functions */
-	uint64 Num() const {
+	uint64 Num() const
+	{
 		return mObjects.Num();
 	}
 
-	TArray<TWeakObjectPtr<T>> GetAllConst() const {
+	TArray<TWeakObjectPtr<T>> GetAllConst() const
+	{
 		return mObjects;
 	}
 
-	void SortArrayByLocation(FVector LocationRef) {
+	void SortArrayByLocation(FVector LocationRef)
+	{
 		mObjects = SortByLocationRef(LocationRef);
 	}
 
 	/** Note: Get the last sort state! */
-	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true) {
-		if(Sorted) {
+	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true)
+	{
+		if (Sorted)
+		{
 			Sort();
 		}
 		return mObjects;
 	}
 
-	TArray<TWeakObjectPtr<T>> GetSortedByRef(T* Object) const {
-		if(Object) {
+	TArray<TWeakObjectPtr<T>> GetSortedByRef(T* Object) const
+	{
+		if (Object)
+		{
 			return SortByTempRef(Object);
 		}
 		return mObjects;
 	}
 
-	TWeakObjectPtr<T> GetClosedObject() {
+	TWeakObjectPtr<T> GetClosedObject()
+	{
 		return GetClosedObjectWithRef(mSortRef.Get());
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRef(T* Object) {
-		if(!Object) {
-			if(mObjects.Num() > 0) {
+	TWeakObjectPtr<T> GetClosedObjectWithRef(T* Object)
+	{
+		if (!Object)
+		{
+			if (mObjects.Num() > 0)
+			{
 				return mObjects[0];
 			}
 		}
 
-		if(Object) {
+		if (Object)
+		{
 			TArray<TWeakObjectPtr<T>> Sorted = SortByTempRef(Object);
-			if(Sorted.Num() > 0) {
+			if (Sorted.Num() > 0)
+			{
 				return Sorted[0];
 			}
 		}
@@ -78,18 +98,24 @@ struct FSortedComponentDistanceArray {
 		return {};
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(T* Object, float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(T* Object, float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObjectWithRef(Object);
-		if(ClosedObject.IsValid() && mSortRef.IsValid()) {
+		if (ClosedObject.IsValid() && mSortRef.IsValid())
+		{
 			T* TargetObject = ClosedObject.Get();
-			if(FVector::Distance(TargetObject->GetComponentLocation(), Object->GetComponentLocation()) <= Distance) {
+			if (FVector::Distance(TargetObject->GetComponentLocation(), Object->GetComponentLocation()) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
 
-		if(!Object) {
-			if(mObjects.Num() > 0) {
-				if(FVector::Distance(mObjects[0]->GetComponentLocation(), Object->GetComponentLocation()) <= Distance) {
+		if (!Object)
+		{
+			if (mObjects.Num() > 0)
+			{
+				if (FVector::Distance(mObjects[0]->GetComponentLocation(), Object->GetComponentLocation()) <= Distance)
+				{
 					return mObjects[0];
 				}
 			}
@@ -98,18 +124,24 @@ struct FSortedComponentDistanceArray {
 		return {};
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithLocRefAndDistance(FVector Location, float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithLocRefAndDistance(FVector Location, float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObject();
-		if(ClosedObject.IsValid()) {
+		if (ClosedObject.IsValid())
+		{
 			T* TargetObject = ClosedObject.Get();
-			if(FVector::Distance(TargetObject->GetComponentLocation(), Location) <= Distance) {
+			if (FVector::Distance(TargetObject->GetComponentLocation(), Location) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
 
-		if(!ClosedObject.IsValid()) {
-			if(mObjects.Num() > 0) {
-				if(FVector::Distance(mObjects[0]->GetComponentLocation(), Location) <= Distance) {
+		if (!ClosedObject.IsValid())
+		{
+			if (mObjects.Num() > 0)
+			{
+				if (FVector::Distance(mObjects[0]->GetComponentLocation(), Location) <= Distance)
+				{
 					return mObjects[0];
 				}
 			}
@@ -118,12 +150,15 @@ struct FSortedComponentDistanceArray {
 		return {};
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObject();
-		if(ClosedObject.IsValid() && mSortRef.IsValid()) {
+		if (ClosedObject.IsValid() && mSortRef.IsValid())
+		{
 			T* RefObject = mSortRef.Get();
 			T* Object = ClosedObject.Get();
-			if(FVector::Distance(RefObject->GetComponentLocation(), Object->GetComponentLocation()) <= Distance) {
+			if (FVector::Distance(RefObject->GetComponentLocation(), Object->GetComponentLocation()) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -131,8 +166,10 @@ struct FSortedComponentDistanceArray {
 		return {};
 	}
 
-	uint64 AddObject(T* Object) {
-		if(Object) {
+	uint64 AddObject(T* Object)
+	{
+		if (Object)
+		{
 			uint64 Return = mObjects.AddUnique(Object);
 			Sort();
 			return Return;
@@ -140,115 +177,144 @@ struct FSortedComponentDistanceArray {
 		return -1;
 	}
 
-	void RemoveObject(T* Object) {
-		if(Object) {
-			if(mObjects.Contains(Object)) {
+	void RemoveObject(T* Object)
+	{
+		if (Object)
+		{
+			if (mObjects.Contains(Object))
+			{
 				mObjects.Remove(Object);
 			}
 		}
 	}
 
-	void Empty() {
+	void Empty()
+	{
 		mObjects.Empty();
 	}
 
-	private:
-		/** Sort the Array */
-		TArray<TWeakObjectPtr<T>> SortByTempRef(TWeakObjectPtr<T> Ref) const {
-			TArray<TWeakObjectPtr<T>> SortArray = mObjects;
-			if(Ref.IsValid() && SortArray.Num() > 1) {
-				SortArray.Sort([Ref](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B) {
-					float ADistance = 0.0f;
-					float BDistance = 0.0f;
+private:
+	/** Sort the Array */
+	TArray<TWeakObjectPtr<T>> SortByTempRef(TWeakObjectPtr<T> Ref) const
+	{
+		TArray<TWeakObjectPtr<T>> SortArray = mObjects;
+		if (Ref.IsValid() && SortArray.Num() > 1)
+		{
+			SortArray.Sort([Ref](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B)
+			{
+				float ADistance = 0.0f;
+				float BDistance = 0.0f;
 
-					if(A.IsValid() && B.IsValid() && Ref.IsValid()) {
-						ADistance = FVector::Distance(A->GetComponentLocation(), Ref->GetComponentLocation());
-						BDistance = FVector::Distance(B->GetComponentLocation(), Ref->GetComponentLocation());
-					}
-					return ADistance < BDistance;
-				});
-			}
-			return SortArray;
+				if (A.IsValid() && B.IsValid() && Ref.IsValid())
+				{
+					ADistance = FVector::Distance(A->GetComponentLocation(), Ref->GetComponentLocation());
+					BDistance = FVector::Distance(B->GetComponentLocation(), Ref->GetComponentLocation());
+				}
+				return ADistance < BDistance;
+			});
 		}
+		return SortArray;
+	}
 
-		/** Sort the Array by Location*/
-		TArray<TWeakObjectPtr<T>> SortByLocationRef(FVector LocationRef) const {
-			TArray<TWeakObjectPtr<T>> SortArray = mObjects;
-			if(SortArray.Num() > 1) {
-				SortArray.Sort([LocationRef](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B) {
-					float ADistance = 0.0f;
-					float BDistance = 0.0f;
+	/** Sort the Array by Location*/
+	TArray<TWeakObjectPtr<T>> SortByLocationRef(FVector LocationRef) const
+	{
+		TArray<TWeakObjectPtr<T>> SortArray = mObjects;
+		if (SortArray.Num() > 1)
+		{
+			SortArray.Sort([LocationRef](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B)
+			{
+				float ADistance = 0.0f;
+				float BDistance = 0.0f;
 
-					if(A.IsValid() && B.IsValid()) {
-						ADistance = FVector::Distance(A->GetComponentLocation(), LocationRef);
-						BDistance = FVector::Distance(B->GetComponentLocation(), LocationRef);
-					}
-					return ADistance < BDistance;
-				});
-			}
-			return SortArray;
+				if (A.IsValid() && B.IsValid())
+				{
+					ADistance = FVector::Distance(A->GetComponentLocation(), LocationRef);
+					BDistance = FVector::Distance(B->GetComponentLocation(), LocationRef);
+				}
+				return ADistance < BDistance;
+			});
 		}
+		return SortArray;
+	}
 
-		TArray<TWeakObjectPtr<T>> mObjects;
-		TWeakObjectPtr<T>         mSortRef;
+	TArray<TWeakObjectPtr<T>> mObjects;
+	TWeakObjectPtr<T> mSortRef;
 };
 
 
-template<typename T>
+template <typename T>
 USTRUCT()
-struct FSortedActorDistanceArray {
-	FSortedActorDistanceArray() {
+struct FSortedActorDistanceArray
+{
+	FSortedActorDistanceArray()
+	{
 	};
 
-	FSortedActorDistanceArray(T* RefObject) {
+	FSortedActorDistanceArray(T* RefObject)
+	{
 		SetSortRef(RefObject);
 	};
 
 	/** Set our ref for sorting */
-	void SetSortRef(T* Object) {
-		if(Object) {
+	void SetSortRef(T* Object)
+	{
+		if (Object)
+		{
 			mSortRef = Object;
 		}
 	}
 
 	/** Sorting Functions */
-	void Sort() {
-		if(mSortRef.IsValid()) {
+	void Sort()
+	{
+		if (mSortRef.IsValid())
+		{
 			mObjects = SortByTempRef(mSortRef);
 		}
 	}
 
 	/** Getter Functions */
-	uint64 Num() const {
+	uint64 Num() const
+	{
 		return mObjects.Num();
 	}
 
-	TArray<TWeakObjectPtr<T>> GetAllConst() const {
+	TArray<TWeakObjectPtr<T>> GetAllConst() const
+	{
 		return mObjects;
 	}
 
 	/** Note: Get the last sort state! */
-	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true) {
-		if(Sorted) {
+	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true)
+	{
+		if (Sorted)
+		{
 			Sort();
 		}
 		return mObjects;
 	}
 
-	TArray<TWeakObjectPtr<T>> GetSortedByRef(T* Object) const {
-		if(Object) {
+	TArray<TWeakObjectPtr<T>> GetSortedByRef(T* Object) const
+	{
+		if (Object)
+		{
 			return SortByTempRef(Object);
 		}
 	}
 
-	TWeakObjectPtr<T> GetClosedObject() {
+	TWeakObjectPtr<T> GetClosedObject()
+	{
 		return GetClosedObjectWithRef(mSortRef);
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRef(T* Object) {
-		if(Object) {
+	TWeakObjectPtr<T> GetClosedObjectWithRef(T* Object)
+	{
+		if (Object)
+		{
 			TArray<TWeakObjectPtr<T>> Sorted = SortByTempRef(Object);
-			if(Sorted.Num() > 0) {
+			if (Sorted.Num() > 0)
+			{
 				return Sorted[0];
 			}
 		}
@@ -256,11 +322,14 @@ struct FSortedActorDistanceArray {
 		return {};
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(T* Object, float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(T* Object, float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObjectWithRef(Object);
-		if(ClosedObject.IsValid() && mSortRef.IsValid()) {
+		if (ClosedObject.IsValid() && mSortRef.IsValid())
+		{
 			T* TargetObject = ClosedObject.Get();
-			if(Object->GetDistanceTo(TargetObject) <= Distance) {
+			if (Object->GetDistanceTo(TargetObject) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -268,12 +337,15 @@ struct FSortedActorDistanceArray {
 		return {};
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObject();
-		if(ClosedObject.IsValid() && mSortRef.IsValid()) {
+		if (ClosedObject.IsValid() && mSortRef.IsValid())
+		{
 			T* RefObject = mSortRef.Get();
 			T* Object = ClosedObject.Get();
-			if(RefObject->GetDistanceTo(Object) <= Distance) {
+			if (RefObject->GetDistanceTo(Object) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -281,107 +353,134 @@ struct FSortedActorDistanceArray {
 		return {};
 	}
 
-	void AddObject(T* Object) {
-		if(Object) {
-			if(Object) {
+	void AddObject(T* Object)
+	{
+		if (Object)
+		{
+			if (Object)
+			{
 				mObjects.AddUnique(Object);
 			}
 		}
 	}
 
-	void RemoveObject(T* Object) {
-		if(Object) {
-			if(mObjects.Contains(Object)) {
+	void RemoveObject(T* Object)
+	{
+		if (Object)
+		{
+			if (mObjects.Contains(Object))
+			{
 				mObjects.Remove(Object);
 			}
 		}
 	}
 
-	void Empty() {
+	void Empty()
+	{
 		mObjects.Empty();
 	}
 
-	private:
-		/** Sort the Array */
-		TArray<TWeakObjectPtr<T>> SortByTempRef(TWeakObjectPtr<T> Ref) const {
-			TArray<TWeakObjectPtr<T>> SortArray = mObjects;
-			if(Ref.IsValid()) {
-				SortArray.Sort([Ref](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B) {
-					float ADistance = A.Get()->GetDistanceTo(Ref.Get());
-					float BDistance = B.Get()->GetDistanceTo(Ref.Get());
-					return ADistance > BDistance;
-				});
-			}
-			return SortArray;
+private:
+	/** Sort the Array */
+	TArray<TWeakObjectPtr<T>> SortByTempRef(TWeakObjectPtr<T> Ref) const
+	{
+		TArray<TWeakObjectPtr<T>> SortArray = mObjects;
+		if (Ref.IsValid())
+		{
+			SortArray.Sort([Ref](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B)
+			{
+				float ADistance = A.Get()->GetDistanceTo(Ref.Get());
+				float BDistance = B.Get()->GetDistanceTo(Ref.Get());
+				return ADistance > BDistance;
+			});
 		}
+		return SortArray;
+	}
 
-		TArray<TWeakObjectPtr<T>> mObjects;
-		TWeakObjectPtr<T>         mSortRef;
+	TArray<TWeakObjectPtr<T>> mObjects;
+	TWeakObjectPtr<T> mSortRef;
 };
 
 
-template<typename T>
+template <typename T>
 USTRUCT()
-struct FSortedComponentDistanceArrayV2 {
-	FSortedComponentDistanceArrayV2() {
+struct FSortedComponentDistanceArrayV2
+{
+	FSortedComponentDistanceArrayV2()
+	{
 	};
 
-	FSortedComponentDistanceArrayV2(FVector RefLocation) {
+	FSortedComponentDistanceArrayV2(FVector RefLocation)
+	{
 		SetSortRef(RefLocation);
 	};
 
 	/** Set our ref for sorting */
-	void SetSortRef(FVector RefLocation) {
+	void SetSortRef(FVector RefLocation)
+	{
 		mSortRef = RefLocation;
 	}
 
 	/** Sorting Functions */
-	void Sort() {
+	void Sort()
+	{
 		mObjects = SortByTempRef(mSortRef);
 	}
 
 	/** Getter Functions */
-	uint64 Num() const {
+	uint64 Num() const
+	{
 		return mObjects.Num();
 	}
 
-	TArray<TWeakObjectPtr<T>> GetAllConst() const {
+	TArray<TWeakObjectPtr<T>> GetAllConst() const
+	{
 		return mObjects;
 	}
 
-	void SortArrayByLocation(FVector LocationRef) {
+	void SortArrayByLocation(FVector LocationRef)
+	{
 		mObjects = SortByTempRef(LocationRef);
 	}
 
 	/** Note: Get the last sort state! */
-	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true) {
-		if(Sorted) {
+	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true)
+	{
+		if (Sorted)
+		{
 			Sort();
 		}
 		return mObjects;
 	}
 
-	TArray<TWeakObjectPtr<T>> GetSortedByRef(FVector RefLocation) const {
+	TArray<TWeakObjectPtr<T>> GetSortedByRef(FVector RefLocation) const
+	{
 		return SortByTempRef(RefLocation);
 	}
 
-	TWeakObjectPtr<T> GetClosedObject() {
+	TWeakObjectPtr<T> GetClosedObject()
+	{
 		return GetClosedObjectWithRef(mSortRef);
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRef(FVector RefLocation) {
+	TWeakObjectPtr<T> GetClosedObjectWithRef(FVector RefLocation)
+	{
 		TArray<TWeakObjectPtr<T>> Sorted = SortByTempRef(RefLocation);
-		if(Sorted.Num() > 0) {
+		if (Sorted.Num() > 0)
+		{
 			return Sorted[0];
 		}
 		return nullptr;
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(FVector RefLocation, float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(FVector RefLocation, float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObjectWithRef(RefLocation);
-		if(ClosedObject.IsValid()) {
+		if (ClosedObject.IsValid())
+		{
 			T* TargetObject = ClosedObject.Get();
-			if(FVector::Distance(TargetObject->GetComponentLocation(), RefLocation) <= Distance) {
+			if (FVector::Distance(TargetObject->GetComponentLocation(), RefLocation) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -389,11 +488,14 @@ struct FSortedComponentDistanceArrayV2 {
 		return nullptr;
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObject();
-		if(ClosedObject.IsValid()) {
+		if (ClosedObject.IsValid())
+		{
 			T* Object = ClosedObject.Get();
-			if(FVector::Distance(mSortRef, Object->GetComponentLocation()) <= Distance) {
+			if (FVector::Distance(mSortRef, Object->GetComponentLocation()) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -401,8 +503,10 @@ struct FSortedComponentDistanceArrayV2 {
 		return {};
 	}
 
-	uint64 AddObject(T* Object) {
-		if(Object) {
+	uint64 AddObject(T* Object)
+	{
+		if (Object)
+		{
 			uint64 Return = mObjects.AddUnique(Object);
 			Sort();
 			return Return;
@@ -410,104 +514,129 @@ struct FSortedComponentDistanceArrayV2 {
 		return -1;
 	}
 
-	void RemoveObject(T* Object) {
-		if(Object) {
-			if(mObjects.Contains(Object)) {
+	void RemoveObject(T* Object)
+	{
+		if (Object)
+		{
+			if (mObjects.Contains(Object))
+			{
 				mObjects.Remove(Object);
 			}
 		}
 	}
 
-	void Empty() {
+	void Empty()
+	{
 		mObjects.Empty();
 	}
 
-	private:
-		/** Sort the Array */
-		TArray<TWeakObjectPtr<T>> SortByTempRef(FVector RefLocation) const {
-			TArray<TWeakObjectPtr<T>> SortArray = mObjects;
-			if(SortArray.Num() > 1) {
-				SortArray.Sort([RefLocation](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B) {
-					float ADistance = 0.0f;
-					float BDistance = 0.0f;
+private:
+	/** Sort the Array */
+	TArray<TWeakObjectPtr<T>> SortByTempRef(FVector RefLocation) const
+	{
+		TArray<TWeakObjectPtr<T>> SortArray = mObjects;
+		if (SortArray.Num() > 1)
+		{
+			SortArray.Sort([RefLocation](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B)
+			{
+				float ADistance = 0.0f;
+				float BDistance = 0.0f;
 
-					if(A.IsValid() && B.IsValid()) {
-						ADistance = FVector::Distance(A->GetComponentLocation(), RefLocation);
-						BDistance = FVector::Distance(B->GetComponentLocation(), RefLocation);
-					}
-					return ADistance < BDistance;
-				});
-			}
-			return SortArray;
+				if (A.IsValid() && B.IsValid())
+				{
+					ADistance = FVector::Distance(A->GetComponentLocation(), RefLocation);
+					BDistance = FVector::Distance(B->GetComponentLocation(), RefLocation);
+				}
+				return ADistance < BDistance;
+			});
 		}
+		return SortArray;
+	}
 
-		TArray<TWeakObjectPtr<T>> mObjects;
-		FVector                   mSortRef;
+	TArray<TWeakObjectPtr<T>> mObjects;
+	FVector mSortRef;
 };
 
 
-template<typename T>
+template <typename T>
 USTRUCT()
-struct FSortedActorDistanceArrayV2 {
-	FSortedActorDistanceArrayV2() {
+struct FSortedActorDistanceArrayV2
+{
+	FSortedActorDistanceArrayV2()
+	{
 	};
 
-	FSortedActorDistanceArrayV2(FVector RefLocation) {
+	FSortedActorDistanceArrayV2(FVector RefLocation)
+	{
 		SetSortRef(RefLocation);
 	};
 
 	/** Set our ref for sorting */
-	void SetSortRef(FVector RefLocation) {
+	void SetSortRef(FVector RefLocation)
+	{
 		mSortRef = RefLocation;
 	}
 
 	/** Sorting Functions */
-	void Sort() {
+	void Sort()
+	{
 		mObjects = SortByTempRef(mSortRef);
 	}
 
 	/** Getter Functions */
-	uint64 Num() const {
+	uint64 Num() const
+	{
 		return mObjects.Num();
 	}
 
-	TArray<TWeakObjectPtr<T>> GetAllConst() const {
+	TArray<TWeakObjectPtr<T>> GetAllConst() const
+	{
 		return mObjects;
 	}
 
-	void SortArrayByLocation(FVector LocationRef) {
+	void SortArrayByLocation(FVector LocationRef)
+	{
 		mObjects = SortByTempRef(LocationRef);
 	}
 
 	/** Note: Get the last sort state! */
-	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true) {
-		if(Sorted) {
+	TArray<TWeakObjectPtr<T>> GetAllObjects(const bool Sorted = true)
+	{
+		if (Sorted)
+		{
 			Sort();
 		}
 		return mObjects;
 	}
 
-	TArray<TWeakObjectPtr<T>> GetSortedByRef(FVector RefLocation) const {
+	TArray<TWeakObjectPtr<T>> GetSortedByRef(FVector RefLocation) const
+	{
 		return SortByTempRef(RefLocation);
 	}
 
-	TWeakObjectPtr<T> GetClosedObject() {
+	TWeakObjectPtr<T> GetClosedObject()
+	{
 		return GetClosedObjectWithRef(mSortRef);
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRef(FVector RefLocation) {
+	TWeakObjectPtr<T> GetClosedObjectWithRef(FVector RefLocation)
+	{
 		TArray<TWeakObjectPtr<T>> Sorted = SortByTempRef(RefLocation);
-		if(Sorted.Num() > 0) {
+		if (Sorted.Num() > 0)
+		{
 			return Sorted[0];
 		}
 		return nullptr;
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(FVector RefLocation, float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithRefAndDistance(FVector RefLocation, float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObjectWithRef(RefLocation);
-		if(ClosedObject.IsValid()) {
+		if (ClosedObject.IsValid())
+		{
 			T* TargetObject = ClosedObject.Get();
-			if(FVector::Distance(TargetObject->GetActorLocation(), RefLocation) <= Distance) {
+			if (FVector::Distance(TargetObject->GetActorLocation(), RefLocation) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -515,11 +644,14 @@ struct FSortedActorDistanceArrayV2 {
 		return nullptr;
 	}
 
-	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f) {
+	TWeakObjectPtr<T> GetClosedObjectWithDistance(float Distance = 500.f)
+	{
 		TWeakObjectPtr<T> ClosedObject = GetClosedObject();
-		if(ClosedObject.IsValid()) {
+		if (ClosedObject.IsValid())
+		{
 			T* Object = ClosedObject.Get();
-			if(FVector::Distance(mSortRef, Object->GetActorLocation()) <= Distance) {
+			if (FVector::Distance(mSortRef, Object->GetActorLocation()) <= Distance)
+			{
 				return ClosedObject;
 			}
 		}
@@ -527,8 +659,10 @@ struct FSortedActorDistanceArrayV2 {
 		return {};
 	}
 
-	uint64 AddObject(T* Object) {
-		if(Object) {
+	uint64 AddObject(T* Object)
+	{
+		if (Object)
+		{
 			uint64 Return = mObjects.AddUnique(Object);
 			Sort();
 			return Return;
@@ -536,37 +670,45 @@ struct FSortedActorDistanceArrayV2 {
 		return -1;
 	}
 
-	void RemoveObject(T* Object) {
-		if(Object) {
-			if(mObjects.Contains(Object)) {
+	void RemoveObject(T* Object)
+	{
+		if (Object)
+		{
+			if (mObjects.Contains(Object))
+			{
 				mObjects.Remove(Object);
 			}
 		}
 	}
 
-	void Empty() {
+	void Empty()
+	{
 		mObjects.Empty();
 	}
 
-	private:
-		/** Sort the Array */
-		TArray<TWeakObjectPtr<T>> SortByTempRef(FVector RefLocation) const {
-			TArray<TWeakObjectPtr<T>> SortArray = mObjects;
-			if(SortArray.Num() > 1) {
-				SortArray.Sort([RefLocation](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B) {
-					float ADistance = 0.0f;
-					float BDistance = 0.0f;
+private:
+	/** Sort the Array */
+	TArray<TWeakObjectPtr<T>> SortByTempRef(FVector RefLocation) const
+	{
+		TArray<TWeakObjectPtr<T>> SortArray = mObjects;
+		if (SortArray.Num() > 1)
+		{
+			SortArray.Sort([RefLocation](const TWeakObjectPtr<T>& A, const TWeakObjectPtr<T>& B)
+			{
+				float ADistance = 0.0f;
+				float BDistance = 0.0f;
 
-					if(A.IsValid() && B.IsValid()) {
-						ADistance = FVector::Distance(A->GetActorLocation(), RefLocation);
-						BDistance = FVector::Distance(B->GetActorLocation(), RefLocation);
-					}
-					return ADistance < BDistance;
-				});
-			}
-			return SortArray;
+				if (A.IsValid() && B.IsValid())
+				{
+					ADistance = FVector::Distance(A->GetActorLocation(), RefLocation);
+					BDistance = FVector::Distance(B->GetActorLocation(), RefLocation);
+				}
+				return ADistance < BDistance;
+			});
 		}
+		return SortArray;
+	}
 
-		TArray<TWeakObjectPtr<T>> mObjects;
-		FVector                   mSortRef;
+	TArray<TWeakObjectPtr<T>> mObjects;
+	FVector mSortRef;
 };

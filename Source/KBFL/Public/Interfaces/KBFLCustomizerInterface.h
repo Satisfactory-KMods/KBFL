@@ -8,7 +8,8 @@
 #include "KBFLCustomizerInterface.generated.h"
 
 USTRUCT(BlueprintType)
-struct FKBFLSwatchInformation {
+struct FKBFLSwatchInformation
+{
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -23,7 +24,8 @@ struct FKBFLSwatchInformation {
 
 
 USTRUCT(BlueprintType)
-struct FKBFLMaterialDescriptorInformation {
+struct FKBFLMaterialDescriptorInformation
+{
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -33,7 +35,7 @@ struct FKBFLMaterialDescriptorInformation {
 	TArray<TSubclassOf<class AFGBuildable>> mValidBuildables;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<TSubclassOf<class AFGBuildable> , TSubclassOf<class UFGRecipe>> mBuildableMap;
+	TMap<TSubclassOf<class AFGBuildable>, TSubclassOf<class UFGRecipe>> mBuildableMap;
 };
 
 /*
@@ -48,7 +50,8 @@ struct FKBFLMaterialInformation
 */
 
 UINTERFACE()
-class UKBFLCustomizerInterface: public UInterface {
+class UKBFLCustomizerInterface : public UInterface
+{
 	GENERATED_BODY()
 };
 
@@ -56,16 +59,17 @@ class UKBFLCustomizerInterface: public UInterface {
 /**
  * 
  */
-class KBFL_API IKBFLCustomizerInterface {
+class KBFL_API IKBFLCustomizerInterface
+{
 	GENERATED_BODY()
 
-	public:
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|Customizer Interface")
-		TArray<FKBFLMaterialDescriptorInformation> GetMaterialInformation();
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|Customizer Interface")
+	TArray<FKBFLMaterialDescriptorInformation> GetMaterialInformation();
 
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|Customizer Interface")
-		TArray<FKBFLSwatchInformation> GetSwatchDescriptionInformation();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|Customizer Interface")
+	TArray<FKBFLSwatchInformation> GetSwatchDescriptionInformation();
 
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|Customizer Interface")
-		TMap<TSubclassOf<UFGSwatchGroup> , TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch>> GetSwatchGroups();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|Customizer Interface")
+	TMap<TSubclassOf<UFGSwatchGroup>, TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch>> GetSwatchGroups();
 };

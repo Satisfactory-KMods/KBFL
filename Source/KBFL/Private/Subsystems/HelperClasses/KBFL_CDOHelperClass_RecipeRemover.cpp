@@ -1,13 +1,17 @@
 ﻿#pragma once
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_RecipeRemover.h"
 
-void UKBFL_CDOHelperClass_RecipeRemover::DoCDO() {
+void UKBFL_CDOHelperClass_RecipeRemover::DoCDO()
+{
 	UE_LOG(LogTemp, Log, TEXT("CDOHelperRecipeRemover > Called %s"), *this->GetName());
 	AFGRecipeManager* RecipeSubsystem = AFGRecipeManager::Get(GetWorld());
 
-	if(RecipeSubsystem) {
-		for(UClass* Class: GetClasses()) {
-			if(Class->IsChildOf(UFGRecipe::StaticClass())) {
+	if (RecipeSubsystem)
+	{
+		for (UClass* Class : GetClasses())
+		{
+			if (Class->IsChildOf(UFGRecipe::StaticClass()))
+			{
 				RemoveRecipe(Class, RecipeSubsystem, {}, {}, RemovedClasses);
 			}
 		}
@@ -16,11 +20,14 @@ void UKBFL_CDOHelperClass_RecipeRemover::DoCDO() {
 	Super::DoCDO();
 }
 
-TArray<UClass*> UKBFL_CDOHelperClass_RecipeRemover::GetClasses() {
+TArray<UClass*> UKBFL_CDOHelperClass_RecipeRemover::GetClasses()
+{
 	TArray<UClass*> Re;
 
-	for(auto Class: mRecipes) {
-		if(IsValidSoftClass(Class)) {
+	for (auto Class : mRecipes)
+	{
+		if (IsValidSoftClass(Class))
+		{
 			Re.Add(Class.LoadSynchronous());
 		}
 	}

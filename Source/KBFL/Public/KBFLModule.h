@@ -2,9 +2,10 @@
 
 #include "Modules/ModuleManager.h"
 
-class FKBFLModule: public FDefaultGameModuleImpl {
-	public:
-		virtual void StartupModule() override;
+class FKBFLModule : public FDefaultGameModuleImpl
+{
+public:
+	virtual void StartupModule() override;
 
-		virtual bool IsGameModule() const override { return true; }
+	virtual bool IsGameModule() const override { return true; }
 };

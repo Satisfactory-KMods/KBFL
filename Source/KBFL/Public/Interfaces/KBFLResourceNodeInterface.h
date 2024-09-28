@@ -11,7 +11,8 @@
 
 
 UINTERFACE()
-class UKBFLResourceNodeInterface: public UInterface {
+class UKBFLResourceNodeInterface : public UInterface
+{
 	GENERATED_BODY()
 };
 
@@ -19,13 +20,14 @@ class UKBFLResourceNodeInterface: public UInterface {
 /**
  * 
  */
-class KBFL_API IKBFLResourceNodeInterface {
+class KBFL_API IKBFLResourceNodeInterface
+{
 	GENERATED_BODY()
 
-	public:
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|ResourceNode Interface")
-		TArray<TSubclassOf<class UKBFLActorSpawnDescriptorBase>> GetActorSpawnDescriptors();
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|ResourceNode Interface")
+	TArray<TSubclassOf<class UKBFLActorSpawnDescriptorBase>> GetActorSpawnDescriptors();
 
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|ResourceNode Interface")
-		TArray<TSubclassOf<AActor>> GetRemoveClasses();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|ResourceNode Interface")
+	TArray<TSubclassOf<AActor>> GetRemoveClasses();
 };
