@@ -3,17 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGSchematic.h"
 #include "Module/ModModule.h"
-#include "Resources/FGResourceDescriptor.h"
-#include "Resources/FGResourceNode.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Items.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_RecipeRemover.h"
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Recipes.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_RemoverBase.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_ResearchTreeRemover.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Schematic.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_SchematicRemover.h"
 #include "UObject/Interface.h"
 #include "KBFLContentCDOHelperInterface.generated.h"
 

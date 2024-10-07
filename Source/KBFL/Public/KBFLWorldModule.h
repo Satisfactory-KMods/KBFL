@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "FGBackgroundThread.h"
-#include "BFL/KBFL_Struct.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Interfaces/KBFLCustomizerInterface.h"
 #include "Interfaces/KBFLResourceNodeInterface.h"
@@ -13,100 +12,13 @@
 #include "UObject/Object.h"
 #include "KBFLWorldModule.generated.h"
 
-USTRUCT(BlueprintType)
-struct KBFL_API FKBFLPool
-{
-	GENERATED_BODY()
-
-	/* Type */
-	UPROPERTY(EditDefaultsOnly)
-	EPoolType Type;
-
-	/* Component placed in the blueprint to handle this instance. */
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UFGPoolableProxyComponentBase> mProxyComponent;
-
-	/* Max Default count of instances in the world. */
-	UPROPERTY(EditDefaultsOnly, meta = ( EditCondition = "!bInstanced" ))
-	int32 Count;
-
-	/* Draw distance the world instances get relevant,
-	* it could be that lights further away from the player still isn't relevant due to the max pool count.*/
-	UPROPERTY(EditDefaultsOnly)
-	float RelevanceDistance;
-
-	/* Should the instance try to snap to the nearest foundation / non factory building.
-    * Needed for ceiling lights and other spotlight based lights */
-	UPROPERTY(EditDefaultsOnly, Category = "Range")
-	bool bAdjustHeight;
-
-	// TODO uncomment with ue 4.25
-	UPROPERTY(EditDefaultsOnly,
-		Category = "Mesh" /*, meta = ( EditCondition = "Type == EPT_StaticMesh || Type == EPT_InstanceMesh") */)
-	UStaticMesh* mVisual_Mesh;
-
-	/* DEPRECATED */
-	UPROPERTY(EditDefaultsOnly)
-	bool bVisual_Instanced;
-
-	/*~~~~~~ Count scalability ~~~~~~*/
-	/* The string used for count scalability checks. */
-	UPROPERTY(EditDefaultsOnly)
-	FString mCVarCountScalabilityString;
-	IConsoleVariable* mCachedCountScalabilityConsoleVariable;
-
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "Count Default Value"))
-	int32 mCachedCountScalabilityValue;
-	bool mIsCountScalabilityDirty;
-
-	/*~~~~~~ Relevancy scalability ~~~~~~*/
-	/* The string used for relevancy scalability checks. */
-	UPROPERTY(EditDefaultsOnly)
-	FString mCVarRelevancyScalabilityString;
-	IConsoleVariable* mCachedRelevancyScalabilityConsoleVariable;
-
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "Relevancy Scale Default Value"))
-	float mCachedRelevancyScaleScalabilityValue;
-	bool mIsRelevancyScalabilityDirty;
-
-	/*~~~~~~ Quality scalability ~~~~~~*/
-	/* The string used for quality scalability checks. */
-	UPROPERTY(EditDefaultsOnly)
-	FString mCvarQualityScalabilityString;
-	IConsoleVariable* mCachedQualityScaleConsoleVariable;
-
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "Quality Default Value"))
-	int32 mCachedQualityScalabilityValue;
-	bool mIsQualityScalabilityDirty;
-
-	FFGPoolType ToFg() const
-	{
-		FFGPoolType PoolType = FFGPoolType();
-
-		PoolType.Type = Type;
-		PoolType.mProxyComponent = mProxyComponent;
-		PoolType.Count = Count;
-		PoolType.RelevanceDistance = RelevanceDistance;
-		PoolType.bAdjustHeight = bAdjustHeight;
-		PoolType.mVisual_Mesh = mVisual_Mesh;
-		PoolType.bVisual_Instanced = bVisual_Instanced;
-		PoolType.mCachedQualityScalabilityValue = mCachedQualityScalabilityValue;
-		PoolType.mCvarQualityScalabilityString = mCvarQualityScalabilityString;
-		PoolType.mCachedRelevancyScaleScalabilityValue = mCachedRelevancyScaleScalabilityValue;
-		PoolType.mCVarRelevancyScalabilityString = mCVarRelevancyScalabilityString;
-		PoolType.mCachedCountScalabilityValue = mCachedCountScalabilityValue;
-		PoolType.mCVarCountScalabilityString = mCVarCountScalabilityString;
-
-		return PoolType;
-	}
-};
-
 /**
  * 
  */
 UCLASS(Blueprintable)
-class KBFL_API UKBFLWorldModule : public UGameWorldModule, public IKBFLCustomizerInterface,
-                                  public IKBFLResourceNodeInterface, public IKBFLContentCDOHelperInterface
+class KBFL_API UKBFLWorldModule
+	: public UGameWorldModule, public IKBFLCustomizerInterface,
+	  public IKBFLResourceNodeInterface, public IKBFLContentCDOHelperInterface
 {
 	GENERATED_BODY()
 
@@ -153,12 +65,8 @@ public:
 	virtual void RegisterKBFLLogicContent();
 
 	virtual void FindAllCDOs();
-
-	virtual void RegisterPoolSettings();
-
+	
 	virtual bool IsAllowedToRegister(TSubclassOf<UObject> Object) const;
-
-	static bool IsPoolEntryThere(TArray<FFGPoolType> Source, FKBFLPool CheckStruc);
 
 	bool bScanForCDOsDone = false;
 	/** Information for CDO's */
@@ -211,16 +119,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry",
 		meta = ( EditCondition = mUseAssetRegistry ))
 	bool mRegisterResearchTrees = true;
-
-	UPROPERTY(meta=(NoAutoJson = true))
-	bool mAddPoolEntry = false;
-
-	/**
-	* Pool Entrys to add new Light pools
-	*/
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry",
-		meta = ( EditCondition = mAddPoolEntry ))
-	TArray<FKBFLPool> mPoolEntryToAdd;
 
 	/**
 	* Path for automatic find classes to register

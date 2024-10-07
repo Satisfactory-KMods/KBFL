@@ -3,8 +3,6 @@
 #include "CoreMinimal.h"
 
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Resources/FGResourceNode.h"
-#include "Runtime/CoreUObject/Public/UObject/NoExportTypes.h"
 
 #include "KBFL_Math.generated.h"
 
@@ -21,7 +19,7 @@ public:
 	/** Caclulate Orbit Points for Splines */
 	UFUNCTION(BlueprintPure, Category="KMods|Math")
 	static TArray<FVector> CalculateOrbitPoints(float Ellipse = 1.0f, float Radius = 1000.0f, float Tilt = 0.0f,
-	                                            int PointCount = 12);
+		int                                           PointCount = 12);
 
 	UFUNCTION(BlueprintPure, Category="KMods|Math")
 	static float CalculateItemsPerMin(int ItemCount, float ProductionTime);

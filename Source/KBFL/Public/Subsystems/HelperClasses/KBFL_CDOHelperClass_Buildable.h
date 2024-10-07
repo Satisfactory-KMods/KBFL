@@ -13,7 +13,7 @@ class KBFL_API UKBFL_CDOHelperClass_Buildable : public UKBFL_CDOHelperClass_Base
 	GENERATED_BODY()
 
 public:
-	virtual void DoCDO() override;
+	virtual void            DoCDO() override;
 	virtual TArray<UClass*> GetClasses() override;
 
 	/** must be set for CDO */

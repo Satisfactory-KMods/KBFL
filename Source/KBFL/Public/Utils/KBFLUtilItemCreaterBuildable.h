@@ -65,17 +65,17 @@ class KBFL_API UKBFLDefaultRCO : public UFGRemoteCallObject
 public:
 	UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
 	void Server_CheatBuilding_SetPipeItem(AKBFLUtilItemCreaterBuildable* Building,
-	                                      TSubclassOf<UFGItemDescriptor> ItemToSet);
+		TSubclassOf<UFGItemDescriptor>                                   ItemToSet);
 
 	bool Server_CheatBuilding_SetPipeItem_Validate(AKBFLUtilItemCreaterBuildable* Building,
-	                                               TSubclassOf<UFGItemDescriptor> ItemToSet) { return true; }
+		TSubclassOf<UFGItemDescriptor>                                            ItemToSet) { return true; }
 
 	UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
 	void Server_CheatBuilding_SetBeltItem(AKBFLUtilItemCreaterBuildable* Building,
-	                                      TSubclassOf<UFGItemDescriptor> ItemToSet);
+		TSubclassOf<UFGItemDescriptor>                                   ItemToSet);
 
 	bool Server_CheatBuilding_SetBeltItem_Validate(AKBFLUtilItemCreaterBuildable* Building,
-	                                               TSubclassOf<UFGItemDescriptor> ItemToSet) { return true; }
+		TSubclassOf<UFGItemDescriptor>                                            ItemToSet) { return true; }
 
 	UFUNCTION(BlueprintCallable, Server, WithValidation, Unreliable)
 	void Server_AddStackToCharacter(AFGCharacterPlayer* Player, TSubclassOf<UFGItemDescriptor> ItemToAdd);

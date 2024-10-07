@@ -23,7 +23,7 @@ public:
 	static T* GetPropertyByKey(TSubclassOf<UModConfiguration> Config, FString Key, UObject* WorldContext);
 
 	static UConfigProperty* GetConfigPropertyByKey(TSubclassOf<UModConfiguration> Config, FString Key,
-	                                               UObject* WorldContext);
+		UObject*                                                                  WorldContext);
 
 	static void SaveProperty(TSubclassOf<UModConfiguration> Config, FString Key, UObject* WorldContext);
 
@@ -46,7 +46,7 @@ public:
 	/** Write an Bool from given Config */
 	UFUNCTION(BlueprintCallable, Category="KMods|ConfigHelper", meta = ( WorldContext = "WorldContext" ))
 	static void SetFloatInConfig(TSubclassOf<UModConfiguration> Config, FString Key, float Value,
-	                             UObject* WorldContext);
+		UObject*                                                WorldContext);
 
 	/** get an UClass* from given Config
 	* return nullptr if the Config is invalid
@@ -57,7 +57,7 @@ public:
 	/** Write an UClass* from given Config */
 	UFUNCTION(BlueprintCallable, Category="KMods|ConfigHelper", meta = ( WorldContext = "WorldContext" ))
 	static void SetClassInConfig(TSubclassOf<UModConfiguration> Config, FString Key, UClass* Value,
-	                             UObject* WorldContext);
+		UObject*                                                WorldContext);
 
 	/** get an Int from given Config
 	* return 0 if the Config is invalid
@@ -88,7 +88,7 @@ public:
 	/** Write an String from given Config */
 	UFUNCTION(BlueprintCallable, Category="KMods|ConfigHelper", meta = ( WorldContext = "WorldContext" ))
 	static void SetStringInConfig(TSubclassOf<UModConfiguration> Config, FString Key, FString Value,
-	                              UObject* WorldContext);
+		UObject*                                                 WorldContext);
 
 	/** get an Text from given Config
 	* return nothing if the Config is invalid

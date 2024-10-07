@@ -7,7 +7,7 @@
 #include "Resources/FGResourceNodeFrackingCore.h"
 #include "Resources/FGResourceNodeFrackingSatellite.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
-#include "Subsystems/ResourceNodes/ResourceNodesLogging.h"
+#include "KBFLLogging.h"
 
 uint32 UKBFLResourceNodeDescriptor_ResourceWell::GetCountOfSat(
 	TMap<TEnumAsByte<EResourcePurity>, FKBFLTransformArray> SatMap)
@@ -29,7 +29,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::ForeachLocations(TArray<AActor*>&
 		EResourceForm Form = UFGItemDescriptor::GetForm(mResourceClass);
 		if (Form != EResourceForm::RF_GAS && Form != EResourceForm::RF_LIQUID)
 		{
-			UE_LOG(ActorSpawnerLog, Warning, TEXT("Skipp well spawn (Liquid & Gas only!)"));
+			UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("Skipp well spawn (Liquid & Gas only!)"));
 			return;
 		}
 	}
@@ -38,19 +38,19 @@ void UKBFLResourceNodeDescriptor_ResourceWell::ForeachLocations(TArray<AActor*>&
 	{
 		if (GetCountOfSat(WellData.mPurityLocations) == 0 || WellData.mCoreLocation.GetLocation() == FVector(0))
 		{
-			UE_LOG(ActorSpawnerLog, Warning, TEXT("GetCountOfSat == 0 : Skip!"));
+			UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("GetCountOfSat == 0 : Skip!"));
 			continue;
 		}
 
 		bIsInSatelliteSpawning = false;
 
-		UE_LOG(ActorSpawnerLog, Warning, TEXT("Begin Spawn for Well Data"));
+		UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("Begin Spawn for Well Data"));
 		mCoreTransforms.Add(WellData.mCoreLocation);
 		AActor* OutActor;
 
 		if (!CheckActorInRange(WellData.mCoreLocation, OutActor) && IsRangeFree(WellData.mCoreLocation))
 		{
-			UE_LOG(ActorSpawnerLog, Warning, TEXT("Try Core spawn at: %s"), *WellData.mCoreLocation.ToString());
+			UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("Try Core spawn at: %s"), *WellData.mCoreLocation.ToString());
 			OutActor = SpawnActorAtLocation(WellData.mCoreLocation, GetActorClass());
 		}
 
@@ -109,7 +109,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::ForeachLocations(TArray<AActor*>&
 		}
 		else
 		{
-			UE_LOG(ActorSpawnerLog, Warning, TEXT("Core is invalid!!!"));
+			UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("Core is invalid!!!"));
 		}
 	}
 
@@ -132,7 +132,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::Validate(TArray<AFGResourceNodeFr
 	{
 		if(mLastCore->mSatellites[i].IsValid() && !AllreadyFound.Contains(mLastCore->mSatellites[i]))
 		{
-			UE_LOG(ActorSpawnerLog, Warning, TEXT("Remove Duplicated Satellite"));
+			UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("Remove Duplicated Satellite"));
 			mLastCore->mSatellites.RemoveAt(i);
 		}
 		else
@@ -209,7 +209,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::AfterSpawning()
 		// Do CDO to Activator & Extractor for new resource classes to enable the placement
 		if (TSubclassOf<AFGBuildableFrackingActivator> BPBuildableFrackingActivator = LoadClass<
 			AFGBuildableFrackingActivator>(nullptr, TEXT(
-				                               "/Game/FactoryGame/Buildable/Factory/FrackingSmasher/Build_FrackingSmasher.Build_FrackingSmasher_C")))
+			"/Game/FactoryGame/Buildable/Factory/FrackingSmasher/Build_FrackingSmasher.Build_FrackingSmasher_C")))
 		{
 			if (AFGBuildableFrackingActivator* FrackingActivatorDefault = Sub->GetAndStoreDefaultObject_Native<
 				AFGBuildableFrackingActivator>(BPBuildableFrackingActivator))
@@ -220,7 +220,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::AfterSpawning()
 
 		if (TSubclassOf<AFGBuildableFrackingExtractor> BPBuildableFrackingExtractor = LoadClass<
 			AFGBuildableFrackingExtractor>(nullptr, TEXT(
-				                               "/Game/FactoryGame/Buildable/Factory/FrackingExtractor/Build_FrackingExtractor.Build_FrackingExtractor_C")))
+			"/Game/FactoryGame/Buildable/Factory/FrackingExtractor/Build_FrackingExtractor.Build_FrackingExtractor_C")))
 		{
 			if (AFGBuildableFrackingExtractor* FrackingExtractorDefault = Sub->GetAndStoreDefaultObject_Native<
 				AFGBuildableFrackingExtractor>(BPBuildableFrackingExtractor))
@@ -253,7 +253,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::RemoveWrongActors(TArray<AActor*>
 
 		if (!IsActorCorrect)
 		{
-			UE_LOG(ActorSpawnerLog, Warning, TEXT("Core pending to remove! > %s "), *CoreActor->GetName());
+			UE_LOG(KBFLActorSpawnerLog, Warning, TEXT("Core pending to remove! > %s "), *CoreActor->GetName());
 			if (IsAllowedToRemoveActor(*CoreActor))
 			{
 				TArray<AFGResourceNodeFrackingSatellite*> Satellites;
@@ -266,8 +266,8 @@ void UKBFLResourceNodeDescriptor_ResourceWell::RemoveWrongActors(TArray<AActor*>
 					}
 				}
 
-				UE_LOG(ActorSpawnerLog, Log, TEXT("Remove Core > %s at %s"), *CoreActor->GetName(),
-				       *CoreActor->GetActorLocation().ToString());
+				UE_LOG(KBFLActorSpawnerLog, Log, TEXT("Remove Core > %s at %s"), *CoreActor->GetName(),
+					*CoreActor->GetActorLocation().ToString());
 				CoreActor->K2_DestroyActor();
 			}
 		}
@@ -294,7 +294,7 @@ void UKBFLResourceNodeDescriptor_ResourceWell::RemoveWrongActors(TArray<AActor*>
 		}
 		else if (!SatelliteActor->mCore)
 		{
-			UE_LOG(ActorSpawnerLog, Log, TEXT("Remove Actors > InValidCore!!! > %s"), *SatelliteActor->GetName());
+			UE_LOG(KBFLActorSpawnerLog, Log, TEXT("Remove Actors > InValidCore!!! > %s"), *SatelliteActor->GetName());
 			SatelliteActor->Destroy();
 		}
 	}

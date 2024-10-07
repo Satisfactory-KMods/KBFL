@@ -5,7 +5,6 @@
 #include "FGSchematic.h"
 #include "KBFL_Struct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Runtime/CoreUObject/Public/UObject/NoExportTypes.h"
 #include "KBFL_Schematics.generated.h"
 
 UCLASS()

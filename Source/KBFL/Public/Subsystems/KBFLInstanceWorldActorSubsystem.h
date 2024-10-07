@@ -27,16 +27,16 @@ public:
 	static bool KBFL_OverwriteInstanceData(AFGBuildable* Buildable, UStaticMesh* Mesh, int32 Idx);
 
 	UFUNCTION(BlueprintCallable, Category="KMods")
-	static bool KBFL_OverwriteInstanceData_Transform(AFGBuildable* Buildable, UStaticMesh* Mesh,
-	                                                 FTransform NewRelativTransform, int32 Idx);
+	static bool KBFL_OverwriteInstanceData_Transform(AFGBuildable* Buildable, UStaticMesh*    Mesh,
+		FTransform                                                 NewRelativTransform, int32 Idx);
 
 	UFUNCTION(BlueprintCallable, Category="KMods")
 	static bool KBFL_UpdateCustomFloat(AFGBuildable* Buildable, int32 FloatIndex, float Data, int32 InstanceIdx,
-	                                   bool MarkDirty = true);
+		bool                                         MarkDirty = true);
 
 	UFUNCTION(BlueprintCallable, Category="KMods")
-	static bool KBFL_UpdateCustomFloatAsColor(AFGBuildable* Buildable, int32 StartFloatIndex, FLinearColor Data,
-	                                          int32 InstanceIdx, bool MarkDirty = true);
+	static bool KBFL_UpdateCustomFloatAsColor(AFGBuildable* Buildable, int32  StartFloatIndex, FLinearColor Data,
+		int32                                               InstanceIdx, bool MarkDirty = true);
 
 	UFUNCTION(BlueprintCallable, Category="KMods")
 	static bool KBFL_SetInstanceHidden(AFGBuildable* Buildable, int32 InstanceIdx, bool IsHidden);

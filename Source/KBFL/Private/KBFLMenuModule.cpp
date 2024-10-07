@@ -7,6 +7,7 @@
 #include "AssetRegistry/IAssetRegistry.h"
 #include "BFL/KBFL_Asset.h"
 #include "BFL/KBFL_Widgets.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/AssetManager.h"
 #include "Patching/BlueprintHookHelper.h"
 #include "Patching/BlueprintHookManager.h"
@@ -43,8 +44,7 @@ void UKBFLMenuModule::DispatchLifecycleEvent(ELifecyclePhase Phase)
 			return;
 		}
 		UBlueprintHookManager* HookManager = GEngine->GetEngineSubsystem<UBlueprintHookManager>();
-		HookManager->HookBlueprintFunction(ConstructFunction, [&](FBlueprintHookHelper& HookHelper)
-		{
+		HookManager->HookBlueprintFunction(ConstructFunction, [&](FBlueprintHookHelper& HookHelper) {
 			Binding.ExecuteIfBound(Cast<UUserWidget>(HookHelper.GetContext()));
 		}, Return);
 	}
@@ -70,18 +70,10 @@ void UKBFLMenuModule::MenuWidgetHooked(UUserWidget* WidgetClass)
 	}
 }
 
-void UKBFLMenuModule::OnMenuWidgetHooked_Implementation(UUserWidget* WidgetClass)
-{
-}
+void UKBFLMenuModule::OnMenuWidgetHooked_Implementation(UUserWidget* WidgetClass) {}
 
-void UKBFLMenuModule::InitPhase_Implementation()
-{
-}
+void UKBFLMenuModule::InitPhase_Implementation() {}
 
-void UKBFLMenuModule::ConstructionPhase_Implementation()
-{
-}
+void UKBFLMenuModule::ConstructionPhase_Implementation() {}
 
-void UKBFLMenuModule::PostInitPhase_Implementation()
-{
-}
+void UKBFLMenuModule::PostInitPhase_Implementation() {}

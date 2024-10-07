@@ -14,7 +14,7 @@
 #include "Unlocks/FGUnlockScannableResource.h"
 
 void UKBFL_Util::RemoveAllNotAllowedScanners(UObject* WorldContext,
-                                             const TArray<TSubclassOf<UFGResourceDescriptor>> Resources)
+	const TArray<TSubclassOf<UFGResourceDescriptor>>  Resources)
 {
 	auto UnlockSubsystem = AFGUnlockSubsystem::Get(WorldContext);
 
@@ -30,14 +30,13 @@ void UKBFL_Util::RemoveAllNotAllowedScanners(UObject* WorldContext,
 }
 
 void UKBFL_Util::SortItemArray(TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items,
-                               const TArray<TSubclassOf<UFGItemDescriptor>>& In_Items,
-                               const TArray<TSubclassOf<UFGItemDescriptor>>& ForceFirstItems, bool Reverse)
+	const TArray<TSubclassOf<UFGItemDescriptor>>&                      In_Items,
+	const TArray<TSubclassOf<UFGItemDescriptor>>&                      ForceFirstItems, bool Reverse)
 {
 	Out_Items = In_Items;
 	if (Out_Items.Num() > 1)
 	{
-		Out_Items.Sort([Reverse](const TSubclassOf<UFGItemDescriptor> A, const TSubclassOf<UFGItemDescriptor> B)
-		{
+		Out_Items.Sort([Reverse](const TSubclassOf<UFGItemDescriptor> A, const TSubclassOf<UFGItemDescriptor> B) {
 			if (!Reverse)
 			{
 				return UFGItemDescriptor::GetItemName(A).ToString() < UFGItemDescriptor::GetItemName(B).ToString();
@@ -63,7 +62,7 @@ void UKBFL_Util::SortItemArray(TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items
 }
 
 void UKBFL_Util::KBFL_SetResourceNodeToExtractor(AFGBuildableResourceExtractorBase* Extractor,
-                                                 AFGResourceNodeBase* Node)
+	AFGResourceNodeBase*                                                            Node)
 {
 	if (ensure(IsValid(Node) && IsValid(Extractor)))
 	{
@@ -105,8 +104,8 @@ AModSubsystem* UKBFL_Util::GetSubsystem(UObject* WorldContext, TSubclassOf<AModS
 	return nullptr;
 }
 
-void UKBFL_Util::RemoveArrayFromScanners(UObject* WorldContext,
-                                         const TArray<TSubclassOf<UFGResourceDescriptor>> Resources)
+void UKBFL_Util::RemoveArrayFromScanners(UObject*    WorldContext,
+	const TArray<TSubclassOf<UFGResourceDescriptor>> Resources)
 {
 	auto UnlockSubsystem = AFGUnlockSubsystem::Get(WorldContext);
 
@@ -150,7 +149,7 @@ void UKBFL_Util::RemoveNodeClassFromWorld(UObject* WorldContext, const TSubclass
 }
 
 void UKBFL_Util::RemoveNodeResourceClassFromWorld(UObject* WorldContext,
-                                                  const TSubclassOf<UFGResourceDescriptor> Resource)
+	const TSubclassOf<UFGResourceDescriptor>               Resource)
 {
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(WorldContext, AFGResourceNode::StaticClass(), Actors);
@@ -169,7 +168,7 @@ void UKBFL_Util::RemoveNodeResourceClassFromWorld(UObject* WorldContext,
 }
 
 void UKBFL_Util::RemoveNodeResourcesClassFromWorld(UObject* WorldContext,
-                                                   const TArray<TSubclassOf<UFGResourceDescriptor>> Resources)
+	const TArray<TSubclassOf<UFGResourceDescriptor>>        Resources)
 {
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(WorldContext, AFGResourceNode::StaticClass(), Actors);
@@ -188,7 +187,7 @@ void UKBFL_Util::RemoveNodeResourcesClassFromWorld(UObject* WorldContext,
 }
 
 void UKBFL_Util::RemoveNodeNOTResourcesClassFromWorld(UObject* WorldContext,
-                                                      const TArray<TSubclassOf<UFGResourceDescriptor>> Resources)
+	const TArray<TSubclassOf<UFGResourceDescriptor>>           Resources)
 {
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(WorldContext, AFGResourceNode::StaticClass(), Actors);
@@ -206,8 +205,8 @@ void UKBFL_Util::RemoveNodeNOTResourcesClassFromWorld(UObject* WorldContext,
 	}
 }
 
-bool UKBFL_Util::DoPlayerViewLineTrace(UObject* WorldContext, FHitResult& Hit, float Distance,
-                                       TArray<AActor*> ActorsToIgnore, ETraceTypeQuery TraceChannel, bool TraceComplex)
+bool UKBFL_Util::DoPlayerViewLineTrace(UObject* WorldContext, FHitResult&       Hit, float         Distance,
+	TArray<AActor*>                             ActorsToIgnore, ETraceTypeQuery TraceChannel, bool TraceComplex)
 {
 	if (AFGCharacterPlayer* Char = UKBFL_Player::GetFGCharacter(WorldContext))
 	{
@@ -218,16 +217,16 @@ bool UKBFL_Util::DoPlayerViewLineTrace(UObject* WorldContext, FHitResult& Hit, f
 		ActorsToIgnore.AddUnique(Char);
 
 		UKismetSystemLibrary::LineTraceSingle(WorldContext, Start, End, TraceChannel, TraceComplex, ActorsToIgnore,
-		                                      EDrawDebugTrace::None, Hit, true);
+			EDrawDebugTrace::None, Hit, true);
 		return Hit.IsValidBlockingHit();
 	}
 	return false;
 }
 
-bool UKBFL_Util::DoPlayerViewLineTraceSphere(UObject* WorldContext, TArray<AActor*>& OutActors, float Distance,
-                                             TArray<AActor*> ActorsToIgnore, ETraceTypeQuery TraceChannel,
-                                             TArray<TEnumAsByte<EObjectTypeQuery>> ObjTypes,
-                                             TSubclassOf<AActor> ActorClass, float SphereSize, bool TraceComplex)
+bool UKBFL_Util::DoPlayerViewLineTraceSphere(UObject* WorldContext, TArray<AActor*>&  OutActors, float Distance,
+	TArray<AActor*>                                   ActorsToIgnore, ETraceTypeQuery TraceChannel,
+	TArray<TEnumAsByte<EObjectTypeQuery>>             ObjTypes,
+	TSubclassOf<AActor>                               ActorClass, float SphereSize, bool TraceComplex)
 {
 	if (AFGCharacterPlayer* Char = UKBFL_Player::GetFGCharacter(WorldContext))
 	{
@@ -236,7 +235,7 @@ bool UKBFL_Util::DoPlayerViewLineTraceSphere(UObject* WorldContext, TArray<AActo
 		{
 			ActorsToIgnore.AddUnique(Char);
 			return UKismetSystemLibrary::SphereOverlapActors(WorldContext, LineHit.ImpactPoint, SphereSize, ObjTypes,
-			                                                 ActorClass, ActorsToIgnore, OutActors);
+				ActorClass, ActorsToIgnore, OutActors);
 		}
 	}
 	return false;
@@ -244,13 +243,13 @@ bool UKBFL_Util::DoPlayerViewLineTraceSphere(UObject* WorldContext, TArray<AActo
 
 AModSubsystem* UKBFL_Util::GetSubsystemFromChild(UObject* WorldContext, TSubclassOf<AModSubsystem> SubsystemClass)
 {
-#if WITH_EDITOR
+	#if WITH_EDITOR
 	return SubsystemClass.GetDefaultObject();
-#endif
+	#endif
 
 	if (WorldContext)
 	{
-		const UWorld* WorldObject = GEngine->GetWorldFromContextObjectChecked(WorldContext);
+		const UWorld*           WorldObject = GEngine->GetWorldFromContextObjectChecked(WorldContext);
 		USubsystemActorManager* SubsystemActorManager = WorldObject->GetSubsystem<USubsystemActorManager>();
 		check(SubsystemActorManager);
 
@@ -266,15 +265,15 @@ AModSubsystem* UKBFL_Util::GetSubsystemFromChild(UObject* WorldContext, TSubclas
 }
 
 void UKBFL_Util::GetAllSubsystemsFromChild(UObject* WorldContext, TSubclassOf<AModSubsystem> SubsystemClass,
-                                           TArray<AModSubsystem*>& Subsystems)
+	TArray<AModSubsystem*>&                         Subsystems)
 {
-#if WITH_EDITOR
+	#if WITH_EDITOR
 	return;
-#endif
+	#endif
 
 	if (WorldContext)
 	{
-		const UWorld* WorldObject = GEngine->GetWorldFromContextObjectChecked(WorldContext);
+		const UWorld*           WorldObject = GEngine->GetWorldFromContextObjectChecked(WorldContext);
 		USubsystemActorManager* SubsystemActorManager = WorldObject->GetSubsystem<USubsystemActorManager>();
 		check(SubsystemActorManager);
 

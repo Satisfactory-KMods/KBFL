@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 
-#include "FGPlayerController.h"
 #include "Equipment/FGBuildGun.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 

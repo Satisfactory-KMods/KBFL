@@ -2,12 +2,15 @@
 
 #include "CoreMinimal.h"
 #include "FGDriveablePawn.h"
+#include "FGResearchTree.h"
+#include "FGSchematic.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Module/WorldModule.h"
 #include "ResourceNodes/KBFLActorSpawnDescriptorBase.h"
 #include "ResourceNodes/KBFLSubLevelSpawning.h"
-#include "KBFLAssetDataSubsystem.generated.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 
+#include "KBFLAssetDataSubsystem.generated.h"
 
 USTRUCT(Blueprintable)
 struct FKBFLAssetData
@@ -32,36 +35,38 @@ struct FKBFLAssetData
 	{
 		switch (Type)
 		{
-		case 0:
-			mAllFoundedSchematics.Add(Class);
-			break;
-		case 1:
-			mAllFoundedRecipes.Add(Class);
-			break;
-		case 2:
-			mAllFoundedItems.Add(Class);
-			break;
-		case 3:
-			mAllFoundedBuildables.Add(Class);
-			break;
-		case 4:
-			mAllFoundedDriveablePawns.Add(Class);
-			break;
-		case 5:
-			mAllFoundedHolograms.Add(Class);
-			break;
-		case 6:
-			mAllFoundedModModules.Add(Class);
-			break;
-		case 7:
-			mAllFoundedCDOHelpers.Add(Class);
-			break;
-		case 8:
-			mAllFoundedResourceDescriptors.Add(Class);
-			break;
-		case 10:
-			mAllFoundResearchTrees.Add(Class);
-			break;
+			case 0:
+				mAllFoundedSchematics.Add(Class);
+				break;
+			case 1:
+				mAllFoundedRecipes.Add(Class);
+				break;
+			case 2:
+				mAllFoundedItems.Add(Class);
+				break;
+			case 3:
+				mAllFoundedBuildables.Add(Class);
+				break;
+			case 4:
+				mAllFoundedDriveablePawns.Add(Class);
+				break;
+			case 5:
+				mAllFoundedHolograms.Add(Class);
+				break;
+			case 6:
+				mAllFoundedModModules.Add(Class);
+				break;
+			case 7:
+				mAllFoundedCDOHelpers.Add(Class);
+				break;
+			case 8:
+				mAllFoundedResourceDescriptors.Add(Class);
+				break;
+			case 10:
+				mAllFoundResearchTrees.Add(Class);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -152,7 +157,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetItemsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items,
-	                      bool UseNativeCheck = false);
+		bool                              UseNativeCheck = false);
 
 	/** Get All Items with a filter for Items & Equip  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
@@ -177,7 +182,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetSchematicsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGSchematic>>& Out_Items,
-	                           bool UseNativeCheck = false);
+		bool                                   UseNativeCheck = false);
 
 	/** Get All Schematics that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
@@ -190,7 +195,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetRecipesOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGRecipe>>& Out_Items,
-	                        bool UseNativeCheck = false);
+		bool                                UseNativeCheck = false);
 
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
@@ -206,7 +211,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetBuildableOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGBuildable>>& Out_Items,
-	                          bool UseNativeCheck = false);
+		bool                                  UseNativeCheck = false);
 
 	/** Get All Buildables that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
@@ -230,35 +235,35 @@ public:
 	/** Get All Objects that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetObjectsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UObject>>& Out_Items,
-	                        bool UseNativeCheck = false);
+		bool                                UseNativeCheck = false);
 
 	template <class T>
 	void GetObjectsOfChilds_Internal(TArray<UClass*> Childs, TArray<TSubclassOf<T>>& Out_Items,
-	                                 bool UseNativeCheck = false);
+		bool                                         UseNativeCheck = false);
 
 
 	/** Get All DriveablePawns that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetDriveablePawnsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGDriveablePawn>>& Out_Items,
-	                               bool UseNativeCheck = false);
+		bool                                       UseNativeCheck = false);
 
 
 	/** Get All Holograms that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetHologramsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGHologram>>& Out_Items,
-	                          bool UseNativeCheck = false);
+		bool                                  UseNativeCheck = false);
 
 
 	/** Get All tModModules that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetModModulesOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UModModule>>& Out_Items,
-	                           bool UseNativeCheck = false);
+		bool                                   UseNativeCheck = false);
 
 
 	/** Get All CDOHelpers that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetCDOHelpersOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UKBFL_CDOHelperClass_Base>>& Out_Items,
-	                           bool UseNativeCheck = false);
+		bool                                   UseNativeCheck = false);
 
 	/** get data from a mod */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
@@ -266,9 +271,9 @@ public:
 
 	/** Get All ResourceDescriptors that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
-	void GetResourceDescriptorsOfChilds(TArray<UClass*> Childs,
-	                                    TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>>& Out_Items,
-	                                    bool UseNativeCheck = false);
+	void GetResourceDescriptorsOfChilds(TArray<UClass*>     Childs,
+		TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>>& Out_Items,
+		bool                                                UseNativeCheck = false);
 
 	inline static bool bWasInit = false;
 
@@ -306,7 +311,7 @@ private:
 	TSet<TSubclassOf<UKBFL_CDOHelperClass_Base>> mAllFoundedCDOHelpers;
 
 	UPROPERTY()
-	TSet<TSubclassOf<UFGResourceDescriptor>> mAllFoundedResourceDescriptors;
+	TSet<TSubclassOf<UFGItemDescriptor>> mAllFoundedResourceDescriptors;
 
 	UPROPERTY()
 	TSet<TSubclassOf<UObject>> mAllFoundedObjects;
@@ -321,12 +326,12 @@ public:
 	TMap<UClass*, FAssetData> mAssetClassMap;
 
 	// Small fix for PassiveMode
-	TArray<FString> mPreventStrings = {"/PassiveMode/"};
+	TArray<FString> mPreventStrings = { "/PassiveMode/" };
 };
 
 template <class T>
 void UKBFLAssetDataSubsystem::GetObjectsOfChilds_Internal(const TArray<UClass*> Childs,
-                                                          TArray<TSubclassOf<T>>& Out_Items, bool UseNativeCheck)
+	TArray<TSubclassOf<T>>&                                                     Out_Items, bool UseNativeCheck)
 {
 	if (!bWasInit)
 	{

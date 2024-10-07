@@ -7,7 +7,7 @@
 
 
 bool UKBFLCppInventoryHelper::CanStoreItem(UFGInventoryComponent* Inventory, int InvIndex,
-                                           TSubclassOf<UFGItemDescriptor> ItemClass, int Amount)
+	TSubclassOf<UFGItemDescriptor>                                ItemClass, int Amount)
 {
 	if (Inventory)
 	{
@@ -47,7 +47,7 @@ bool UKBFLCppInventoryHelper::CanStoreItem(UFGInventoryComponent* Inventory, int
 }
 
 bool UKBFLCppInventoryHelper::CanStoreItemStackOnIndex(UFGInventoryComponent* Inventory, int InvIndex,
-                                                       FInventoryStack Stack)
+	FInventoryStack                                                           Stack)
 {
 	if (Inventory && InvIndex >= 0)
 	{
@@ -57,7 +57,7 @@ bool UKBFLCppInventoryHelper::CanStoreItemStackOnIndex(UFGInventoryComponent* In
 }
 
 bool UKBFLCppInventoryHelper::CanStoreItemStacksOnIndex(UFGInventoryComponent* Inventory, int InvIndex,
-                                                        TArray<FInventoryStack> Stacks)
+	TArray<FInventoryStack>                                                    Stacks)
 {
 	if (Inventory && InvIndex >= 0 && Stacks.Num() > 0)
 	{
@@ -110,7 +110,7 @@ bool UKBFLCppInventoryHelper::CanStoreItemStack(UFGInventoryComponent* Inventory
 
 
 void UKBFLCppInventoryHelper::StoreItemStackInInventory(UFGInventoryComponent* inventory, const int InvIndex,
-                                                        const FInventoryStack ItemStack)
+	const FInventoryStack                                                      ItemStack)
 {
 	if (ItemStack.HasItems() == false)
 	{
@@ -121,7 +121,7 @@ void UKBFLCppInventoryHelper::StoreItemStackInInventory(UFGInventoryComponent* i
 }
 
 void UKBFLCppInventoryHelper::AddItemsInInventory(UFGInventoryComponent* inventory,
-                                                  TSubclassOf<UFGItemDescriptor> itemClass, int Amount)
+	TSubclassOf<UFGItemDescriptor>                                       itemClass, int Amount)
 {
 	if (inventory)
 	{
@@ -155,7 +155,7 @@ void UKBFLCppInventoryHelper::AddStacksInInventory(UFGInventoryComponent* invent
 }
 
 bool UKBFLCppInventoryHelper::HasItems(UFGInventoryComponent* inventory, TSubclassOf<UFGItemDescriptor> itemClass,
-                                       int Amount)
+	int                                                       Amount)
 {
 	if (inventory && itemClass && Amount > 0)
 	{
@@ -165,7 +165,7 @@ bool UKBFLCppInventoryHelper::HasItems(UFGInventoryComponent* inventory, TSubcla
 }
 
 void UKBFLCppInventoryHelper::GatherRefundFromInventory(UFGInventoryComponent* inventory,
-                                                        TArray<FInventoryStack>& out_refund)
+	TArray<FInventoryStack>&                                                   out_refund)
 {
 	if (inventory)
 	{
@@ -184,7 +184,7 @@ void UKBFLCppInventoryHelper::GatherRefundFromInventory(UFGInventoryComponent* i
 }
 
 void UKBFLCppInventoryHelper::StoreItemAmountInInventory(UFGInventoryComponent* inventory, int InvIndex,
-                                                         TSubclassOf<UFGItemDescriptor> itemClass, int amount)
+	TSubclassOf<UFGItemDescriptor>                                              itemClass, int amount)
 {
 	if (inventory)
 	{
@@ -215,7 +215,7 @@ void UKBFLCppInventoryHelper::StoreItemAmountInInventory(UFGInventoryComponent* 
 }
 
 void UKBFLCppInventoryHelper::PushPipe(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                       UFGPipeConnectionFactory* PipeOutput)
+	UFGPipeConnectionFactory*                                 PipeOutput)
 {
 	if (Inventory)
 	{
@@ -242,8 +242,8 @@ void UKBFLCppInventoryHelper::PushPipe(UFGInventoryComponent* Inventory, int Inv
 }
 
 void UKBFLCppInventoryHelper::PullPipe(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                       TSubclassOf<UFGItemDescriptor> AllowedItem,
-                                       UFGPipeConnectionFactory* PipeInputComp)
+	TSubclassOf<UFGItemDescriptor>                            AllowedItem,
+	UFGPipeConnectionFactory*                                 PipeInputComp)
 {
 	int32 PullAmount = 400;
 
@@ -280,7 +280,7 @@ void UKBFLCppInventoryHelper::PullPipe(UFGInventoryComponent* Inventory, int Inv
 
 					if (CanStoreItem(Inventory, InventoryIndex, FluidItem, PullAmount))
 					{
-						//Pull pull success
+						//Pull success
 						if (PipeInputComp->Factory_PullPipeInput(dt, Stack, AllowedItem, PullAmount))
 						{
 							// add pulled item into Inventory
@@ -294,8 +294,8 @@ void UKBFLCppInventoryHelper::PullPipe(UFGInventoryComponent* Inventory, int Inv
 }
 
 void UKBFLCppInventoryHelper::PullPipe(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                       TArray<TSubclassOf<UFGItemDescriptor>> AllowedItem,
-                                       UFGPipeConnectionFactory* PipeInputComp)
+	TArray<TSubclassOf<UFGItemDescriptor>>                    AllowedItem,
+	UFGPipeConnectionFactory*                                 PipeInputComp)
 {
 	// look if the inventory has already an item on index and pull only this.
 	FInventoryStack Stack;
@@ -316,8 +316,8 @@ void UKBFLCppInventoryHelper::PullPipe(UFGInventoryComponent* Inventory, int Inv
 }
 
 void UKBFLCppInventoryHelper::PullBelt(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                       TSubclassOf<UFGItemDescriptor> AllowedItem,
-                                       UFGFactoryConnectionComponent* BeltInput)
+	TSubclassOf<UFGItemDescriptor>                            AllowedItem,
+	UFGFactoryConnectionComponent*                            BeltInput)
 {
 	if (BeltInput)
 	{
@@ -326,11 +326,15 @@ void UKBFLCppInventoryHelper::PullBelt(UFGInventoryComponent* Inventory, int Inv
 			if (CanStoreItem(Inventory, InventoryIndex, AllowedItem, 1))
 			{
 				FInventoryItem Item;
-				float offset = 0.0f;
-				bool pulledItem = BeltInput->Factory_GrabOutput(Item, offset, AllowedItem);
-				if (pulledItem)
+				float          offset = 0.0f;
+				uint8          maxGrab = FMath::Min(static_cast<uint8>(1), BeltInput->MaxNumGrab(dt));
+				for (uint8 i = 0; i < maxGrab; i++)
 				{
-					StoreItemAmountInInventory(Inventory, InventoryIndex, AllowedItem);
+					bool pulledItem = BeltInput->Factory_GrabOutput(Item, offset, AllowedItem);
+					if (pulledItem)
+					{
+						StoreItemAmountInInventory(Inventory, InventoryIndex, AllowedItem);
+					}
 				}
 			}
 		}
@@ -338,8 +342,8 @@ void UKBFLCppInventoryHelper::PullBelt(UFGInventoryComponent* Inventory, int Inv
 }
 
 void UKBFLCppInventoryHelper::PullBelt(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                       TArray<TSubclassOf<UFGItemDescriptor>> AllowedItem,
-                                       UFGFactoryConnectionComponent* BeltInput)
+	TArray<TSubclassOf<UFGItemDescriptor>>                    AllowedItem,
+	UFGFactoryConnectionComponent*                            BeltInput)
 {
 	// look if the inventory has already an item on index and pull only this.
 	FInventoryStack Stack;
@@ -360,8 +364,8 @@ void UKBFLCppInventoryHelper::PullBelt(UFGInventoryComponent* Inventory, int Inv
 }
 
 void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                                 TSubclassOf<UFGItemDescriptor> AllowedItemClass,
-                                                 UFGFactoryConnectionComponent* BeltInput)
+	TSubclassOf<UFGItemDescriptor>                                      AllowedItemClass,
+	UFGFactoryConnectionComponent*                                      BeltInput)
 {
 	if (BeltInput && Inventory && AllowedItemClass)
 	{
@@ -378,10 +382,14 @@ void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventor
 							Inventory, InventoryIndex, InventoryItem.GetItemClass()))
 						{
 							FInventoryItem Item;
-							float offset;
-							if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
+							float          offset;
+							uint8          maxGrab = FMath::Min(static_cast<uint8>(1), BeltInput->MaxNumGrab(dt));
+							for (uint8 i = 0; i < maxGrab; i++)
 							{
-								StoreItemAmountInInventory(Inventory, InventoryIndex, InventoryItem.GetItemClass());
+								if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
+								{
+									StoreItemAmountInInventory(Inventory, InventoryIndex, InventoryItem.GetItemClass());
+								}
 							}
 						}
 					}
@@ -392,8 +400,8 @@ void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventor
 }
 
 void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventory, float dt,
-                                                 TSubclassOf<UFGItemDescriptor> AllowedItemClass,
-                                                 UFGFactoryConnectionComponent* BeltInput)
+	TSubclassOf<UFGItemDescriptor>                                      AllowedItemClass,
+	UFGFactoryConnectionComponent*                                      BeltInput)
 {
 	if (BeltInput && Inventory && AllowedItemClass)
 	{
@@ -410,10 +418,14 @@ void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventor
 							HasEnoughSpaceForItem(InventoryItem))
 						{
 							FInventoryItem Item;
-							float offset;
-							if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
+							float          offset;
+							uint8          maxGrab = FMath::Min(static_cast<uint8>(1), BeltInput->MaxNumGrab(dt));
+							for (uint8 i = 0; i < maxGrab; i++)
 							{
-								AddItemsInInventory(Inventory, InventoryItem.GetItemClass());
+								if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
+								{
+									AddItemsInInventory(Inventory, InventoryItem.GetItemClass());
+								}
 							}
 						}
 					}
@@ -424,9 +436,9 @@ void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventor
 }
 
 void UKBFLCppInventoryHelper::PullAllFromPipe(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
-                                              UFGPipeConnectionFactory* PipeInputComp)
+	UFGPipeConnectionFactory*                                        PipeInputComp)
 {
-	bool Debug = false;
+	bool  Debug = false;
 	int32 PullAmount = 400;
 	// check is connection set
 	if (PipeInputComp && Inventory)
@@ -489,6 +501,6 @@ void UKBFLCppInventoryHelper::PullAllFromPipe(UFGInventoryComponent* Inventory, 
 	else if (Debug)
 	{
 		UE_LOG(LogTemp, Error, TEXT("PullAllFromPipe, invalid connection (%d) or inventory (%d)!"),
-		       PipeInputComp != nullptr, Inventory != nullptr);
+			PipeInputComp != nullptr, Inventory != nullptr);
 	}
 }

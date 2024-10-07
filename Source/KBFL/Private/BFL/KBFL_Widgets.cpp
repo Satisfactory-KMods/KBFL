@@ -18,8 +18,7 @@ void UKBFL_Widgets::BindOnWidget(const TSubclassOf<UUserWidget> WidgetClass, FOn
 		return;
 	}
 	UBlueprintHookManager* HookManager = GEngine->GetEngineSubsystem<UBlueprintHookManager>();
-	HookManager->HookBlueprintFunction(ConstructFunction, [Binding](FBlueprintHookHelper& HookHelper)
-	{
+	HookManager->HookBlueprintFunction(ConstructFunction, [Binding](FBlueprintHookHelper& HookHelper) {
 		Binding.ExecuteIfBound(Cast<UUserWidget>(HookHelper.GetContext()));
 	}, Return);
 }
@@ -36,8 +35,7 @@ void UKBFL_Widgets::BindOnPreWidget(const TSubclassOf<UUserWidget> WidgetClass, 
 		return;
 	}
 	UBlueprintHookManager* HookManager = GEngine->GetEngineSubsystem<UBlueprintHookManager>();
-	HookManager->HookBlueprintFunction(ConstructFunction, [Binding](FBlueprintHookHelper& HookHelper)
-	{
+	HookManager->HookBlueprintFunction(ConstructFunction, [Binding](FBlueprintHookHelper& HookHelper) {
 		Binding.ExecuteIfBound(Cast<UUserWidget>(HookHelper.GetContext()));
 	}, Return);
 }

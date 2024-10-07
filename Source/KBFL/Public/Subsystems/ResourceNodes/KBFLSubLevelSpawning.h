@@ -15,9 +15,9 @@ class KBFL_API UKBFLSubLevelSpawning : public UObject
 	GENERATED_BODY()
 
 public:
-#if WITH_ENGINE
+	#if WITH_ENGINE
 	virtual UWorld* GetWorld() const override;
-#endif
+	#endif
 
 	// Init the Spawning sequenz
 	virtual void InitSpawning();
@@ -36,7 +36,7 @@ public:
 	bool CheckWorld() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	bool ExecuteAllowed() const;
+	bool         ExecuteAllowed() const;
 	virtual bool ExecuteAllowed_Implementation() const;
 
 	// Map where we want to load our Sublevel

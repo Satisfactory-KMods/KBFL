@@ -3,29 +3,27 @@
 
 #include "KBFLWorldModule.h"
 
-#include "FGBackgroundThread.h"
+#include "KBFLLogging.h"
 #include "AssetRegistry/IAssetRegistry.h"
 #include "BFL/KBFL_Asset.h"
 #include "Engine/AssetManager.h"
+#include "Engine/World.h"
 #include "Registry/ModContentRegistry.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 #include "Subsystems/KBFLCustomizerSubsystem.h"
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(KBFLWorldModuleLog, Log, All);
 
-DEFINE_LOG_CATEGORY(KBFLWorldModuleLog);
 
 UKBFLWorldModule::UKBFLWorldModule()
+	: mCallCustomizerInPhase()
 {
 	bRootModule = false;
 
 	mCDOInformationMap.Add(ELifecyclePhase::CONSTRUCTION, FKBFLCDOInformation());
 	mCDOInformationMap.Add(ELifecyclePhase::INITIALIZATION, FKBFLCDOInformation());
 	mCDOInformationMap.Add(ELifecyclePhase::POST_INITIALIZATION, FKBFLCDOInformation());
-
-	mPoolEntryToAdd.Add(FKBFLPool());
 }
 
 FKBFLCDOInformation UKBFLWorldModule::GetCDOInformationFromPhase_Implementation(ELifecyclePhase Phase, bool& bHasPhase)
@@ -67,7 +65,6 @@ void UKBFLWorldModule::DispatchLifecycleEvent(ELifecyclePhase Phase)
 {
 	if (Phase == ELifecyclePhase::CONSTRUCTION)
 	{
-		RegisterPoolSettings();
 		ConstructionPhase();
 	}
 
@@ -85,17 +82,11 @@ void UKBFLWorldModule::DispatchLifecycleEvent(ELifecyclePhase Phase)
 	Super::DispatchLifecycleEvent(Phase);
 }
 
-void UKBFLWorldModule::InitPhase_Implementation()
-{
-}
+void UKBFLWorldModule::InitPhase_Implementation() {}
 
-void UKBFLWorldModule::ConstructionPhase_Implementation()
-{
-}
+void UKBFLWorldModule::ConstructionPhase_Implementation() {}
 
-void UKBFLWorldModule::PostInitPhase_Implementation()
-{
-}
+void UKBFLWorldModule::PostInitPhase_Implementation() {}
 
 void UKBFLWorldModule::RegisterKBFLLogicContent()
 {
@@ -105,7 +96,7 @@ void UKBFLWorldModule::RegisterKBFLLogicContent()
 		return;
 	}
 
-	UWorld* WorldObject = GetWorld();
+	UWorld*              WorldObject = GetWorld();
 	UModContentRegistry* ModContentRegistry = UModContentRegistry::Get(WorldObject);
 	fgcheck(ModContentRegistry);
 
@@ -131,8 +122,8 @@ void UKBFLWorldModule::RegisterKBFLLogicContent()
 				else
 				{
 					UE_LOG(KBFLWorldModuleLog, Warning,
-					       TEXT("Cancle Register Schematic (%s) in ModContentRegistry because it not allowed!"),
-					       *SchematicClass->GetName());
+						TEXT("Cancle Register Schematic (%s) in ModContentRegistry because it not allowed!"),
+						*SchematicClass->GetName());
 				}
 			}
 		}
@@ -155,8 +146,8 @@ void UKBFLWorldModule::RegisterKBFLLogicContent()
 				else
 				{
 					UE_LOG(KBFLWorldModuleLog, Warning,
-					       TEXT("Cancle Register ResearchTree (%s) in ModContentRegistry because it not allowed!"),
-					       *ResearchTreeClass->GetName());
+						TEXT("Cancle Register ResearchTree (%s) in ModContentRegistry because it not allowed!"),
+						*ResearchTreeClass->GetName());
 				}
 			}
 		}
@@ -176,30 +167,8 @@ void UKBFLWorldModule::RegisterKBFLLogicContent()
 				else
 				{
 					UE_LOG(KBFLWorldModuleLog, Warning,
-					       TEXT("Cancle Register Recipe (%s) in ModContentRegistry because it not allowed!"),
-					       *RecipeClass->GetName());
-				}
-			}
-		}
-	}
-}
-
-void UKBFLWorldModule::RegisterPoolSettings()
-{
-	UKBFLContentCDOHelperSubsystem* CDoSub = UKBFLContentCDOHelperSubsystem::Get(GetWorld());
-	if (mAddPoolEntry && mPoolEntryToAdd.Num() > 0 && CDoSub)
-	{
-		if (UFGPoolSettings* Settings = GetMutableDefault<UFGPoolSettings>())
-		{
-			CDoSub->StoreObject(Settings);
-			CDoSub->StoreClass(UFGPoolSettings::StaticClass());
-			for (FKBFLPool PoolEntry : mPoolEntryToAdd)
-			{
-				if (!IsPoolEntryThere(Settings->PoolEntry, PoolEntry))
-				{
-					Settings->PoolEntry.Add(PoolEntry.ToFg());
-					CDoSub->StoreObject(PoolEntry.mProxyComponent);
-					CDoSub->StoreObject(PoolEntry.mVisual_Mesh);
+						TEXT("Cancle Register Recipe (%s) in ModContentRegistry because it not allowed!"),
+						*RecipeClass->GetName());
 				}
 			}
 		}
@@ -215,33 +184,6 @@ bool UKBFLWorldModule::IsAllowedToRegister(TSubclassOf<UObject> Object) const
 	return false;
 }
 
-bool UKBFLWorldModule::IsPoolEntryThere(TArray<FFGPoolType> Source, FKBFLPool CheckStruc)
-{
-	if (!CheckStruc.mProxyComponent)
-	{
-		return true;
-	}
-
-	if (!CheckStruc.mVisual_Mesh)
-	{
-		return true;
-	}
-
-	for (FFGPoolType PoolType : Source)
-	{
-		if (PoolType.mProxyComponent->IsValidLowLevel() && CheckStruc.mProxyComponent->IsValidLowLevel())
-		{
-			if (PoolType.mProxyComponent == CheckStruc.mProxyComponent && CheckStruc.mProxyComponent)
-			{
-				UE_LOG(KBFLWorldModuleLog, Warning, TEXT("Ignore Pool Entry because is allready there: %s"),
-				       *CheckStruc.mProxyComponent->GetName());
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
 void UKBFLWorldModule::FindAllCDOs()
 {
 	if (!mUseAssetRegistry || !mRegisterCDOs)
@@ -253,7 +195,7 @@ void UKBFLWorldModule::FindAllCDOs()
 	fgcheck(AssetDataSub);
 
 	constexpr ELifecyclePhase CdoPhase = ELifecyclePhase::CONSTRUCTION;
-	FKBFLAssetData Datas = AssetDataSub->GetModRelatedData(this);
+	FKBFLAssetData            Datas = AssetDataSub->GetModRelatedData(this);
 	if (!mCDOInformationMap.Find(CdoPhase))
 	{
 		mCDOInformationMap.Add(CdoPhase, FKBFLCDOInformation());
@@ -270,7 +212,7 @@ void UKBFLWorldModule::FindAllCDOs()
 				continue;
 			}
 			UE_LOG(KBFLWorldModuleLog, Warning, TEXT("Found CDO helper (%s) and add to map"),
-			       *CDOHelperClass->GetName());
+				*CDOHelperClass->GetName());
 			CDOInfo->mCDOHelperClasses.AddUnique(CDOHelperClass);
 		}
 	}

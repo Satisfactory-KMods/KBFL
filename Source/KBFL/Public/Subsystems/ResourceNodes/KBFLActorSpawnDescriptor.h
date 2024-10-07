@@ -18,7 +18,7 @@ public:
 
 	virtual TArray<TSubclassOf<AActor>> GetSearchingActorClasses() override
 	{
-		return {mActorClass};
+		return { mActorClass };
 	};
 
 	FORCEINLINE virtual TSubclassOf<AActor> GetActorClass() override { return mActorClass; };

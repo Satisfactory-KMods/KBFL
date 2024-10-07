@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "Resources/FGResourceNode.h"
 
 #include "KBFLActorSpawnDescriptorBase.generated.h"
 
@@ -14,42 +13,40 @@ class KBFL_API UKBFLActorSpawnDescriptorBase : public UObject
 	GENERATED_BODY()
 
 public:
-#if WITH_ENGINE
+	#if WITH_ENGINE
 	virtual UWorld* GetWorld() const override;
-#endif
+	#endif
 
-	void BeginSpawning();
+	void         BeginSpawning();
 	virtual void ForeachLocations(TArray<AActor*>& ActorArray);
 
-	virtual bool CheckActorInRange(FTransform Transform, AActor*& OutActor);
-	virtual void ModifyCheckActor(AActor*& InActor, FTransform FoundTransform);
-	virtual bool IsRangeFree(FTransform Transform);
-	virtual void RemoveWrongActors(TArray<AActor*>& ActorArray);
+	virtual bool    CheckActorInRange(FTransform Transform, AActor*& OutActor);
+	virtual void    ModifyCheckActor(AActor*& InActor, FTransform FoundTransform);
+	virtual bool    IsRangeFree(FTransform Transform);
+	virtual void    RemoveWrongActors(TArray<AActor*>& ActorArray);
 	virtual AActor* SpawnActorAtLocation(FTransform Transform, TSubclassOf<AActor> ClassToSpawn);
-	virtual void ModifySpawnedActorPreSpawn(AActor*& InActor);
-	virtual void ModifySpawnedActorPostSpawn(AActor*& InActor);
-	virtual void AfterSpawning();
+	virtual void    ModifySpawnedActorPreSpawn(AActor*& InActor);
+	virtual void    ModifySpawnedActorPostSpawn(AActor*& InActor);
+	virtual void    AfterSpawning();
 
 	virtual TArray<TEnumAsByte<EObjectTypeQuery>> GetSphereCheckChannels();
-	void SetSphereCheckChannels(TArray<TEnumAsByte<EObjectTypeQuery>> Channels);
+	void                                          SetSphereCheckChannels(TArray<TEnumAsByte<EObjectTypeQuery>> Channels);
 
 	void ApplyMaterialData(AActor* Actor, TMap<uint8, UMaterialInterface*> MaterialInfo);
 
 	virtual TArray<TSubclassOf<AActor>> GetSearchingActorClasses();
 
 	virtual bool IsAllowedToRemoveActor(AActor* InActor);
-	bool CheckWorld() const;
+	bool         CheckWorld() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	bool ExecuteAllowed() const;
+	bool         ExecuteAllowed() const;
 	virtual bool ExecuteAllowed_Implementation() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void ModifyValues();
 
-	virtual void ModifyValues_Implementation()
-	{
-	};
+	virtual void ModifyValues_Implementation() {};
 
 	virtual TSubclassOf<AActor> GetActorClass();
 	virtual TSubclassOf<AActor> GetActorFreeClass();

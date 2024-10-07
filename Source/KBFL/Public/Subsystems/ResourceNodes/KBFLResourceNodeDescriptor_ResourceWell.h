@@ -57,7 +57,7 @@ public:
 
 	virtual TArray<TSubclassOf<AActor>> GetSearchingActorClasses() override
 	{
-		return {mFrackingCoreClass, mFrackingSatelliteClass};
+		return { mFrackingCoreClass, mFrackingSatelliteClass };
 	};
 
 	virtual TArray<TEnumAsByte<EObjectTypeQuery>> GetSphereCheckChannels() override;
@@ -104,6 +104,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FTransform> mCoreTransforms;
-	bool bIsInSatelliteSpawning = false;
-	bool bIsInCrackSpawning = false;
+	bool               bIsInSatelliteSpawning = false;
+	bool               bIsInCrackSpawning = false;
 };

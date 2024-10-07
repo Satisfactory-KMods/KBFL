@@ -1,0 +1,15 @@
+﻿#pragma once
+
+#include "CoreMinimal.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(KBFLActorSpawnerLog, Log, All)
+DECLARE_LOG_CATEGORY_EXTERN(KBFLSubLevelSpawnerLog, Log, All)
+DECLARE_LOG_CATEGORY_EXTERN(LogKBFLModule, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(KBFLAssetLog, Log, All)
+DECLARE_LOG_CATEGORY_EXTERN(KBFLWorldModuleLog, Log, All);
+
+inline DEFINE_LOG_CATEGORY(KBFLWorldModuleLog);
+inline DEFINE_LOG_CATEGORY(KBFLAssetLog)
+inline DEFINE_LOG_CATEGORY(LogKBFLModule);
+inline DEFINE_LOG_CATEGORY(KBFLActorSpawnerLog)
+inline DEFINE_LOG_CATEGORY(KBFLSubLevelSpawnerLog)

@@ -6,7 +6,7 @@
 #include "Subsystems/KBFLLocationSubsystem.h"
 
 void UKBFLUtilWidget::OnNewStats_Implementation(const FVector& NewScale, const FVector& NewLocation,
-                                                const FRotator& NewRotation)
+	const FRotator&                                            NewRotation)
 {
 	Rotation = NewRotation;
 	Scale = NewScale;

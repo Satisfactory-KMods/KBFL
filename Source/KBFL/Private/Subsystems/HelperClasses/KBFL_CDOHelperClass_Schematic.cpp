@@ -18,7 +18,7 @@ void UKBFL_CDOHelperClass_Schematic::DoCDO()
 		{
 			//DefaultObject->AddToRoot();
 			UE_LOG(CDOHelperSchematicLog, Log, TEXT("CDOHelperSchematic > DoSchematicCDO > %s"),
-			       *DefaultObject->GetName());
+				*DefaultObject->GetName());
 			if (mTypeOverride)
 			{
 				DefaultObject->mType = mType;
@@ -149,7 +149,6 @@ TArray<UClass*> UKBFL_CDOHelperClass_Schematic::GetClasses()
 			Re.Add(Class.LoadSynchronous());
 		}
 	}
-
 
 	return Re;
 }

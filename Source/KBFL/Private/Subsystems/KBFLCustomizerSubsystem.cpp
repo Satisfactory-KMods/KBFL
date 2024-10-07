@@ -100,9 +100,9 @@ void UKBFLCustomizerSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 
 bool UKBFLCustomizerSubsystem::RegisterSwatchesInSubsystem(TArray<FKBFLSwatchInformation> SwatchInformations)
 {
-	AFGBuildableSubsystem* Subsystem = AFGBuildableSubsystem::Get(this);
+	AFGBuildableSubsystem*          Subsystem = AFGBuildableSubsystem::Get(this);
 	UKBFLContentCDOHelperSubsystem* CDOHelperSubsystem = UKBFLContentCDOHelperSubsystem::Get(this);
-	AFGGameState* FGGameState = Cast<AFGGameState>(UGameplayStatics::GetGameState(this));
+	AFGGameState*                   FGGameState = Cast<AFGGameState>(UGameplayStatics::GetGameState(this));
 
 	if (Subsystem && FGGameState && CDOHelperSubsystem)
 	{
@@ -131,7 +131,7 @@ bool UKBFLCustomizerSubsystem::RegisterSwatchesInSubsystem(TArray<FKBFLSwatchInf
 						if (!Subsystem->mColorSlots_Data.IsValidIndex(ColourIndex))
 						{
 							UE_LOG(CustomizerSubsystem, Log, TEXT("Try to add new color Slot at index, %d - %d"),
-							       ColourIndex, Subsystem->mColorSlots_Data.Num());
+								ColourIndex, Subsystem->mColorSlots_Data.Num());
 							for (uint8 i = Subsystem->mColorSlots_Data.Num(); i <= ColourIndex; ++i)
 							{
 								// Defaults
@@ -144,11 +144,11 @@ bool UKBFLCustomizerSubsystem::RegisterSwatchesInSubsystem(TArray<FKBFLSwatchInf
 								FGGameState->Server_SetBuildingColorDataForSlot(i, NewColourSlot);
 
 								FTimerDelegate TimerDel;
-								FTimerHandle TimerHandle;
+								FTimerHandle   TimerHandle;
 								TimerDel.BindUFunction(Subsystem, FName("SetColorSlot_Data"), i, NewColourSlot);
 								GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 2.0f, false);
 								TimerDel.BindUFunction(FGGameState, FName("Server_SetBuildingColorDataForSlot"), i,
-								                       NewColourSlot);
+									NewColourSlot);
 								GetWorld()->GetTimerManager().SetTimer(TimerHandle, TimerDel, 2.0f, false);
 
 								Subsystem->SetColorSlot_Data(i, NewColourSlot);
@@ -168,28 +168,28 @@ bool UKBFLCustomizerSubsystem::RegisterSwatchesInSubsystem(TArray<FKBFLSwatchInf
 								ColourIndex];
 							FGGameState->SetupColorSlots_Data(Subsystem->mColorSlots_Data);
 							UE_LOG(CustomizerSubsystem, Log, TEXT("write color again to gamestate: %d / %d"),
-							       FGGameState->mBuildingColorSlots_Data.Num(), Subsystem->mColorSlots_Data.Num());
+								FGGameState->mBuildingColorSlots_Data.Num(), Subsystem->mColorSlots_Data.Num());
 						}
 
 						mSwatchIDMap.Add(ColourIndex, Swatch.mSwatch);
 						FGGameState->SetupColorSlots_Data(Subsystem->mColorSlots_Data);
 						Subsystem->mColorSlotsAreDirty = true;
 						UE_LOG(CustomizerSubsystem, Log, TEXT("Swatch found and success: %d > %s (%d/%d)"), ColourIndex,
-						       *Swatch.mSwatch->GetName(), FGGameState->mBuildingColorSlots_Data.Num(),
-						       Subsystem->mColorSlots_Data.Num());
+							*Swatch.mSwatch->GetName(), FGGameState->mBuildingColorSlots_Data.Num(),
+							Subsystem->mColorSlots_Data.Num());
 					}
 					else
 					{
 						UE_LOG(CustomizerSubsystem, Fatal, TEXT("Duplicate Swatch ID: %s | %d >< %s | %d"),
-						       *Swatch.mSwatch->GetName(), Swatch.mSwatch.GetDefaultObject()->ID,
-						       *mSwatchIDMap[ColourIndex]->GetName(), ColourIndex)
+							*Swatch.mSwatch->GetName(), Swatch.mSwatch.GetDefaultObject()->ID,
+							*mSwatchIDMap[ColourIndex]->GetName(), ColourIndex)
 					}
 
 					// Ignore Slots used by CSS (Slot 16 for example is used twice)
 					if (!(ColourIndex > 18 && ColourIndex < 255))
 					{
 						UE_LOG(CustomizerSubsystem, Fatal,
-						       TEXT("Please use a Index between 19 and 254 (Dont use Slots from SF!)"));
+							TEXT("Please use a Index between 19 and 254 (Dont use Slots from SF!)"));
 					}
 				}
 			}
@@ -221,7 +221,7 @@ bool UKBFLCustomizerSubsystem::RegisterSwatchesInSubsystem(TArray<FKBFLSwatchInf
 						FGGameState->mBuildingColorSlots_Data[ColourIndex] = Subsystem->mColorSlots_Data[ColourIndex];
 						FGGameState->SetupColorSlots_Data(Subsystem->mColorSlots_Data);
 						UE_LOG(CustomizerSubsystem, Log, TEXT("write color again to gamestate: %d / %d"),
-						       FGGameState->mBuildingColorSlots_Data.Num(), Subsystem->mColorSlots_Data.Num());
+							FGGameState->mBuildingColorSlots_Data.Num(), Subsystem->mColorSlots_Data.Num());
 					}
 				}
 			}
@@ -347,7 +347,7 @@ bool UKBFLCustomizerSubsystem::GatherDefaultCollections()
 
 void UKBFLCustomizerSubsystem::GatherInterfaces()
 {
-#if !WITH_EDITOR
+	#if !WITH_EDITOR
 	UWorldModuleManager* Subsystem = Cast< UWorldModuleManager >( GetWorld()->GetSubsystem< UWorldModuleManager >() );
 	for ( auto i : Subsystem->RootModuleList )
 	{
@@ -357,15 +357,15 @@ void UKBFLCustomizerSubsystem::GatherInterfaces()
 			BeginForModule( i );
 		}
 	}
-#endif
+	#endif
 }
 
 bool UKBFLCustomizerSubsystem::SetDefaultToSwatchGroup(TSubclassOf<UFGSwatchGroup> SwatchGroup,
-                                                       TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch> Swatch)
+	TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch>                          Swatch)
 {
 	UE_LOG(CustomizerSubsystem, Log, TEXT("SetDefaultToSwatchGroup"));
 	AFGBuildableSubsystem* Subsystem = AFGBuildableSubsystem::Get(this);
-	AFGGameState* GameState = Cast<AFGGameState>(UGameplayStatics::GetGameState(this));
+	AFGGameState*          GameState = Cast<AFGGameState>(UGameplayStatics::GetGameState(this));
 
 	if (Subsystem && GameState && Swatch && SwatchGroup)
 	{
@@ -394,11 +394,11 @@ bool UKBFLCustomizerSubsystem::SetDefaultToSwatchGroup(TSubclassOf<UFGSwatchGrou
 
 			Subsystem->mColorSlotsAreDirty = true;
 			UE_LOG(CustomizerSubsystem, Log, TEXT("Swatch Group found and success added: %s > %s"),
-			       *SwatchGroup->GetName(), *Swatch->GetName());
+				*SwatchGroup->GetName(), *Swatch->GetName());
 		}
 
 		UE_LOG(CustomizerSubsystem, Log, TEXT("Swatch Group found: %s > %s"), *SwatchGroup->GetName(),
-		       *Swatch->GetName());
+			*Swatch->GetName());
 		return true;
 	}
 

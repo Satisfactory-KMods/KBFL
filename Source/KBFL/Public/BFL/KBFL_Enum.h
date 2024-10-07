@@ -11,4 +11,5 @@ enum class KBFLInOut : uint8
 {
 	Input UMETA(DisplayName = "Input"),
 	Output UMETA(DisplayName = "Output"),
-	Both UMETA(DisplayName = "Both")};
+	Both UMETA(DisplayName = "Both")
+};

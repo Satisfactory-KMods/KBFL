@@ -6,8 +6,8 @@
 
 TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllRegisteredSchematics(UObject* WorldContext)
 {
-	auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Schematics = ModContent->GetRegisteredSchematics();
+	auto                              ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                              Schematics = ModContent->GetRegisteredSchematics();
 	TArray<TSubclassOf<UFGSchematic>> ReturnSchematics = {};
 
 	for (auto Schematic : Schematics)
@@ -20,8 +20,8 @@ TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllRegisteredSchematics(U
 
 TArray<FKBFLSchematicInfo> UKBFL_Schematics::GetAllRegisteredSchematicsWithInfos(UObject* WorldContext)
 {
-	auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Schematics = ModContent->GetRegisteredSchematics();
+	auto                       ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                       Schematics = ModContent->GetRegisteredSchematics();
 	TArray<FKBFLSchematicInfo> ReturnSchematics = {};
 
 	for (auto Schematic : Schematics)
@@ -38,8 +38,8 @@ TArray<FKBFLSchematicInfo> UKBFL_Schematics::GetAllRegisteredSchematicsWithInfos
 
 TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllModSchematics(UObject* WorldContext, FName ModName)
 {
-	auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Schematics = ModContent->GetRegisteredSchematics();
+	auto                              ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                              Schematics = ModContent->GetRegisteredSchematics();
 	TArray<TSubclassOf<UFGSchematic>> ReturnSchematics = {};
 
 	for (auto Schematic : Schematics)
@@ -55,8 +55,8 @@ TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllModSchematics(UObject*
 
 TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllModsSchematics(UObject* WorldContext, TArray<FName> ModNames)
 {
-	auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Schematics = ModContent->GetRegisteredSchematics();
+	auto                              ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                              Schematics = ModContent->GetRegisteredSchematics();
 	TArray<TSubclassOf<UFGSchematic>> ReturnSchematics = {};
 
 	for (auto Schematic : Schematics)
@@ -72,8 +72,8 @@ TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllModsSchematics(UObject
 
 TArray<FKBFLSchematicInfo> UKBFL_Schematics::GetAllModsSchematicsWithInfo(UObject* WorldContext, TArray<FName> ModNames)
 {
-	auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Schematics = ModContent->GetRegisteredSchematics();
+	auto                       ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                       Schematics = ModContent->GetRegisteredSchematics();
 	TArray<FKBFLSchematicInfo> ReturnSchematics = {};
 
 	for (auto Schematic : Schematics)

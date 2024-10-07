@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "KBFL_Struct.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "Resources/FGItemDescriptorNuclearFuel.h"
 
 #include "KBFL_Items.generated.h"
 

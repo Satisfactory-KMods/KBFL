@@ -2,8 +2,11 @@
 
 #include "KBFLGameInstanceModule.h"
 
+#include "TimerManager.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "BFL/KBFL_Asset.h"
+#include "Engine/GameInstance.h"
+#include "Engine/World.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
@@ -35,7 +38,7 @@ void UKBFLGameInstanceModule::FindAllCDOs()
 	fgcheck(AssetDataSub);
 
 	constexpr ELifecyclePhase CdoPhase = ELifecyclePhase::CONSTRUCTION;
-	FKBFLAssetData Datas = AssetDataSub->GetModRelatedData(this);
+	FKBFLAssetData            Datas = AssetDataSub->GetModRelatedData(this);
 	if (!mCDOInformationMap.Find(CdoPhase))
 	{
 		mCDOInformationMap.Add(CdoPhase, FKBFLCDOInformation());
@@ -52,7 +55,7 @@ void UKBFLGameInstanceModule::FindAllCDOs()
 				continue;
 			}
 			UE_LOG(KBFLGameInstanceModuleLog, Warning, TEXT("Found CDO helper (%s) and add to map"),
-			       *CDOHelperClass->GetName());
+				*CDOHelperClass->GetName());
 			CDOInfo->mCDOHelperClasses.AddUnique(CDOHelperClass);
 		}
 	}
@@ -103,15 +106,15 @@ void UKBFLGameInstanceModule::ConstructionPhase_Delayed()
 		{
 			Called.Add(ELifecyclePhase::CONSTRUCTION);
 			UE_LOG(KBFLGameInstanceModuleLog, Log, TEXT("Begin CDO call for %s as phase CONSTRUCTION"),
-			       *GetOwnerModReference().ToString());
+				*GetOwnerModReference().ToString());
 			CDOHelperSubsystem->BeginCDOForModule(this, ELifecyclePhase::CONSTRUCTION);
 		}
 	}
 	else
 	{
 		UE_LOG(KBFLGameInstanceModuleLog, Log,
-		       TEXT("WARNING INVALID CDOHelperSubsystem : %s as phase ELifecyclePhase::CONSTRUCTION"),
-		       *GetOwnerModReference().ToString());
+			TEXT("WARNING INVALID CDOHelperSubsystem : %s as phase ELifecyclePhase::CONSTRUCTION"),
+			*GetOwnerModReference().ToString());
 		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UKBFLGameInstanceModule::ConstructionPhase_Delayed);
 	}
 }
@@ -126,14 +129,14 @@ void UKBFLGameInstanceModule::InitPhase_Delayed()
 		{
 			Called.Add(ELifecyclePhase::INITIALIZATION);
 			UE_LOG(KBFLGameInstanceModuleLog, Log, TEXT("Begin CDO call for %s as phase INITIALIZATION"),
-			       *GetOwnerModReference().ToString());
+				*GetOwnerModReference().ToString());
 			CDOHelperSubsystem->BeginCDOForModule(this, ELifecyclePhase::INITIALIZATION);
 		}
 	}
 	else
 	{
 		UE_LOG(KBFLGameInstanceModuleLog, Log, TEXT("WARNING INVALID CDOHelperSubsystem : %s as phase INITIALIZATION"),
-		       *GetOwnerModReference().ToString());
+			*GetOwnerModReference().ToString());
 		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UKBFLGameInstanceModule::InitPhase_Delayed);
 	}
 }
@@ -148,27 +151,21 @@ void UKBFLGameInstanceModule::PostInitPhase_Delayed()
 		{
 			Called.Add(ELifecyclePhase::POST_INITIALIZATION);
 			UE_LOG(KBFLGameInstanceModuleLog, Log, TEXT("Begin CDO call for %s as phase POST_INITIALIZATION"),
-			       *GetOwnerModReference().ToString());
+				*GetOwnerModReference().ToString());
 			CDOHelperSubsystem->BeginCDOForModule(this, ELifecyclePhase::POST_INITIALIZATION);
 		}
 	}
 	else
 	{
 		UE_LOG(KBFLGameInstanceModuleLog, Log,
-		       TEXT("WARNING INVALID CDOHelperSubsystem : %s as phase POST_INITIALIZATION"),
-		       *GetOwnerModReference().ToString());
+			TEXT("WARNING INVALID CDOHelperSubsystem : %s as phase POST_INITIALIZATION"),
+			*GetOwnerModReference().ToString());
 		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UKBFLGameInstanceModule::PostInitPhase_Delayed);
 	}
 }
 
-void UKBFLGameInstanceModule::PostInitPhase_Implementation()
-{
-}
+void UKBFLGameInstanceModule::PostInitPhase_Implementation() {}
 
-void UKBFLGameInstanceModule::InitPhase_Implementation()
-{
-}
+void UKBFLGameInstanceModule::InitPhase_Implementation() {}
 
-void UKBFLGameInstanceModule::ConstructionPhase_Implementation()
-{
-}
+void UKBFLGameInstanceModule::ConstructionPhase_Implementation() {}

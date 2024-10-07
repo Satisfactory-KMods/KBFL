@@ -4,19 +4,21 @@ public class KBFL : ModuleRules
 {
 	public KBFL(ReadOnlyTargetRules Target) : base(Target)
 	{
+		CppStandard = CppStandardVersion.Cpp20;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		bLegacyPublicIncludePaths = false;
 
 		PublicDependencyModuleNames.AddRange(
 			new[]
 			{
-				"Json",
+				"Json", "HTTP",
 				"Core",
 				"CoreUObject",
 				"Engine",
 				"DeveloperSettings",
 				"PhysicsCore",
 				"InputCore",
-				"OnlineSubsystem", "OnlineSubsystemUtils",
+				"OnlineSubsystem", "OnlineSubsystemNull", "OnlineSubsystemUtils",
 				"SignificanceManager",
 				"GeometryCollectionEngine",
 				"ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
@@ -35,7 +37,7 @@ public class KBFL : ModuleRules
 				"EnhancedInput",
 				"GameplayCameras",
 				"TemplateSequence",
-				"NetCore", "HTTP",
+				"NetCore",
 				"GameplayTags"
 			});
 
@@ -56,6 +58,5 @@ public class KBFL : ModuleRules
 		if (Target.Type == TargetRules.TargetType.Editor)
 			PublicDependencyModuleNames.AddRange(new[] { "OnlineBlueprintSupport", "AnimGraph" });
 		PublicDependencyModuleNames.AddRange(new[] { "FactoryGame", "SML" });
-		PrivateDependencyModuleNames.AddRange(new[] { "FactoryGame", "SML" });
 	}
 }

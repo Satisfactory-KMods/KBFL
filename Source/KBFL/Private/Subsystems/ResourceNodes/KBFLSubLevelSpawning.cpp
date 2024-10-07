@@ -9,7 +9,7 @@
 #include "Engine/LevelStreamingDynamic.h"
 #include "Kismet/GameplayStatics.h"
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
-#include "Subsystems/ResourceNodes/ResourceNodesLogging.h"
+#include "KBFLLogging.h"
 
 UWorld* UKBFLSubLevelSpawning::GetWorld() const
 {
@@ -27,26 +27,26 @@ void UKBFLSubLevelSpawning::InitSpawning()
 {
 	if (CheckWorld())
 	{
-		UE_LOG(SubLevelSpawnerLog, Log, TEXT("Init SubLevelSpawning %s"), *GetName());
+		UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Init SubLevelSpawning %s"), *GetName());
 		SpawnSubLevel();
 		StreamingLevelReceived();
 	}
 	else
 	{
-		UE_LOG(SubLevelSpawnerLog, Log, TEXT("Skip SubLevelSpawning because wrong world %s"), *GetName());
+		UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Skip SubLevelSpawning because wrong world %s"), *GetName());
 	}
 }
 
 void UKBFLSubLevelSpawning::SpawnSubLevel()
 {
-	UE_LOG(SubLevelSpawnerLog, Log, TEXT("Try to load total of %d levels"), mSubLevelArray.Num());
+	UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Try to load total of %d levels"), mSubLevelArray.Num());
 	for (TSoftObjectPtr<UWorld> Level : mSubLevelArray)
 	{
 		// Load the World and store the ref to avoid Garb.
 		mCachedWorlds.AddUnique(Level.LoadSynchronous());
 
 		FString LevelName = Level.GetLongPackageName();
-		UE_LOG(SubLevelSpawnerLog, Log, TEXT("Try to load Level %s"), *LevelName);
+		UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Try to load Level %s"), *LevelName);
 
 		FStaticConstructObjectParameters Params = FStaticConstructObjectParameters(
 			ULevelStreamingDynamic::StaticClass());
@@ -74,14 +74,13 @@ void UKBFLSubLevelSpawning::SpawnSubLevel()
 
 			FString PackageFileName;
 			if (!FPackageName::DoesPackageExist(StreamingLevel->PackageNameToLoad.ToString(), nullptr,
-			                                    &PackageFileName))
+				&PackageFileName))
 			{
-				UE_LOG(SubLevelSpawnerLog, Error, TEXT("Invalid Level: %s"),
-				       *StreamingLevel->PackageNameToLoad.ToString());
+				UE_LOG(KBFLSubLevelSpawnerLog, Error, TEXT("Invalid Level: %s"),
+					*StreamingLevel->PackageNameToLoad.ToString());
 				return;
 			}
 			StreamingLevel->PackageNameToLoad = FName(*FPackageName::FilenameToLongPackageName(PackageFileName));
-
 
 			// Add Stream to World (Unique so dont need a check if its already exsists
 			GetWorld()->AddUniqueStreamingLevel(StreamingLevel);
@@ -101,8 +100,8 @@ void UKBFLSubLevelSpawning::SpawnSubLevel()
 
 			if (ULevelStreaming* NewLoadedLevel = UGameplayStatics::GetStreamingLevel(GetWorld(), FName(LevelName)))
 			{
-				UE_LOG(SubLevelSpawnerLog, Log, TEXT("Level Added to Current world: %s"),
-				       *StreamingLevel->PackageNameToLoad.ToString());
+				UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Level Added to Current world: %s"),
+					*StreamingLevel->PackageNameToLoad.ToString());
 				// Store ref to avoid Garb.
 				mLevelStreaming.Add(NewLoadedLevel);
 			}
@@ -144,16 +143,15 @@ void UKBFLSubLevelSpawning::StreamingLevelReceived()
 
 				// Todo: get this to work again
 
-
 				// Get our AFGWorldSettings if can cast to it.
 				/*	if(AFGWorldSettings* Settings = Cast<AFGWorldSettings>(LoadLevel->GetWorldSettings())) {
 						// We makr the Save Actors as Dirty and prepare the Level to make sure that the array has all actors!
 						Settings->mSaveActorsDirty = true;
 						Settings->PrepareSaveActors();
-						UE_LOG(SubLevelSpawnerLog, Log, TEXT("Save Actors: %d"), Settings->GetSaveActors().Num());
+						UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Save Actors: %d"), Settings->GetSaveActors().Num());
 	
 						// Get our Session... Should always Valid! > no check needed.
-						UE_LOG(SubLevelSpawnerLog, Log, TEXT("LevelStreaming is loaded"));
+						UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("LevelStreaming is loaded"));
 						UFGSaveSession* Session = UFGSaveSession::Get(GetWorld());
 	
 						// Is a check for MP on Client looks like the Session is dont needed bc we also never save on Client side!
@@ -163,25 +161,25 @@ void UKBFLSubLevelSpawning::StreamingLevelReceived()
 						}
 	
 						// We add the world to the Session that all information will create
-						UE_LOG(SubLevelSpawnerLog, Log, TEXT("Session->OnLevelAddedToWorld > %s"), *LoadLevel->GetName());
+						UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Session->OnLevelAddedToWorld > %s"), *LoadLevel->GetName());
 						Session->OnLevelAddedToWorld(LoadLevel, GetWorld());
 						if(Session && LoadLevel) {
 							// Manuell add our PersistentActors because our level is not "Persistent" but it is tbh.
-							UE_LOG(SubLevelSpawnerLog, Log, TEXT("Add Level actors to mPersistentAndRuntimeLoadedObjects"));
+							UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Add Level actors to mPersistentAndRuntimeLoadedObjects"));
 							for(AActor* SaveActor: Settings->GetSaveActors()) {
 								if(Session->mPersistentAndRuntimeLoadedObjects.AddUnique(SaveActor) > 0) {
 									if(mDetailedDebug) {
-										UE_LOG(SubLevelSpawnerLog, Log, TEXT("Add %s to Session"), *SaveActor->GetName());
+										UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("Add %s to Session"), *SaveActor->GetName());
 									}
 								} else if(mDetailedDebug) {
-									UE_LOG(SubLevelSpawnerLog, Warning, TEXT("Cannot add %s to Session because in not Unique and allready exsists!"), *SaveActor->GetName());
+									UE_LOG(KBFLSubLevelSpawnerLog, Warning, TEXT("Cannot add %s to Session because in not Unique and allready exsists!"), *SaveActor->GetName());
 								}
 							}
 	
 							// Only for debug if our level was added.
 							if(mDetailedDebug) {
 								for(TTuple<FString , FPerLevelSaveData*> Data: Session->mPerLevelDataMap) {
-									UE_LOG(SubLevelSpawnerLog, Warning, TEXT("%s > %d"), *Data.Key, Data.Value->IsPersistentLevelData);
+									UE_LOG(KBFLSubLevelSpawnerLog, Warning, TEXT("%s > %d"), *Data.Key, Data.Value->IsPersistentLevelData);
 								}
 							}
 	
@@ -192,7 +190,7 @@ void UKBFLSubLevelSpawning::StreamingLevelReceived()
 			}
 			else
 			{
-				UE_LOG(SubLevelSpawnerLog, Log, TEXT("!HasLoadedLevel"));
+				UE_LOG(KBFLSubLevelSpawnerLog, Log, TEXT("!HasLoadedLevel"));
 			}
 		}
 	}
@@ -202,11 +200,11 @@ bool UKBFLSubLevelSpawning::CheckWorld() const
 {
 	if (GetWorld())
 	{
-#if WITH_EDITOR
+		#if WITH_EDITOR
 		return FString("UEDPIE_0_").Append(mMapName) != GetWorld()->GetMapName();
-#else
+		#else
 		return mMapName == GetWorld()->GetMapName();
-#endif
+		#endif
 	}
 	return false;
 }

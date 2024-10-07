@@ -3,6 +3,7 @@
 
 #include "FGCategory.h"
 #include "FGQuickSwitchGroup.h"
+#include "Resources/FGItemDescriptorNuclearFuel.h"
 #include "Resources/FGResourceDescriptor.h"
 
 void UKBFL_CDOHelperClass_Items::DoCDO()
@@ -113,7 +114,6 @@ void UKBFL_CDOHelperClass_Items::DoCDO()
 					DefaultObject->mGasColor = this->mGasColor;
 				}
 
-
 				UFGResourceDescriptor* ResDefault = Cast<UFGResourceDescriptor>(DefaultObject);
 				if (ResDefault)
 				{
@@ -153,8 +153,7 @@ void UKBFL_CDOHelperClass_Items::DoCDO()
 					}
 				}
 
-				UFGItemDescriptorNuclearFuel* NuclearFuelDefault = Cast<UFGItemDescriptorNuclearFuel>(DefaultObject);
-				if (NuclearFuelDefault)
+				if (UFGItemDescriptorNuclearFuel* NuclearFuelDefault = Cast<UFGItemDescriptorNuclearFuel>(DefaultObject))
 				{
 					if (mSpentFuelClassOverride)
 					{

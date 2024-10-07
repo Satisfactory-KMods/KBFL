@@ -3,13 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGBackgroundThread.h"
-#include "KBFLWorldModule.h"
-#include "BFL/KBFL_Struct.h"
 #include "BFL/KBFL_Widgets.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
-#include "Interfaces/KBFLCustomizerInterface.h"
-#include "Interfaces/KBFLResourceNodeInterface.h"
 #include "Module/MenuWorldModule.h"
 #include "KBFLMenuModule.generated.h"
 

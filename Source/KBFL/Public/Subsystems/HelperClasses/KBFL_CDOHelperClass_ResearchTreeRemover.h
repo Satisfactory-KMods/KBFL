@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "FGSchematic.h"
-#include "FGSchematicManager.h"
 #include "KBFL_CDOHelperClass_RemoverBase.h"
 #include "KBFL_CDOHelperClass_ResearchTreeRemover.generated.h"
 
@@ -16,9 +15,9 @@ class KBFL_API UKBFL_CDOHelperClass_ResearchTreeRemover : public UKBFL_CDOHelper
 	GENERATED_BODY()
 
 public:
-	virtual void DoCDO() override;
-	virtual TArray<UClass*> GetClasses() override;
-	TArray<TSubclassOf<UFGRecipe>> GetExcludeClassesRecipes();
+	virtual void                      DoCDO() override;
+	virtual TArray<UClass*>           GetClasses() override;
+	TArray<TSubclassOf<UFGRecipe>>    GetExcludeClassesRecipes();
 	TArray<TSubclassOf<UFGSchematic>> GetExcludeClassesSchematics();
 
 	/** must be set for CDO */

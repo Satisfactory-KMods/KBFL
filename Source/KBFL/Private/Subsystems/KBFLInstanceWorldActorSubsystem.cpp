@@ -44,8 +44,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_OverwriteInstanceData(AFGBuildable* 
 
 	if (!IsInGameThread())
 	{
-		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, Mesh, Idx ]()
-		{
+		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, Mesh, Idx ]() {
 			KBFL_OverwriteInstanceData(Buildable, Mesh, Idx);
 		}, GET_STATID(STAT_TaskGraph_OtherTasks), nullptr, ENamedThreads::GameThread);
 		return true;
@@ -72,8 +71,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_OverwriteInstanceData_Transform(
 
 	if (!IsInGameThread())
 	{
-		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, Mesh, NewRelativTransform, Idx ]()
-		{
+		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, Mesh, NewRelativTransform, Idx ]() {
 			KBFL_OverwriteInstanceData_Transform(Buildable, Mesh, NewRelativTransform, Idx);
 		}, GET_STATID(STAT_TaskGraph_OtherTasks), nullptr, ENamedThreads::GameThread);
 		return true;
@@ -82,7 +80,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_OverwriteInstanceData_Transform(
 	if (Idx > INDEX_NONE && IsValid(Mesh))
 	{
 		AAbstractInstanceManager* Manager = AAbstractInstanceManager::GetInstanceManager(Buildable->GetWorld());
-		TArray<FInstanceData> Datas = Buildable->mInstanceDataCDO->GetInstanceData();
+		TArray<FInstanceData>     Datas = Buildable->mInstanceDataCDO->GetInstanceData();
 		if (Datas.IsValidIndex(Idx) && Buildable->mInstanceHandles.IsValidIndex(Idx) && IsValid(Manager))
 		{
 			FInstanceData Data = Datas[Idx];
@@ -105,8 +103,8 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_OverwriteInstanceData_Transform(
 	return false;
 }
 
-bool AKBFLInstanceWorldActorSubsystem::KBFL_UpdateCustomFloat(AFGBuildable* Buildable, int32 FloatIndex, float Data,
-                                                              int32 InstanceIdx, bool MarkDirty)
+bool AKBFLInstanceWorldActorSubsystem::KBFL_UpdateCustomFloat(AFGBuildable* Buildable, int32  FloatIndex, float Data,
+	int32                                                                   InstanceIdx, bool MarkDirty)
 {
 	if (!IsValid(Buildable))
 	{
@@ -115,8 +113,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_UpdateCustomFloat(AFGBuildable* Buil
 
 	if (!IsInGameThread())
 	{
-		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, FloatIndex, Data, InstanceIdx, MarkDirty ]()
-		{
+		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, FloatIndex, Data, InstanceIdx, MarkDirty ]() {
 			KBFL_UpdateCustomFloat(Buildable, FloatIndex, Data, InstanceIdx, MarkDirty);
 		}, GET_STATID(STAT_TaskGraph_OtherTasks), nullptr, ENamedThreads::GameThread);
 		return true;
@@ -137,8 +134,8 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_UpdateCustomFloat(AFGBuildable* Buil
 }
 
 bool AKBFLInstanceWorldActorSubsystem::KBFL_UpdateCustomFloatAsColor(AFGBuildable* Buildable, int32 StartFloatIndex,
-                                                                     FLinearColor Data, int32 InstanceIdx,
-                                                                     bool MarkDirty)
+	FLinearColor                                                                   Data, int32      InstanceIdx,
+	bool                                                                           MarkDirty)
 {
 	if (!IsValid(Buildable))
 	{
@@ -147,8 +144,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_UpdateCustomFloatAsColor(AFGBuildabl
 
 	if (!IsInGameThread())
 	{
-		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, StartFloatIndex, Data, InstanceIdx, MarkDirty ]()
-		{
+		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, StartFloatIndex, Data, InstanceIdx, MarkDirty ]() {
 			KBFL_UpdateCustomFloatAsColor(Buildable, StartFloatIndex, Data, InstanceIdx, MarkDirty);
 		}, GET_STATID(STAT_TaskGraph_OtherTasks), nullptr, ENamedThreads::GameThread);
 		return true;
@@ -168,8 +164,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_SetInstanceHidden(AFGBuildable* Buil
 
 	if (!IsInGameThread())
 	{
-		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, InstanceIdx, IsHidden ]()
-		{
+		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, InstanceIdx, IsHidden ]() {
 			KBFL_SetInstanceHidden(Buildable, InstanceIdx, IsHidden);
 		}, GET_STATID(STAT_TaskGraph_OtherTasks), nullptr, ENamedThreads::GameThread);
 		return true;
@@ -197,7 +192,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_SetInstanceHidden(AFGBuildable* Buil
 }
 
 bool AKBFLInstanceWorldActorSubsystem::KBFL_SetInstanceWorldTransform(AFGBuildable* Buildable, int32 InstanceIdx,
-                                                                      FTransform Transform)
+	FTransform                                                                      Transform)
 {
 	if (!IsValid(Buildable))
 	{
@@ -206,8 +201,7 @@ bool AKBFLInstanceWorldActorSubsystem::KBFL_SetInstanceWorldTransform(AFGBuildab
 
 	if (!IsInGameThread())
 	{
-		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, InstanceIdx, Transform ]()
-		{
+		FFunctionGraphTask::CreateAndDispatchWhenReady([ &, Buildable, InstanceIdx, Transform ]() {
 			KBFL_SetInstanceWorldTransform(Buildable, InstanceIdx, Transform);
 		}, GET_STATID(STAT_TaskGraph_OtherTasks), nullptr, ENamedThreads::GameThread);
 		return true;

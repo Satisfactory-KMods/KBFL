@@ -76,7 +76,7 @@ AFGPlayerState* UKBFL_Player::GetFgPlayerState(UObject* WorldContext)
 }
 
 void UKBFL_Player::GetBuildingGunHitResult(UObject* WorldContext, bool& IsInBuildOrDismantleState,
-                                           FHitResult& HitResult)
+	FHitResult&                                     HitResult)
 {
 	const auto BuildGun = GetBuildingGun(WorldContext);
 	if (IsValid(BuildGun))

@@ -2,8 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Module/GameWorldModule.h"
-#include "ResourceNodes/KBFLResourceNodeDescriptor_ResourceNode.h"
-#include "ResourceNodes/KBFLResourceNodeDescriptor_ResourceWell.h"
 #include "Subsystems/WorldSubsystem.h"
 
 #include "KBFLResourceNodeSubsystem.generated.h"

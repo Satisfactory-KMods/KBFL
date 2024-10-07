@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 
 #include "KBFLContentCDOHelperSubsystem.generated.h"
 
@@ -23,8 +24,8 @@ public:
 	/** Moves all Recipes from a building to a other */
 	UFUNCTION(BlueprintCallable, Category="KMods")
 	void MoveRecipesFromBuilding(TSoftClassPtr<UObject> From, TSoftClassPtr<UObject> To,
-	                             TArray<TSubclassOf<UFGItemCategory>> IgnoreCategory,
-	                             TArray<TSubclassOf<UFGRecipe>> IgnoreRecipe);
+		TArray<TSubclassOf<UFGItemCategory>>            IgnoreCategory,
+		TArray<TSubclassOf<UFGRecipe>>                  IgnoreRecipe);
 
 	UFUNCTION(BlueprintCallable, Category = "KMods")
 	void BeginCDOForModule(UModModule* Module, ELifecyclePhase Phase);

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BFL/KBFL_Struct.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Module/GameInstanceModule.h"
 #include "UObject/Object.h"

@@ -7,8 +7,8 @@
 
 TArray<FKBFLDescInfo> UKBFL_Items::GetAllRegisteredDescWithInfos(UObject* WorldContext)
 {
-	auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto ItemDescriptors = ModContent->GetLoadedItemDescriptors();
+	auto                  ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                  ItemDescriptors = ModContent->GetLoadedItemDescriptors();
 	TArray<FKBFLDescInfo> ReturnDescriptors = {};
 
 	for (auto ItemDescriptor : ItemDescriptors)

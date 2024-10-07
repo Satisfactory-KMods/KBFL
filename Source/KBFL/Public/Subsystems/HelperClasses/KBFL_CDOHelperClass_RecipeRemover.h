@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "FGRecipe.h"
-#include "FGRecipeManager.h"
 #include "KBFL_CDOHelperClass_RemoverBase.h"
 #include "KBFL_CDOHelperClass_RecipeRemover.generated.h"
 
@@ -16,7 +15,7 @@ class KBFL_API UKBFL_CDOHelperClass_RecipeRemover : public UKBFL_CDOHelperClass_
 	GENERATED_BODY()
 
 public:
-	virtual void DoCDO() override;
+	virtual void            DoCDO() override;
 	virtual TArray<UClass*> GetClasses() override;
 
 	/** must be set for CDO */

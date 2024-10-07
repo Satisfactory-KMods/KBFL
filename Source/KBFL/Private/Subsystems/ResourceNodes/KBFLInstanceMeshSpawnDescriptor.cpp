@@ -17,8 +17,8 @@ void UKBFLInstanceMeshSpawnDescriptor::ForeachLocations(TArray<AActor*>& ActorAr
 			{
 				Subsystem->AddInstances(InstanceInfo.mStaticMesh, InstanceInfo.mLocations);
 				UE_LOG(LogTemp, Warning,
-				       TEXT("UKBFLInstanceMeshSpawnDescriptor: Instances for mesh %s added (total: %d)"),
-				       *InstanceInfo.mStaticMesh->GetName(), InstanceInfo.mLocations.Num());
+					TEXT("UKBFLInstanceMeshSpawnDescriptor: Instances for mesh %s added (total: %d)"),
+					*InstanceInfo.mStaticMesh->GetName(), InstanceInfo.mLocations.Num());
 			}
 			else
 			{

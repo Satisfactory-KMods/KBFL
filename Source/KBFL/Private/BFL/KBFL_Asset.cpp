@@ -4,9 +4,7 @@
 #include "FGSchematic.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(KBFLAssetLog, Log, All)
 
-DEFINE_LOG_CATEGORY(KBFLAssetLog)
 
 template <class T>
 bool UKBFL_Asset::GetAllClassesOfSubclass(TArray<FAssetData> AllAssets, TArray<TSubclassOf<T>>& OutClasses)
@@ -71,7 +69,7 @@ bool UKBFL_Asset::GetAllClassesOfSubclass(TArray<FAssetData> AllAssets, TArray<T
 }
 
 bool UKBFL_Asset::FindChildsByClass(TArray<TSubclassOf<UObject>>& OutClasses, TSubclassOf<UObject> Search,
-                                    bool bSearchSubClasses)
+	bool                                                          bSearchSubClasses)
 {
 	OutClasses.Empty();
 	if (!IsValid(Search))
@@ -81,7 +79,7 @@ bool UKBFL_Asset::FindChildsByClass(TArray<TSubclassOf<UObject>>& OutClasses, TS
 
 	const FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(
 		AssetRegistryConstants::ModuleName);
-	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
+	IAssetRegistry&    AssetRegistry = AssetRegistryModule.Get();
 	TArray<FAssetData> AssetData;
 
 	GetAllClassesOfSubclass(AssetData, OutClasses);

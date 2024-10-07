@@ -5,6 +5,8 @@
 #include "BFL/KBFL_Player.h"
 #include "Equipment/FGResourceScanner.h"
 #include "Interfaces/KBFLResourceNodeInterface.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Module/WorldModuleManager.h"
 #include "Resources/FGResourceNodeFrackingSatellite.h"
 #include "Subsystem/SubsystemActorManager.h"
@@ -21,9 +23,9 @@ void UKBFLResourceNodeSubsystem::Initialize(FSubsystemCollectionBase& Collection
 	Collection.InitializeDependency(USubsystemActorManager::StaticClass());
 	//Collection.InitializeDependency(UKBFLAssetDataSubsystem::StaticClass());
 
-#if WITH_EDITOR
+	#if WITH_EDITOR
 	return;
-#endif
+	#endif
 
 	if (GetWorld()->GetMapName().Contains("Untitled"))
 	{
@@ -102,7 +104,7 @@ void UKBFLResourceNodeSubsystem::GetAllSubLevel(TSet<TSubclassOf<UKBFLSubLevelSp
 
 void UKBFLResourceNodeSubsystem::GatherInterfaces()
 {
-#if !WITH_EDITOR
+	#if !WITH_EDITOR
 	UWorldModuleManager* Subsystem = Cast< UWorldModuleManager >( GetWorld()->GetSubsystem< UWorldModuleManager >() );
 	for ( const auto Module : Subsystem->RootModuleList )
 	{
@@ -111,7 +113,7 @@ void UKBFLResourceNodeSubsystem::GatherInterfaces()
 			BeginSpawningForModule( Module );
 		}
 	}
-#endif
+	#endif
 }
 
 void UKBFLResourceNodeSubsystem::BeginSpawningForModule(UWorldModule* Module)
@@ -138,7 +140,7 @@ void UKBFLResourceNodeSubsystem::BeginSpawningForModule(UWorldModule* Module)
 				else
 				{
 					UE_LOG(ResourceNodeSubsystem, Log, TEXT("Skip UKBFLActorSpawnDescriptorBase: %s because no auth!"),
-					       *Desc->GetName());
+						*Desc->GetName());
 				}
 			}
 		}
