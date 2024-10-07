@@ -19,11 +19,11 @@ public:
 	                           TArray<AActor*>& OutActors, float Range = 250.0f);
 
 	UFUNCTION(BlueprintCallable, Category="KMods|Actor Helper", meta = (WorldContext = "WorldContext"))
-	static bool HasFreeLineToActor(UObject* WorldContext, AActor* ActorSource, AActor* ActorTarget,
+	static bool HasFreeLineToActor(UObject* WorldContext, AActor* ActorSource, AActor* ActorTarget, FHitResult& OutHit,
 	                               float ZOffsetSource = 0.0f, float ZOffsetTarget = 0.0f);
 
 	UFUNCTION(BlueprintCallable, Category="KMods|Actor Helper", meta = (WorldContext = "WorldContext"))
 	static bool HasFreeLineToComponent(UObject* WorldContext, USceneComponent* ComponentSource,
-	                                   USceneComponent* ComponentTarget, float ZOffsetSource = 0.0f,
+	                                   USceneComponent* ComponentTarget, FHitResult& OutHit, float ZOffsetSource = 0.0f,
 	                                   float ZOffsetTarget = 0.0f);
 };

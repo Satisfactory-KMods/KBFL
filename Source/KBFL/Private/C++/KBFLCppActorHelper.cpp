@@ -16,7 +16,7 @@ bool UKBFLCppActorHelper::ActorsInSphere(UObject* WorldContext, UClass* ActorCla
 	                                                 Ignore, OutActors);
 }
 
-bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* ActorSource, AActor* ActorTarget,
+bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* ActorSource, AActor* ActorTarget, FHitResult& OutHit,
                                              float ZOffsetSource, float ZOffsetTarget)
 {
 	if (ActorSource && ActorTarget)
@@ -29,7 +29,6 @@ bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* Acto
 		FCollisionQueryParams CollisionParams;
 		CollisionParams.AddIgnoredActor(ActorSource);
 		CollisionParams.AddIgnoredActor(ActorTarget);
-		FHitResult OutHit;
 		WorldContext->GetWorld()->LineTraceSingleByChannel(OutHit, Source, Target, ECC_MAX, CollisionParams);
 
 		return !OutHit.IsValidBlockingHit();
@@ -38,7 +37,7 @@ bool UKBFLCppActorHelper::HasFreeLineToActor(UObject* WorldContext, AActor* Acto
 }
 
 bool UKBFLCppActorHelper::HasFreeLineToComponent(UObject* WorldContext, USceneComponent* ComponentSource,
-                                                 USceneComponent* ComponentTarget, float ZOffsetSource,
+                                                 USceneComponent* ComponentTarget, FHitResult& OutHit, float ZOffsetSource,
                                                  float ZOffsetTarget)
 {
 	if (ComponentSource && ComponentTarget)
@@ -52,7 +51,6 @@ bool UKBFLCppActorHelper::HasFreeLineToComponent(UObject* WorldContext, USceneCo
 		CollisionParams.AddIgnoredActor(ComponentSource->GetOwner());
 		CollisionParams.AddIgnoredActor(ComponentTarget->GetOwner());
 		CollisionParams.MobilityType = EQueryMobilityType::Any;
-		FHitResult OutHit;
 		WorldContext->GetWorld()->LineTraceSingleByObjectType(OutHit, Source, Target, ECC_Visibility, CollisionParams);
 
 		return !OutHit.IsValidBlockingHit();

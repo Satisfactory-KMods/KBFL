@@ -119,6 +119,10 @@ void UKBFLAssetDataSubsystem::PrintFound()
 
 void UKBFLAssetDataSubsystem::InitAssetFinder()
 {
+#if WITH_EDITOR
+	return;
+#endif
+	
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<
 		FAssetRegistryModule>("AssetRegistry");
 	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
