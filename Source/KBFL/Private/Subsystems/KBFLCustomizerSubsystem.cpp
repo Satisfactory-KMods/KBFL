@@ -1,10 +1,10 @@
 #include "Subsystems/KBFLCustomizerSubsystem.h"
 
 #include "FGBuildableSubsystem.h"
-#include "FGCheatManager.h"
 #include "FGFactoryColoringTypes.h"
 #include "FGGameMode.h"
 #include "FGGameState.h"
+#include "KBFLLogging.h"
 #include "BFL/KBFL_Player.h"
 #include "Interfaces/KBFLCustomizerInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,9 +12,7 @@
 #include "Subsystem/SubsystemActorManager.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(CustomizerSubsystem, Log, All)
 
-DEFINE_LOG_CATEGORY(CustomizerSubsystem)
 
 void UKBFLCustomizerSubsystem::Tick(float DeltaTime)
 {

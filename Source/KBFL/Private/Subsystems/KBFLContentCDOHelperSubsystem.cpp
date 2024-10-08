@@ -1,26 +1,19 @@
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
-#include "FGCheatManager.h"
 #include "FGGameState.h"
-#include "BFL/KBFL_Player.h"
+#include "KBFLLogging.h"
 #include "Engine/GameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Module/WorldModuleManager.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Recipes.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(ContentCDOHelperSubsystem, Log, All)
 
-DEFINE_LOG_CATEGORY(ContentCDOHelperSubsystem)
 
 void UKBFLContentCDOHelperSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Collection.InitializeDependency(UKBFLAssetDataSubsystem::StaticClass());
 
 	Super::Initialize(Collection);
-
-	#if WITH_EDITOR
-	#endif
 }
 
 void UKBFLContentCDOHelperSubsystem::Deinitialize()
@@ -155,60 +148,6 @@ void UKBFLContentCDOHelperSubsystem::ResetCDOCallFromModule(UModModule* Module)
 		}
 	}
 }
-
-/*
-void UKBFLContentCDOHelperSubsystem::OnWorldBeginPlay()
-{
-	if (!Initialized)
-	{
-		UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("World Begin Play! ContentCDOHelperSubsystem > DoCDOs"));
-		DoCDOs();
-	
-		Initialized = true;
-	}
-}
-
-void UKBFLContentCDOHelperSubsystem::RedoCDOs()
-{
-	UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("RedoCDOs! ContentCDOHelperSubsystem > RedoCDOs"));
-	Initialized = false;
-	mCDOCalled.Empty();
-	OnWorldBeginPlay();
-}
-
-void UKBFLContentCDOHelperSubsystem::DoCDOs()
-{
-	#if !WITH_EDITOR
-		UWorldModuleManager * Subsystem = Cast<UWorldModuleManager>(GetWorld()->GetSubsystem<UWorldModuleManager>());
-		for(UWorldModule* Module : Subsystem->RootModuleList)
-		{
-			const bool bImplementsInterface = Module->GetClass()->ImplementsInterface(UKBFLContentCDOHelperInterface::StaticClass());
-			if (bImplementsInterface)
-			{
-				UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOs > %s"), *Module->GetName());
-				if(Module)
-					for(int i = 0; i < 3; ++i)
-					{
-						ELifecyclePhase Phase = i == 0 ? ELifecyclePhase::CONSTRUCTION : i == 1 ? ELifecyclePhase::INITIALIZATION : ELifecyclePhase::POST_INITIALIZATION;
-						UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOs > Phase > %d"), i);
-						
-						bool HasPhase;
-						FKBFLCDOInformation Info = IKBFLContentCDOHelperInterface::Execute_GetCDOInformationFromPhase(Module, Phase, HasPhase);
-
-						if(HasPhase && !WasCDOForModuleCalled(Module, Phase))
-						{
-							DoCDOFromInfo(Info);
-						}
-						else
-						{
-							UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOs > Phase > Cannot find Phase!"));
-						}
-					}
-			}
-		}
-	#endif
-}
-*/
 
 void UKBFLContentCDOHelperSubsystem::DoCDOFromInfo(FKBFLCDOInformation Info)
 {

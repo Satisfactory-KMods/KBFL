@@ -4,17 +4,10 @@
 #include "KBFLWorldModule.h"
 
 #include "KBFLLogging.h"
-#include "AssetRegistry/IAssetRegistry.h"
-#include "BFL/KBFL_Asset.h"
-#include "Engine/AssetManager.h"
-#include "Engine/World.h"
 #include "Registry/ModContentRegistry.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
-#include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 #include "Subsystems/KBFLCustomizerSubsystem.h"
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
-
-
 
 UKBFLWorldModule::UKBFLWorldModule()
 	: mCallCustomizerInPhase()

@@ -1,11 +1,11 @@
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 
 #include "FGGameState.h"
+#include "KBFLLogging.h"
 #include "SMLWorldModule.h"
 
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetRegistry/IAssetRegistry.h"
-#include "BFL/KBFL_Asset.h"
 #include "Buildables/FGBuildableWire.h"
 #include "Hologram/FGHologram.h"
 
@@ -19,39 +19,9 @@
 #include "Resources/FGOverflowDescriptor.h"
 #include "Resources/FGWildCardDescriptor.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(AssetDataSubsystemLog, Log, All)
-
-DEFINE_LOG_CATEGORY(AssetDataSubsystemLog)
-/*
 void UKBFLAssetDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
-	if(!bWasInit)
-	{
-		if(!GetWorld()->GetMapName().Contains("Menu") && !GetWorld()->GetMapName().Contains("Untitled"))
-		{
-			UE_LOG(AssetDataSubsystemLog, Log, TEXT("Initialize Subsystem in WorldName: %s"), *GetWorld()->GetMapName());
-			InitAssetFinder();
-			bWasInit = true;
-			PrintFound();
-		}
-		else 
-			UE_LOG(AssetDataSubsystemLog, Log, TEXT("Skip Initialize on WorldName: %s"), *GetWorld()->GetMapName());
-	}
-	else
-	{
-		PrintFound();
-	}
-}
-	*/
-
-void UKBFLAssetDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-	#if WITH_EDITOR
-	#endif
 }
 
 void UKBFLAssetDataSubsystem::Deinitialize()

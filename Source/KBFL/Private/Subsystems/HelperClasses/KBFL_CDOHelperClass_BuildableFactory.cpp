@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_BuildableFactory.h"
 
-#include "FGPowerInfoComponent.h"
 #include "Buildables/FGBuildable.h"
 #include "Buildables/FGBuildableFactory.h"
 

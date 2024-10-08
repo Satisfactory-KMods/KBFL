@@ -6,7 +6,7 @@
 
 #include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
-#include "C++/KBFLCppInventoryHelper.h"
+#include "Cpp/KBFLCppInventoryHelper.h"
 
 #include "Net/UnrealNetwork.h"
 

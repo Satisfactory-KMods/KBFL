@@ -4,8 +4,6 @@
 #include "FGSchematic.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 
-
-
 template <class T>
 bool UKBFL_Asset::GetAllClassesOfSubclass(TArray<FAssetData> AllAssets, TArray<TSubclassOf<T>>& OutClasses)
 {

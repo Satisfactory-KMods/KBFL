@@ -2,17 +2,14 @@
 
 #include "KBFLGameInstanceModule.h"
 
+#include "KBFLLogging.h"
 #include "TimerManager.h"
-#include "AssetRegistry/AssetRegistryModule.h"
-#include "BFL/KBFL_Asset.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(KBFLGameInstanceModuleLog, Log, All);
 
-DEFINE_LOG_CATEGORY(KBFLGameInstanceModuleLog);
 
 UKBFLGameInstanceModule::UKBFLGameInstanceModule()
 {

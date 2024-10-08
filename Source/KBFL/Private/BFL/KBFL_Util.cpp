@@ -1,15 +1,10 @@
 ﻿#include "BFL/KBFL_Util.h"
 
-#include "FGLocalPlayer.h"
 #include "FGPlayerController.h"
 #include "FGUnlockSubsystem.h"
 #include "BFL/KBFL_Player.h"
-#include "Blueprint/UserWidget.h"
 #include "Buildables/FGBuildableResourceExtractorBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Kismet/RuntimeBlueprintFunctionLibrary.h"
-#include "Patching/BlueprintHookHelper.h"
 #include "Subsystem/SubsystemActorManager.h"
 #include "Unlocks/FGUnlockScannableResource.h"
 

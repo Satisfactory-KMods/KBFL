@@ -7,6 +7,7 @@
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
 #include "KBFLLogging.h"
 
+#if WITH_ENGINE
 UWorld* UKBFLActorSpawnDescriptorBase::GetWorld() const
 {
 	if (mSubsystem)
@@ -18,6 +19,7 @@ UWorld* UKBFLActorSpawnDescriptorBase::GetWorld() const
 	}
 	return Super::GetWorld();
 }
+#endif
 
 void UKBFLActorSpawnDescriptorBase::BeginSpawning()
 {

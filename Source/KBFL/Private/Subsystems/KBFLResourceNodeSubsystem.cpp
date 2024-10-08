@@ -1,17 +1,13 @@
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
 
-#include "FGBuildableSubsystem.h"
 #include "FGGameState.h"
-#include "BFL/KBFL_Player.h"
 #include "Equipment/FGResourceScanner.h"
 #include "Interfaces/KBFLResourceNodeInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Module/WorldModuleManager.h"
-#include "Resources/FGResourceNodeFrackingSatellite.h"
 #include "Subsystem/SubsystemActorManager.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
-#include "Subsystems/ResourceNodes/KBFLActorSpawnDescriptor.h"
 #include "Subsystems/ResourceNodes/KBFLSubLevelSpawning.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(ResourceNodeSubsystem, Log, All)

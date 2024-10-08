@@ -3,7 +3,6 @@
 
 #include "Subsystems/ResourceNodes/KBFLSubLevelSpawning.h"
 
-#include "FGSaveSession.h"
 #include "FGWorldSettings.h"
 #include "Engine/LevelStreamingAlwaysLoaded.h"
 #include "Engine/LevelStreamingDynamic.h"
@@ -11,6 +10,7 @@
 #include "Subsystems/KBFLResourceNodeSubsystem.h"
 #include "KBFLLogging.h"
 
+#if WITH_ENGINE
 UWorld* UKBFLSubLevelSpawning::GetWorld() const
 {
 	if (mSubsystem)
@@ -22,6 +22,7 @@ UWorld* UKBFLSubLevelSpawning::GetWorld() const
 	}
 	return Super::GetWorld();
 }
+#endif
 
 void UKBFLSubLevelSpawning::InitSpawning()
 {

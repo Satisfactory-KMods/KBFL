@@ -1,9 +1,9 @@
 #include "Subsystems/KBFLLocationSubsystem.h"
 
 #include "BFL/KBFL_Util.h"
-#include "Misc/FileHelper.h"
 
 AKBFLLocationSubsystem::AKBFLLocationSubsystem()
+	: LastClass(nullptr)
 {
 	PrimaryActorTick.bCanEverTick = true;
 }

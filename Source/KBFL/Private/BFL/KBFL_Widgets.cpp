@@ -1,9 +1,6 @@
 ﻿#include "BFL/KBFL_Widgets.h"
 
-#include <string>
-
 #include "Blueprint/UserWidget.h"
-#include "Patching/BlueprintHookHelper.h"
 #include "Patching/BlueprintHookManager.h"
 
 void UKBFL_Widgets::BindOnWidget(const TSubclassOf<UUserWidget> WidgetClass, FOnWidgetCreated Binding)

@@ -17,6 +17,7 @@ class KBFL_API UKBFLResourceNodeDescriptor : public UKBFLActorSpawnDescriptorBas
 
 public:
 	UKBFLResourceNodeDescriptor()
+		: mLastPur()
 	{
 		mActorFreeClass = AFGResourceNodeBase::StaticClass();
 	}

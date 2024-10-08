@@ -13,9 +13,6 @@ class KBFL_API UKBFL_Player : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, Category="KMods|Util")
-	static FString GetPlayerId(AFGPlayerState* PlayerState);
-
 	/** get the build gun from local player */
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContext"), Category="KMods|Player")
 	static AFGBuildGun* GetBuildingGun(UObject* WorldContext);

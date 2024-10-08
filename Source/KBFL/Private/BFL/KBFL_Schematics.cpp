@@ -1,7 +1,5 @@
 ﻿#include "BFL/KBFL_Schematics.h"
 
-#include "BFL/KBFL_Util.h"
-#include "Kismet/RuntimeBlueprintFunctionLibrary.h"
 #include "Registry/ModContentRegistry.h"
 
 TArray<TSubclassOf<UFGSchematic>> UKBFL_Schematics::GetAllRegisteredSchematics(UObject* WorldContext)

@@ -11,42 +11,43 @@ public class KBFL : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new[]
 			{
-				"Json", "HTTP",
-				"Core",
-				"CoreUObject",
+				"Core", "CoreUObject",
 				"Engine",
 				"DeveloperSettings",
 				"PhysicsCore",
 				"InputCore",
-				"OnlineSubsystem", "OnlineSubsystemNull", "OnlineSubsystemUtils",
-				"SignificanceManager",
+				//"OnlineSubsystem", "OnlineSubsystemUtils", "OnlineSubsystemNull",
+				//"SignificanceManager",
 				"GeometryCollectionEngine",
-				"ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
+				//"ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
 				"AnimGraphRuntime",
-				"AkAudio",
+				//"AkAudio",
 				"AssetRegistry",
 				"NavigationSystem",
-				"ReplicationGraph",
+				//"ReplicationGraph",
 				"AIModule",
 				"GameplayTasks",
 				"SlateCore", "Slate", "UMG",
+				//"InstancedSplines",
 				"RenderCore",
 				"CinematicCamera",
 				"Foliage",
-				"Niagara",
+				//"Niagara",
 				"EnhancedInput",
-				"GameplayCameras",
-				"TemplateSequence",
+				//"GameplayCameras",
+				//"TemplateSequence",
+				"Projects",
 				"NetCore",
-				"GameplayTags"
+				"GameplayTags",
+				"Json", "JsonUtilities"
 			});
 
 		// FactoryGame plugins
-		PublicDependencyModuleNames.AddRange(new[]
-		{
+		PublicDependencyModuleNames.AddRange(
+		new string[] {
 			"AbstractInstance",
-			"InstancedSplinesComponent",
-			"SignificanceISPC"
+			//"InstancedSplinesComponent",
+			//"SignificanceISPC"
 		});
 
 		// Header stubs
@@ -54,9 +55,10 @@ public class KBFL : ModuleRules
 		{
 			"DummyHeaders"
 		});
-
-		if (Target.Type == TargetRules.TargetType.Editor)
-			PublicDependencyModuleNames.AddRange(new[] { "OnlineBlueprintSupport", "AnimGraph" });
-		PublicDependencyModuleNames.AddRange(new[] { "FactoryGame", "SML" });
+		
+		if (Target.Type == TargetRules.TargetType.Editor) {
+			PublicDependencyModuleNames.AddRange(new string[] {/*"OnlineBlueprintSupport",*/ "AnimGraph"});
+		}
+		PublicDependencyModuleNames.AddRange(new string[] {"FactoryGame", "SML"});
 	}
 }

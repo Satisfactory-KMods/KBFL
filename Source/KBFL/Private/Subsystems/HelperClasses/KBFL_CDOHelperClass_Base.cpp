@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Base.h"
 
+#include "Equipment/FGBuildGun.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
+#if WITH_ENGINE
 UWorld* UKBFL_CDOHelperClass_Base::GetWorld() const
 {
 	if (mSubsystem)
@@ -14,6 +16,7 @@ UWorld* UKBFL_CDOHelperClass_Base::GetWorld() const
 	}
 	return Super::GetWorld();
 }
+#endif
 
 void UKBFL_CDOHelperClass_Base::DoCDO()
 {

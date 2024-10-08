@@ -3,7 +3,6 @@
 
 #include "Buildables/FGBuildableResourceExtractor.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
-#include "KBFLLogging.h"
 
 void UKBFLResourceNodeDescriptor_ResourceNode::ForeachLocations(TArray<AActor*>& ActorArray)
 {

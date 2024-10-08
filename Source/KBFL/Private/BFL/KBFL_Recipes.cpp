@@ -3,7 +3,6 @@
 #include "FGItemCategory.h"
 #include "BFL/KBFL_Util.h"
 #include "Registry/ModContentRegistry.h"
-#include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
 TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllRegisteredRecipes(UObject* WorldContext)

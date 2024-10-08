@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGBackgroundThread.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Interfaces/KBFLCustomizerInterface.h"
 #include "Interfaces/KBFLResourceNodeInterface.h"

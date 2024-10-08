@@ -3,25 +3,13 @@
 
 #include "KBFLMenuModule.h"
 
-#include "FGBackgroundThread.h"
-#include "AssetRegistry/IAssetRegistry.h"
-#include "BFL/KBFL_Asset.h"
 #include "BFL/KBFL_Widgets.h"
 #include "Blueprint/UserWidget.h"
-#include "Engine/AssetManager.h"
-#include "Patching/BlueprintHookHelper.h"
 #include "Patching/BlueprintHookManager.h"
-#include "Registry/ModContentRegistry.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
-#include "Subsystems/KBFLContentCDOHelperSubsystem.h"
-#include "Subsystems/KBFLCustomizerSubsystem.h"
-#include "Subsystems/KBFLResourceNodeSubsystem.h"
-
-DECLARE_LOG_CATEGORY_EXTERN(KBFLMenuModuleLog, Log, All);
-
-DEFINE_LOG_CATEGORY(KBFLMenuModuleLog);
 
 UKBFLMenuModule::UKBFLMenuModule()
+	: mHookMainMenuWidget(false)
 {
 	bRootModule = false;
 }
