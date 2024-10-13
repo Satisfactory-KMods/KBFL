@@ -23,6 +23,11 @@ UWorld* UKBFLActorSpawnDescriptorBase::GetWorld() const
 
 void UKBFLActorSpawnDescriptorBase::BeginSpawning()
 {
+	if (!ExecuteAllowed())
+	{
+		UE_LOG(KBFLActorSpawnerLog, Log, TEXT("Skip BeginSpawning by Disabled"));
+	}
+
 	UE_LOG(KBFLActorSpawnerLog, Log, TEXT("BeginSpawning"));
 	if (CheckWorld() && mSubsystem && ExecuteAllowed())
 	{
@@ -206,7 +211,7 @@ bool UKBFLActorSpawnDescriptorBase::CheckWorld() const
 
 bool UKBFLActorSpawnDescriptorBase::ExecuteAllowed_Implementation() const
 {
-	return true;
+	return !mDisabled;
 }
 
 TSubclassOf<AActor> UKBFLActorSpawnDescriptorBase::GetActorClass()

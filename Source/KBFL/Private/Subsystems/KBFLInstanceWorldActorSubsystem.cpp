@@ -4,6 +4,7 @@
 #include "Subsystems/KBFLInstanceWorldActorSubsystem.h"
 
 #include "AbstractInstanceManager.h"
+#include "KBFLLogging.h"
 #include "BFL/KBFL_Util.h"
 
 
@@ -30,6 +31,9 @@ void AKBFLInstanceWorldActorSubsystem::AddInstances(UStaticMesh* Mesh, TArray<FT
 
 		FInstanceHandle* Handle = new FInstanceHandle();
 
+		UE_LOG(KBFLInstanceSpawnerLog, Warning,
+			TEXT("AKBFLInstanceWorldActorSubsystem: Instances for mesh %s will be added (total: %d)"),
+			*Mesh->GetName(), Locations.Num());
 		AAbstractInstanceManager::SetInstanceFromDataStatic(this, FTransform(), Data, Handle);
 		mCachedInstances.Add(Handle);
 	}

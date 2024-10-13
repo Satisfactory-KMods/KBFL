@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
-	"Version": 2,
-	"VersionName": "2.2.6",
-	"SemVersion": "2.2.6",
+	"Version": 3,
+	"VersionName": "3.0.0",
+	"SemVersion": "3.0.0",
 	"FriendlyName": "KBFL",
 	"Description": "Lib for Kyris Mods",
 	"Category": "Modding",
@@ -25,9 +25,8 @@
 	"Plugins": [
 		{
 			"Name": "SML",
-			"SemVersion": "^3.8.0-dev",
-			"Enabled": true,
-			"BasePlugin": false
+			"SemVersion": "^3.8.0",
+			"Enabled": true
 		}
 	],
 	"LocalizationTargets": [
@@ -36,7 +35,6 @@
 			"LoadingPolicy": "Always"
 		}
 	],
-	"RemoteVersionRange": "",
 	"AcceptsAnyRemoteVersion": false,
 	"GameVersion": ">=365306"
 }

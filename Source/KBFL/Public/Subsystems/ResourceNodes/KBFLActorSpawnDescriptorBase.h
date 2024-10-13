@@ -17,7 +17,7 @@ public:
 	virtual UWorld* GetWorld() const override;
 	#endif
 
-	void         BeginSpawning();
+	virtual void BeginSpawning();
 	virtual void ForeachLocations(TArray<AActor*>& ActorArray);
 
 	virtual bool    CheckActorInRange(FTransform Transform, AActor*& OutActor);
@@ -30,9 +30,9 @@ public:
 	virtual void    AfterSpawning();
 
 	virtual TArray<TEnumAsByte<EObjectTypeQuery>> GetSphereCheckChannels();
-	void                                          SetSphereCheckChannels(TArray<TEnumAsByte<EObjectTypeQuery>> Channels);
+	virtual void                                  SetSphereCheckChannels(TArray<TEnumAsByte<EObjectTypeQuery>> Channels);
 
-	void ApplyMaterialData(AActor* Actor, TMap<uint8, UMaterialInterface*> MaterialInfo);
+	virtual void ApplyMaterialData(AActor* Actor, TMap<uint8, UMaterialInterface*> MaterialInfo);
 
 	virtual TArray<TSubclassOf<AActor>> GetSearchingActorClasses();
 
@@ -44,14 +44,16 @@ public:
 	virtual bool ExecuteAllowed_Implementation() const;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void ModifyValues();
-
+	void         ModifyValues();
 	virtual void ModifyValues_Implementation() {};
 
 	virtual TSubclassOf<AActor> GetActorClass();
 	virtual TSubclassOf<AActor> GetActorFreeClass();
 
 	// Bool
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Config")
+	bool mDisabled = false;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Config")
 	bool mAllowToMove = true;
 
@@ -83,6 +85,6 @@ public:
 		ObjectTypeQuery1, ObjectTypeQuery2, ObjectTypeQuery5
 	};
 
-	UPROPERTY()
+	UPROPERTY(Transient)
 	TArray<AActor*> mAllActors;
 };
