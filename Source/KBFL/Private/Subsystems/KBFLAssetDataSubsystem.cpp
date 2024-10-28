@@ -1,11 +1,11 @@
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 
 #include "FGGameState.h"
+#include "KBFLLogging.h"
 #include "SMLWorldModule.h"
 
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "AssetRegistry/IAssetRegistry.h"
-#include "BFL/KBFL_Asset.h"
 #include "Buildables/FGBuildableWire.h"
 #include "Hologram/FGHologram.h"
 
@@ -14,43 +14,25 @@
 #include "Module/MenuWorldModule.h"
 
 #include "Resources/FGAnyUndefinedDescriptor.h"
+#include "Resources/FGBuildDescriptor.h"
 #include "Resources/FGNoneDescriptor.h"
 #include "Resources/FGOverflowDescriptor.h"
 #include "Resources/FGWildCardDescriptor.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(AssetDataSubsystemLog, Log, All)
-
-DEFINE_LOG_CATEGORY(AssetDataSubsystemLog)
-/*
 void UKBFLAssetDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(FName("AssetRegistry"));
+	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
 	
-	if(!bWasInit)
-	{
-		if(!GetWorld()->GetMapName().Contains("Menu") && !GetWorld()->GetMapName().Contains("Untitled"))
-		{
-			UE_LOG(AssetDataSubsystemLog, Log, TEXT("Initialize Subsystem in WorldName: %s"), *GetWorld()->GetMapName());
-			InitAssetFinder();
-			bWasInit = true;
-			PrintFound();
-		}
-		else 
-			UE_LOG(AssetDataSubsystemLog, Log, TEXT("Skip Initialize on WorldName: %s"), *GetWorld()->GetMapName());
+	// Must wait until all assets are discovered before populating list of assets.
+	if (AssetRegistry.IsLoadingAssets()) {
+		AssetRegistry.OnFilesLoaded().AddUObject(this, &UKBFLAssetDataSubsystem::ScanOnInitialize);
 	}
-	else
-	{
-		PrintFound();
+	else {
+		ScanOnInitialize();
 	}
-}
-	*/
-
-void UKBFLAssetDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
-{
-	Super::Initialize(Collection);
-
-#if WITH_EDITOR
-#endif
 }
 
 void UKBFLAssetDataSubsystem::Deinitialize()
@@ -78,12 +60,17 @@ void UKBFLAssetDataSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+void UKBFLAssetDataSubsystem::ScanOnInitialize() {
+	DoScan();
+	bWasInit = false;
+}
+
 void UKBFLAssetDataSubsystem::DoScan(bool Force)
 {
 	if (!bWasInit || Force)
 	{
 		UE_LOG(AssetDataSubsystemLog, Log, TEXT("FORCE! Initialize Subsystem in WorldName: %s"),
-		       *GetWorld()->GetMapName());
+			*GetWorld()->GetMapName());
 		InitAssetFinder();
 		PrintFound();
 	}
@@ -101,33 +88,44 @@ UKBFLAssetDataSubsystem* UKBFLAssetDataSubsystem::Get(const UObject* WorldContex
 void UKBFLAssetDataSubsystem::PrintFound()
 {
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("--------------------------------------------"));
-	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllSubLevelSpawningClasses: %d"), mAllSubLevelSpawningClasses.Num());
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("Successful Initialize UKBFLAssetDataSubsystem"));
+	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllSubLevelSpawningClasses: %d"), mAllSubLevelSpawningClasses.Num());
+	PrintArray(mAllSubLevelSpawningClasses);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedSchematics: %d"), mAllFoundedSchematics.Num());
+	PrintArray(mAllFoundedSchematics);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedBuildables: %d"), mAllFoundedBuildables.Num());
+	PrintArray(mAllFoundedBuildables);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedItems: %d"), mAllFoundedItems.Num());
+	PrintArray(mAllFoundedItems);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedRecipes: %d"), mAllFoundedRecipes.Num());
+	PrintArray(mAllFoundedRecipes);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedDriveablePawns: %d"), mAllFoundedDriveablePawns.Num());
+	PrintArray(mAllFoundedDriveablePawns);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedHolograms: %d"), mAllFoundedHolograms.Num());
+	PrintArray(mAllFoundedHolograms);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedModModules: %d"), mAllFoundedModModules.Num());
+	PrintArray(mAllFoundedModModules);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedCDOHelpers: %d"), mAllFoundedCDOHelpers.Num());
+	PrintArray(mAllFoundedCDOHelpers);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedResourceDescriptors: %d"),
-	       mAllFoundedResourceDescriptors.Num());
+		mAllFoundedResourceDescriptors.Num());
+	PrintArray(mAllFoundedResourceDescriptors);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedObjects: %d"), mAllFoundedObjects.Num());
+	PrintArray(mAllFoundedObjects);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("--------------------------------------------"));
 }
 
 void UKBFLAssetDataSubsystem::InitAssetFinder()
 {
-#if WITH_EDITOR
+	#if WITH_EDITOR
 	return;
-#endif
-	
+	#endif
+
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<
 		FAssetRegistryModule>("AssetRegistry");
-	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
+	IAssetRegistry&    AssetRegistry = AssetRegistryModule.Get();
 	TArray<FAssetData> AssetData;
-	TArray<FName> paths = {FName("/Game")};
+	TArray<FName>      paths = { FName("/Game") };
 	bWasInit = true;
 
 	//Use game world module by default
@@ -165,7 +163,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder()
 		GetAllClassesOfSubclass(AssetData, mAllFoundedModModules);
 		GetAllClassesOfSubclass(AssetData, mAllFoundedCDOHelpers);
 		GetAllClassesOfSubclass(AssetData, mAllFoundedResourceDescriptors);
-		GetAllClassesOfSubclass(AssetData, mAllFoundedObjects);
+	//	GetAllClassesOfSubclass(AssetData, mAllFoundedObjects);
 		GetAllClassesOfSubclass(AssetData, mAllFoundResearchTrees);
 
 		for (UClass* data : mAllFoundedSchematics)
@@ -243,12 +241,12 @@ bool UKBFLAssetDataSubsystem::Local_FilterAsset(const FAssetData& AssetData) con
 }
 
 void UKBFLAssetDataSubsystem::GetItemsOfForms(TArray<EResourceForm> Forms,
-                                              TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items)
+	TArray<TSubclassOf<UFGItemDescriptor>>&                         Out_Items)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -265,12 +263,12 @@ void UKBFLAssetDataSubsystem::GetItemsOfForms(TArray<EResourceForm> Forms,
 }
 
 void UKBFLAssetDataSubsystem::GetItemsOfChilds(TArray<UClass*> Childs,
-                                               TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items, bool UseNativeCheck)
+	TArray<TSubclassOf<UFGItemDescriptor>>&                    Out_Items, bool UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -291,7 +289,7 @@ void UKBFLAssetDataSubsystem::GetItemsFiltered(TArray<TSubclassOf<UFGItemDescrip
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -314,15 +312,14 @@ void UKBFLAssetDataSubsystem::GetItemsFiltered(TArray<TSubclassOf<UFGItemDescrip
 }
 
 void UKBFLAssetDataSubsystem::GetItemsFilteredWithForm(TArray<EResourceForm> Forms,
-                                                       TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items)
+	TArray<TSubclassOf<UFGItemDescriptor>>&                                  Out_Items)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
-
 
 	for (UClass* Class : mAllFoundedItems)
 	{
@@ -346,13 +343,12 @@ TArray<TSubclassOf<UFGItemDescriptor>> UKBFLAssetDataSubsystem::GetAllItems()
 	return TArray<TSubclassOf<UFGItemDescriptor>>(mAllFoundedItems.Array());
 }
 
-void UKBFLAssetDataSubsystem::GetSchematicsOfTypes(TArray<ESchematicType> Types,
-                                                   TArray<TSubclassOf<UFGSchematic>>& Out_Schematics)
+void UKBFLAssetDataSubsystem::GetSchematicsOfTypes(TArray<ESchematicType> Types, TArray<TSubclassOf<UFGSchematic>>& Out_Schematics)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -369,12 +365,12 @@ void UKBFLAssetDataSubsystem::GetSchematicsOfTypes(TArray<ESchematicType> Types,
 }
 
 void UKBFLAssetDataSubsystem::GetSchematicsOfChilds(TArray<UClass*> Childs,
-                                                    TArray<TSubclassOf<UFGSchematic>>& Out_Items, bool UseNativeCheck)
+	TArray<TSubclassOf<UFGSchematic>>&                              Out_Items, bool UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -392,16 +388,16 @@ void UKBFLAssetDataSubsystem::GetSchematicsOfChilds(TArray<UClass*> Childs,
 
 TArray<TSubclassOf<UFGSchematic>> UKBFLAssetDataSubsystem::GetAllSchematics()
 {
-	return TArray<TSubclassOf<UFGSchematic>>(mAllFoundedSchematics.Array());
+	return mAllFoundedSchematics.Array();
 }
 
 void UKBFLAssetDataSubsystem::GetRecipesOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGRecipe>>& Out_Items,
-                                                 bool UseNativeCheck)
+	bool                                                         UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -418,12 +414,12 @@ void UKBFLAssetDataSubsystem::GetRecipesOfChilds(TArray<UClass*> Childs, TArray<
 }
 
 void UKBFLAssetDataSubsystem::GetRecipesOfProducer(TArray<TSubclassOf<UObject>> Producers,
-                                                   TArray<TSubclassOf<UFGRecipe>>& Out_Items)
+	TArray<TSubclassOf<UFGRecipe>>&                                             Out_Items)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -445,12 +441,12 @@ TArray<TSubclassOf<UFGRecipe>> UKBFLAssetDataSubsystem::GetAllRecipes()
 }
 
 void UKBFLAssetDataSubsystem::GetBuildableOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGBuildable>>& Out_Items,
-                                                   bool UseNativeCheck)
+	bool                                                           UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -496,7 +492,7 @@ bool UKBFLAssetDataSubsystem::CheckChild(UClass* TestClass, TArray<UClass*> Clas
 }
 
 bool UKBFLAssetDataSubsystem::CheckHasRecipeProducer(TSubclassOf<UFGRecipe> TestClass,
-                                                     TArray<TSubclassOf<UObject>> Producers)
+	TArray<TSubclassOf<UObject>>                                            Producers)
 {
 	if (TestClass)
 	{
@@ -516,12 +512,12 @@ bool UKBFLAssetDataSubsystem::CheckHasRecipeProducer(TSubclassOf<UFGRecipe> Test
 }
 
 void UKBFLAssetDataSubsystem::GetObjectsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UObject>>& Out_Items,
-                                                 bool UseNativeCheck)
+	bool                                                         UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -538,13 +534,13 @@ void UKBFLAssetDataSubsystem::GetObjectsOfChilds(TArray<UClass*> Childs, TArray<
 }
 
 void UKBFLAssetDataSubsystem::GetDriveablePawnsOfChilds(TArray<UClass*> Childs,
-                                                        TArray<TSubclassOf<AFGDriveablePawn>>& Out_Items,
-                                                        bool UseNativeCheck)
+	TArray<TSubclassOf<AFGDriveablePawn>>&                              Out_Items,
+	bool                                                                UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -561,12 +557,12 @@ void UKBFLAssetDataSubsystem::GetDriveablePawnsOfChilds(TArray<UClass*> Childs,
 }
 
 void UKBFLAssetDataSubsystem::GetHologramsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGHologram>>& Out_Items,
-                                                   bool UseNativeCheck)
+	bool                                                           UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -583,12 +579,12 @@ void UKBFLAssetDataSubsystem::GetHologramsOfChilds(TArray<UClass*> Childs, TArra
 }
 
 void UKBFLAssetDataSubsystem::GetModModulesOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UModModule>>& Out_Items,
-                                                    bool UseNativeCheck)
+	bool                                                            UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -605,13 +601,13 @@ void UKBFLAssetDataSubsystem::GetModModulesOfChilds(TArray<UClass*> Childs, TArr
 }
 
 void UKBFLAssetDataSubsystem::GetCDOHelpersOfChilds(TArray<UClass*> Childs,
-                                                    TArray<TSubclassOf<UKBFL_CDOHelperClass_Base>>& Out_Items,
-                                                    bool UseNativeCheck)
+	TArray<TSubclassOf<UKBFL_CDOHelperClass_Base>>&                 Out_Items,
+	bool                                                            UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
@@ -632,12 +628,12 @@ FKBFLAssetData UKBFLAssetDataSubsystem::GetModRelatedData(UModModule* ModModule)
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 
 	UE_LOG(AssetDataSubsystemLog, Warning, TEXT("GetModRelatedData: %s"),
-	       *ModModule->GetOwnerModReference( ).ToString( ).ToLower( ));
+		*ModModule->GetOwnerModReference( ).ToString( ).ToLower( ));
 	if (FKBFLAssetData* AssetData = mDirectoryMappings.Find(
 		FName(ModModule->GetOwnerModReference().ToString().ToLower())))
 	{
@@ -647,13 +643,13 @@ FKBFLAssetData UKBFLAssetDataSubsystem::GetModRelatedData(UModModule* ModModule)
 }
 
 void UKBFLAssetDataSubsystem::GetResourceDescriptorsOfChilds(TArray<UClass*> Childs,
-                                                             TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>>&
-                                                             Out_Items, bool UseNativeCheck)
+	TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>>&
+	Out_Items, bool UseNativeCheck)
 {
 	if (!bWasInit)
 	{
 		UE_LOG(AssetDataSubsystemLog, Error,
-		       TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
+			TEXT("Try to get classes without Init before the subsytem! Do ForceScan!"));
 		DoScan();
 	}
 

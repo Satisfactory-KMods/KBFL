@@ -1,7 +1,7 @@
 ﻿#include "BFL/KBFL_Inventory.h"
 
 void UKBFL_Inventory::FindFirstAllowedSlot(UFGInventoryComponent* Inventory, TSubclassOf<UFGItemDescriptor> Item,
-                                           KBFLFoundSomething& Found, int32& Index)
+	KBFLFoundSomething&                                           Found, int32&                             Index)
 {
 	Index = -1;
 	Found = KBFLFoundSomething::NotFound;
@@ -31,7 +31,7 @@ void UKBFL_Inventory::FindFirstAllowedSlot(UFGInventoryComponent* Inventory, TSu
 }
 
 void UKBFL_Inventory::FindAllAllowedSlots(UFGInventoryComponent* Inventory, TSubclassOf<UFGItemDescriptor> Item,
-                                          KBFLFoundSomething& Found, TArray<int32>& Index)
+	KBFLFoundSomething&                                          Found, TArray<int32>&                     Index)
 {
 	Index = {};
 	Found = KBFLFoundSomething::NotFound;
@@ -39,7 +39,6 @@ void UKBFL_Inventory::FindAllAllowedSlots(UFGInventoryComponent* Inventory, TSub
 	{
 		return;
 	}
-
 
 	const int SlotSizes = Inventory->GetSizeLinear();
 	for (int i = 0; i < SlotSizes; i++)
@@ -53,7 +52,6 @@ void UKBFL_Inventory::FindAllAllowedSlots(UFGInventoryComponent* Inventory, TSub
 			Index.Add(i);
 		}
 	}
-
 
 	if (Index.Num() > 0)
 	{

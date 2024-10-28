@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Resources/FGResourceDescriptor.h"
-#include "Resources/FGResourceNode.h"
 #include "Subsystems/ResourceNodes/KBFLResourceNodeDescriptor.h"
 #include "UObject/Interface.h"
 #include "KBFLResourceNodeInterface.generated.h"

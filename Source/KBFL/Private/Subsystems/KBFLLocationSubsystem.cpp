@@ -1,6 +1,9 @@
 #include "Subsystems/KBFLLocationSubsystem.h"
 
+#include "BFL/KBFL_Util.h"
+
 AKBFLLocationSubsystem::AKBFLLocationSubsystem()
+	: LastClass(nullptr)
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -38,12 +41,12 @@ void AKBFLLocationSubsystem::SaveLocationsToFile()
 		FilePath.Append(".txt");
 
 		const UScriptStruct* Struct = Result.Value.StaticStruct();
-		FString FileContent;
+		FString              FileContent;
 		Struct->ExportText(FileContent, &Result.Value, new FKBFLTransformArray, this,
-		                   (PPF_ExportsNotFullyQualified | PPF_Copy | PPF_Delimited | PPF_IncludeTransient), nullptr);
+			(PPF_ExportsNotFullyQualified | PPF_Copy | PPF_Delimited | PPF_IncludeTransient), nullptr);
 
 		UE_LOG(LogTemp, Warning, TEXT("SaveLocationsToFile: %d"),
-		       FFileHelper::SaveStringToFile(FileContent, *FilePath));
+			FFileHelper::SaveStringToFile(FileContent, *FilePath));
 	}
 }
 

@@ -2,12 +2,17 @@
 
 #include "CoreMinimal.h"
 #include "FGDriveablePawn.h"
+#include "FGResearchTree.h"
+#include "FGSchematic.h"
+#include "KBFLLogging.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Module/WorldModule.h"
 #include "ResourceNodes/KBFLActorSpawnDescriptorBase.h"
 #include "ResourceNodes/KBFLSubLevelSpawning.h"
-#include "KBFLAssetDataSubsystem.generated.h"
+#include "Resources/FGResourceDescriptor.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 
+#include "KBFLAssetDataSubsystem.generated.h"
 
 USTRUCT(Blueprintable)
 struct FKBFLAssetData
@@ -32,36 +37,38 @@ struct FKBFLAssetData
 	{
 		switch (Type)
 		{
-		case 0:
-			mAllFoundedSchematics.Add(Class);
-			break;
-		case 1:
-			mAllFoundedRecipes.Add(Class);
-			break;
-		case 2:
-			mAllFoundedItems.Add(Class);
-			break;
-		case 3:
-			mAllFoundedBuildables.Add(Class);
-			break;
-		case 4:
-			mAllFoundedDriveablePawns.Add(Class);
-			break;
-		case 5:
-			mAllFoundedHolograms.Add(Class);
-			break;
-		case 6:
-			mAllFoundedModModules.Add(Class);
-			break;
-		case 7:
-			mAllFoundedCDOHelpers.Add(Class);
-			break;
-		case 8:
-			mAllFoundedResourceDescriptors.Add(Class);
-			break;
-		case 10:
-			mAllFoundResearchTrees.Add(Class);
-			break;
+			case 0:
+				mAllFoundedSchematics.Add(Class);
+				break;
+			case 1:
+				mAllFoundedRecipes.Add(Class);
+				break;
+			case 2:
+				mAllFoundedItems.Add(Class);
+				break;
+			case 3:
+				mAllFoundedBuildables.Add(Class);
+				break;
+			case 4:
+				mAllFoundedDriveablePawns.Add(Class);
+				break;
+			case 5:
+				mAllFoundedHolograms.Add(Class);
+				break;
+			case 6:
+				mAllFoundedModModules.Add(Class);
+				break;
+			case 7:
+				mAllFoundedCDOHelpers.Add(Class);
+				break;
+			case 8:
+				mAllFoundedResourceDescriptors.Add(Class);
+				break;
+			case 10:
+				mAllFoundResearchTrees.Add(Class);
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -110,6 +117,9 @@ class KBFL_API UKBFLAssetDataSubsystem : public UGameInstanceSubsystem
 
 	virtual void Deinitialize() override;
 
+	UFUNCTION()
+	void ScanOnInitialize();
+
 public:
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void DoScan(bool Force = false);
@@ -138,6 +148,9 @@ public:
 
 	void PrintFound();
 
+	template<class T>
+	void PrintArray(TSet<T> List);
+
 	void InitAssetFinder();
 
 	static bool FilterAsset(const FAssetData& AssetData);
@@ -152,7 +165,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetItemsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGItemDescriptor>>& Out_Items,
-	                      bool UseNativeCheck = false);
+		bool                              UseNativeCheck = false);
 
 	/** Get All Items with a filter for Items & Equip  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
@@ -177,7 +190,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetSchematicsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGSchematic>>& Out_Items,
-	                           bool UseNativeCheck = false);
+		bool                                   UseNativeCheck = false);
 
 	/** Get All Schematics that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
@@ -190,7 +203,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetRecipesOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UFGRecipe>>& Out_Items,
-	                        bool UseNativeCheck = false);
+		bool                                UseNativeCheck = false);
 
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
@@ -206,7 +219,7 @@ public:
 	/** Get All Items that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetBuildableOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGBuildable>>& Out_Items,
-	                          bool UseNativeCheck = false);
+		bool                                  UseNativeCheck = false);
 
 	/** Get All Buildables that found while reading the game */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Asset Data Subsystem")
@@ -230,35 +243,35 @@ public:
 	/** Get All Objects that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetObjectsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UObject>>& Out_Items,
-	                        bool UseNativeCheck = false);
+		bool                                UseNativeCheck = false);
 
 	template <class T>
 	void GetObjectsOfChilds_Internal(TArray<UClass*> Childs, TArray<TSubclassOf<T>>& Out_Items,
-	                                 bool UseNativeCheck = false);
+		bool                                         UseNativeCheck = false);
 
 
 	/** Get All DriveablePawns that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetDriveablePawnsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGDriveablePawn>>& Out_Items,
-	                               bool UseNativeCheck = false);
+		bool                                       UseNativeCheck = false);
 
 
 	/** Get All Holograms that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetHologramsOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<AFGHologram>>& Out_Items,
-	                          bool UseNativeCheck = false);
+		bool                                  UseNativeCheck = false);
 
 
 	/** Get All tModModules that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetModModulesOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UModModule>>& Out_Items,
-	                           bool UseNativeCheck = false);
+		bool                                   UseNativeCheck = false);
 
 
 	/** Get All CDOHelpers that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void GetCDOHelpersOfChilds(TArray<UClass*> Childs, TArray<TSubclassOf<UKBFL_CDOHelperClass_Base>>& Out_Items,
-	                           bool UseNativeCheck = false);
+		bool                                   UseNativeCheck = false);
 
 	/** get data from a mod */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
@@ -266,9 +279,9 @@ public:
 
 	/** Get All ResourceDescriptors that hit the Child Classes  */
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
-	void GetResourceDescriptorsOfChilds(TArray<UClass*> Childs,
-	                                    TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>>& Out_Items,
-	                                    bool UseNativeCheck = false);
+	void GetResourceDescriptorsOfChilds(TArray<UClass*>     Childs,
+		TArray<TSubclassOf<UKBFLActorSpawnDescriptorBase>>& Out_Items,
+		bool                                                UseNativeCheck = false);
 
 	inline static bool bWasInit = false;
 
@@ -321,12 +334,21 @@ public:
 	TMap<UClass*, FAssetData> mAssetClassMap;
 
 	// Small fix for PassiveMode
-	TArray<FString> mPreventStrings = {"/PassiveMode/"};
+	TArray<FString> mPreventStrings = { "/PassiveMode/" };
 };
 
 template <class T>
+void UKBFLAssetDataSubsystem::PrintArray(TSet<T> List) {
+	return; // Disbaled for debug reasons
+	for (UClass* Class : List)
+	{
+		UE_LOG(AssetDataSubsystemLog, Log, TEXT("Class: %s"), *Class->GetClassPathName().ToString());
+	}
+}
+
+template <class T>
 void UKBFLAssetDataSubsystem::GetObjectsOfChilds_Internal(const TArray<UClass*> Childs,
-                                                          TArray<TSubclassOf<T>>& Out_Items, bool UseNativeCheck)
+	TArray<TSubclassOf<T>>&                                                     Out_Items, bool UseNativeCheck)
 {
 	if (!bWasInit)
 	{
@@ -354,6 +376,25 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 {
 	for (const FAssetData& AssetData : AllAssets)
 	{
+		if(AssetData.AssetClassPath == FTopLevelAssetPath(UBlueprintGeneratedClass::StaticClass()))
+		{
+			TSoftClassPtr< UObject > SoftClass = TSoftClassPtr( FSoftObjectPath( AssetData.GetObjectPathString( ) ) );
+			if( SoftClass.IsPending( ) || SoftClass.IsValid( ) ) {
+				UClass* Test = SoftClass.LoadSynchronous( );
+				if( Test ) {
+					if( Test->IsChildOf( T::StaticClass( ) ) ) {
+						 OutClasses.Add(Test);
+					}
+				} else
+				{
+					UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid IsChildOf! %s"), *AssetData.AssetName.ToString());
+				}
+			} else
+			{
+					UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid SoftClass! %s"), *AssetData.AssetName.ToString());
+			}
+		}
+		
 		//Make sure found asset is a blueprint
 		if (AssetData.AssetClassPath != FTopLevelAssetPath(UBlueprint::StaticClass()))
 		{
@@ -362,8 +403,9 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 
 		//Retrieve GeneratedClass tag containing a text path to generated class
 		FString GeneratedClassExportedPath;
-		if (!AssetData.GetTagValue(FBlueprintTags::GeneratedClassPath, GeneratedClassExportedPath))
+		if (!AssetData.GetTagValue(FBlueprintTags::GeneratedClassPath, GeneratedClassExportedPath) && AssetData.AssetClassPath != FTopLevelAssetPath(UBlueprintGeneratedClass::StaticClass()))
 		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid GeneratedClassPath! %s"), *AssetData.AssetName.ToString());
 			continue;
 		}
 
@@ -371,6 +413,7 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 		FString GeneratedClassPath;
 		if (!FPackageName::ParseExportTextPath(GeneratedClassExportedPath, nullptr, &GeneratedClassPath))
 		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid ParseExportTextPath! %s"), *AssetData.AssetName.ToString());
 			continue;
 		}
 
@@ -378,6 +421,7 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 		UClass* ClassObject = LoadObject<UClass>(nullptr, *GeneratedClassPath);
 		if (ClassObject == nullptr)
 		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid ClassObject! %s"), *AssetData.AssetName.ToString());
 			continue;
 		}
 

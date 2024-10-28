@@ -33,7 +33,7 @@ public:
 
 	virtual TArray<TSubclassOf<AActor>> GetSearchingActorClasses() override
 	{
-		return {mResourceNodeClass};
+		return { mResourceNodeClass };
 	};
 
 	FORCEINLINE virtual TSubclassOf<AActor> GetActorClass() override { return mResourceNodeClass; }

@@ -32,8 +32,8 @@ public:
 	void UpdateWidget();
 
 	FRotator AddRotation = FRotator(0);
-	FVector AddVector = FVector(0);
-	FVector Scale = FVector(1);
+	FVector  AddVector = FVector(0);
+	FVector  Scale = FVector(1);
 
 	UPROPERTY(EditDefaultsOnly, Category="Utils")
 	float ScaleMulti = 0.05;

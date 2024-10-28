@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "KBFL_CDOHelperClass_Base.h"
 #include "Resources/FGItemDescriptor.h"
-#include "Resources/FGItemDescriptorNuclearFuel.h"
 #include "KBFL_CDOHelperClass_Items.generated.h"
 
 /**
@@ -15,7 +14,7 @@ class KBFL_API UKBFL_CDOHelperClass_Items : public UKBFL_CDOHelperClass_Base
 	GENERATED_BODY()
 
 public:
-	virtual void DoCDO() override;
+	virtual void            DoCDO() override;
 	virtual TArray<UClass*> GetClasses() override;
 
 	/** must be set for CDO */

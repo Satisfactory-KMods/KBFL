@@ -4,9 +4,9 @@
 void UKBFL_CDOHelperClass_ResearchTreeRemover::DoCDO()
 {
 	UE_LOG(LogTemp, Log, TEXT("CDOHelperSchematicRemover > Called %s"), *this->GetName());
-	AFGRecipeManager* RecipeSubsystem = AFGRecipeManager::Get(GetWorld());
+	AFGRecipeManager*    RecipeSubsystem = AFGRecipeManager::Get(GetWorld());
 	AFGSchematicManager* SchematicSubsystem = AFGSchematicManager::Get(GetWorld());
-	AFGResearchManager* ResearchManager = AFGResearchManager::Get(GetWorld());
+	AFGResearchManager*  ResearchManager = AFGResearchManager::Get(GetWorld());
 
 	if (RecipeSubsystem)
 	{
@@ -15,7 +15,7 @@ void UKBFL_CDOHelperClass_ResearchTreeRemover::DoCDO()
 			if (Class->IsChildOf(UFGSchematic::StaticClass()))
 			{
 				RemoveResearchTree(Class, ResearchManager, RecipeSubsystem, SchematicSubsystem, {}, {},
-				                   GetExcludeClassesRecipes(), {}, GetExcludeClassesSchematics(), {}, RemovedClasses);
+					GetExcludeClassesRecipes(), {}, GetExcludeClassesSchematics(), {}, RemovedClasses);
 			}
 		}
 	}

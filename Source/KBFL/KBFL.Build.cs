@@ -4,47 +4,50 @@ public class KBFL : ModuleRules
 {
 	public KBFL(ReadOnlyTargetRules Target) : base(Target)
 	{
+		CppStandard = CppStandardVersion.Cpp20;
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		bLegacyPublicIncludePaths = false;
 
 		PublicDependencyModuleNames.AddRange(
 			new[]
 			{
-				"Json",
-				"Core",
-				"CoreUObject",
+				"Core", "CoreUObject",
 				"Engine",
 				"DeveloperSettings",
 				"PhysicsCore",
 				"InputCore",
-				"OnlineSubsystem", "OnlineSubsystemUtils",
-				"SignificanceManager",
+				//"OnlineSubsystem", "OnlineSubsystemUtils", "OnlineSubsystemNull",
+				//"SignificanceManager",
 				"GeometryCollectionEngine",
-				"ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
+				//"ChaosVehiclesCore", "ChaosVehicles", "ChaosSolverEngine",
 				"AnimGraphRuntime",
-				"AkAudio",
+				//"AkAudio",
 				"AssetRegistry",
 				"NavigationSystem",
-				"ReplicationGraph",
+				//"ReplicationGraph",
 				"AIModule",
 				"GameplayTasks",
 				"SlateCore", "Slate", "UMG",
+				//"InstancedSplines",
 				"RenderCore",
 				"CinematicCamera",
 				"Foliage",
-				"Niagara",
+				//"Niagara",
 				"EnhancedInput",
-				"GameplayCameras",
-				"TemplateSequence",
-				"NetCore", "HTTP",
-				"GameplayTags"
+				//"GameplayCameras",
+				//"TemplateSequence",
+				"Projects",
+				"NetCore",
+				"GameplayTags",
+				"Json", "JsonUtilities"
 			});
 
 		// FactoryGame plugins
-		PublicDependencyModuleNames.AddRange(new[]
-		{
+		PublicDependencyModuleNames.AddRange(
+		new string[] {
 			"AbstractInstance",
-			"InstancedSplinesComponent",
-			"SignificanceISPC"
+			//"InstancedSplinesComponent",
+			//"SignificanceISPC"
 		});
 
 		// Header stubs
@@ -52,10 +55,10 @@ public class KBFL : ModuleRules
 		{
 			"DummyHeaders"
 		});
-
-		if (Target.Type == TargetRules.TargetType.Editor)
-			PublicDependencyModuleNames.AddRange(new[] { "OnlineBlueprintSupport", "AnimGraph" });
-		PublicDependencyModuleNames.AddRange(new[] { "FactoryGame", "SML" });
-		PrivateDependencyModuleNames.AddRange(new[] { "FactoryGame", "SML" });
+		
+		if (Target.Type == TargetRules.TargetType.Editor) {
+			PublicDependencyModuleNames.AddRange(new string[] {/*"OnlineBlueprintSupport",*/ "AnimGraph"});
+		}
+		PublicDependencyModuleNames.AddRange(new string[] {"FactoryGame", "SML"});
 	}
 }

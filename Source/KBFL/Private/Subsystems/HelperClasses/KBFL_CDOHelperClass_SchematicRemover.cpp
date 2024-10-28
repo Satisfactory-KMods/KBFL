@@ -4,7 +4,7 @@
 void UKBFL_CDOHelperClass_SchematicRemover::DoCDO()
 {
 	UE_LOG(LogTemp, Log, TEXT("CDOHelperSchematicRemover > Called %s"), *this->GetName());
-	AFGRecipeManager* RecipeSubsystem = AFGRecipeManager::Get(GetWorld());
+	AFGRecipeManager*    RecipeSubsystem = AFGRecipeManager::Get(GetWorld());
 	AFGSchematicManager* SchematicSubsystem = AFGSchematicManager::Get(GetWorld());
 
 	if (RecipeSubsystem)
@@ -14,7 +14,7 @@ void UKBFL_CDOHelperClass_SchematicRemover::DoCDO()
 			if (Class->IsChildOf(UFGSchematic::StaticClass()))
 			{
 				RemoveSchematic(Class, RecipeSubsystem, SchematicSubsystem, {}, {}, GetExcludeClasses(), {},
-				                RemovedClasses);
+					RemovedClasses);
 			}
 		}
 	}

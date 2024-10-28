@@ -6,20 +6,22 @@
 
 #include "FGCharacterPlayer.h"
 #include "FGFactoryConnectionComponent.h"
-#include "C++/KBFLCppInventoryHelper.h"
+#include "Cpp/KBFLCppInventoryHelper.h"
 
 #include "Net/UnrealNetwork.h"
 
 AKBFLUtilItemCreaterBuildable::AKBFLUtilItemCreaterBuildable()
-{
-}
+	: mPipeInput(nullptr)
+	, mPipeOutput(nullptr)
+	, mBeltInput(nullptr)
+	, mBeltOutput(nullptr) {}
 
 void AKBFLUtilItemCreaterBuildable::Factory_Tick(float dt)
 {
 	if (HasAuthority())
 	{
 		UKBFLCppInventoryHelper::PullBeltChildClass(GetStorageInventory(), 3, dt, UFGItemDescriptor::StaticClass(),
-		                                            mBeltInput);
+			mBeltInput);
 		UKBFLCppInventoryHelper::PullAllFromPipe(GetStorageInventory(), 2, dt, mPipeInput);
 		DestroyItems();
 		CreateItems();
@@ -115,7 +117,7 @@ void AKBFLUtilItemCreaterBuildable::CreateItems()
 		if (mPipeItemClassToGenerate)
 		{
 			UKBFLCppInventoryHelper::StoreItemAmountInInventory(GetStorageInventory(), 1, mPipeItemClassToGenerate,
-			                                                    200);
+				200);
 		}
 	}
 }
@@ -156,7 +158,7 @@ void AKBFLUtilItemCreaterBuildable::GetLifetimeReplicatedProps(TArray<FLifetimeP
 // Default RCO's
 
 void UKBFLDefaultRCO::Server_AddStackToCharacter_Implementation(AFGCharacterPlayer* Player,
-                                                                TSubclassOf<UFGItemDescriptor> ItemToAdd)
+	TSubclassOf<UFGItemDescriptor>                                                  ItemToAdd)
 {
 	if (Player && ItemToAdd)
 	{
@@ -170,7 +172,7 @@ void UKBFLDefaultRCO::Server_AddStackToCharacter_Implementation(AFGCharacterPlay
 }
 
 void UKBFLDefaultRCO::Server_CheatBuilding_SetBeltItem_Implementation(AKBFLUtilItemCreaterBuildable* Building,
-                                                                      TSubclassOf<UFGItemDescriptor> ItemToSet)
+	TSubclassOf<UFGItemDescriptor>                                                                   ItemToSet)
 {
 	if (Building && ItemToSet)
 	{
@@ -180,7 +182,7 @@ void UKBFLDefaultRCO::Server_CheatBuilding_SetBeltItem_Implementation(AKBFLUtilI
 }
 
 void UKBFLDefaultRCO::Server_CheatBuilding_SetPipeItem_Implementation(AKBFLUtilItemCreaterBuildable* Building,
-                                                                      TSubclassOf<UFGItemDescriptor> ItemToSet)
+	TSubclassOf<UFGItemDescriptor>                                                                   ItemToSet)
 {
 	if (Building && ItemToSet)
 	{

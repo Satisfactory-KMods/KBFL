@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Subsystems/ResourceNodes/KBFLResourceNodeDescriptor.h"
-#include "Subsystems/ResourceNodes/ResourceNodesLogging.h"
 
 bool UKBFLResourceNodeDescriptor::IsAllowedToRemoveActor(AActor* InActor)
 {

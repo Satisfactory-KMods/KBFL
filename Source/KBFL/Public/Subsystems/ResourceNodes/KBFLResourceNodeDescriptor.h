@@ -17,6 +17,7 @@ class KBFL_API UKBFLResourceNodeDescriptor : public UKBFLActorSpawnDescriptorBas
 
 public:
 	UKBFLResourceNodeDescriptor()
+		: mLastPur()
 	{
 		mActorFreeClass = AFGResourceNodeBase::StaticClass();
 	}
@@ -25,7 +26,7 @@ public:
 
 	virtual TSubclassOf<AActor> GetActorFreeClass() override
 	{
-		return mActorFreeClass ? mActorFreeClass : TSubclassOf<AActor>{AFGResourceNodeBase::StaticClass()};
+		return mActorFreeClass ? mActorFreeClass : TSubclassOf<AActor>{ AFGResourceNodeBase::StaticClass() };
 	}
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Resource Node")

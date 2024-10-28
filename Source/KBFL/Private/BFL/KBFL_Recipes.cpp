@@ -3,13 +3,12 @@
 #include "FGItemCategory.h"
 #include "BFL/KBFL_Util.h"
 #include "Registry/ModContentRegistry.h"
-#include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
 TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllRegisteredRecipes(UObject* WorldContext)
 {
-	const auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Recipes = ModContent->GetRegisteredRecipes();
+	const auto                     ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                           Recipes = ModContent->GetRegisteredRecipes();
 	TArray<TSubclassOf<UFGRecipe>> ReturnRecipes = {};
 
 	for (auto Recipe : Recipes)
@@ -22,8 +21,8 @@ TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllRegisteredRecipes(UObject* W
 
 TArray<FKBFLRecipeInfo> UKBFL_Recipes::GetAllRegisteredRecipesWithInfo(UObject* WorldContext)
 {
-	const auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Recipes = ModContent->GetRegisteredRecipes();
+	const auto              ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                    Recipes = ModContent->GetRegisteredRecipes();
 	TArray<FKBFLRecipeInfo> ReturnRecipes = {};
 
 	for (auto Recipe : Recipes)
@@ -46,7 +45,7 @@ TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllRecipesFromBuilding(
 	if (Building)
 	{
 		const auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-		auto Recipes = ModContent->GetRegisteredRecipes();
+		auto       Recipes = ModContent->GetRegisteredRecipes();
 
 		for (auto Recipe : Recipes)
 		{
@@ -72,8 +71,8 @@ TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllRecipesFromBuilding(
 
 TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllModRecipes(UObject* WorldContext, FName ModName)
 {
-	const auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Recipes = ModContent->GetRegisteredRecipes();
+	const auto                     ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                           Recipes = ModContent->GetRegisteredRecipes();
 	TArray<TSubclassOf<UFGRecipe>> ReturnRecipes = {};
 
 	for (auto Recipe : Recipes)
@@ -89,8 +88,8 @@ TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllModRecipes(UObject* WorldCon
 
 TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllModsRecipes(UObject* WorldContext, TArray<FName> ModNames)
 {
-	const auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Recipes = ModContent->GetRegisteredRecipes();
+	const auto                     ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                           Recipes = ModContent->GetRegisteredRecipes();
 	TArray<TSubclassOf<UFGRecipe>> ReturnRecipes = {};
 
 	for (auto Recipe : Recipes)
@@ -106,8 +105,8 @@ TArray<TSubclassOf<UFGRecipe>> UKBFL_Recipes::GetAllModsRecipes(UObject* WorldCo
 
 TArray<FKBFLRecipeInfo> UKBFL_Recipes::GetAllModsRecipesWithInfo(UObject* WorldContext, TArray<FName> ModNames)
 {
-	const auto ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
-	auto Recipes = ModContent->GetRegisteredRecipes();
+	const auto              ModContent = UModContentRegistry::Get(WorldContext->GetWorld());
+	auto                    Recipes = ModContent->GetRegisteredRecipes();
 	TArray<FKBFLRecipeInfo> ReturnRecipes = {};
 
 	for (auto Recipe : Recipes)
@@ -127,9 +126,9 @@ TArray<FKBFLRecipeInfo> UKBFL_Recipes::GetAllModsRecipesWithInfo(UObject* WorldC
 }
 
 void UKBFL_Recipes::CDO_MoveRecipesFromBuilding(UObject* WorldContext, TSoftClassPtr<UObject> From,
-                                                TSoftClassPtr<UObject> To,
-                                                TArray<TSubclassOf<UFGItemCategory>> IgnoreCategory,
-                                                TArray<TSubclassOf<UFGRecipe>> IgnoreRecipe)
+	TSoftClassPtr<UObject>                               To,
+	TArray<TSubclassOf<UFGItemCategory>>                 IgnoreCategory,
+	TArray<TSubclassOf<UFGRecipe>>                       IgnoreRecipe)
 {
 	UKBFLContentCDOHelperSubsystem* Sub = UKBFLContentCDOHelperSubsystem::Get(WorldContext);
 	if (IsValid(Sub))

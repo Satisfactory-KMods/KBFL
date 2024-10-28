@@ -7,14 +7,14 @@ DECLARE_LOG_CATEGORY_EXTERN(KBFLConfigToolLog, Log, All)
 DEFINE_LOG_CATEGORY(KBFLConfigToolLog)
 
 UConfigPropertySection* UKBFL_ConfigTools::GetPropertySection(TSubclassOf<UModConfiguration> Config,
-                                                              UObject* WorldContext)
+	UObject*                                                                                 WorldContext)
 {
 	return Cast<UConfigPropertySection>(
 		URuntimeBlueprintFunctionLibrary::GetModConfigurationPropertyByClass(Config, WorldContext));
 }
 
 UConfigProperty* UKBFL_ConfigTools::GetConfigPropertyByKey(TSubclassOf<UModConfiguration> Config, FString Key,
-                                                           UObject* WorldContext)
+	UObject*                                                                              WorldContext)
 {
 	if (UConfigPropertySection* Configuration = GetPropertySection(Config, WorldContext))
 	{
@@ -42,7 +42,7 @@ bool UKBFL_ConfigTools::GetBoolFromConfig(TSubclassOf<UModConfiguration> Config,
 }
 
 void UKBFL_ConfigTools::SetBoolInConfig(TSubclassOf<UModConfiguration> Config, FString Key, bool Value,
-                                        UObject* WorldContext)
+	UObject*                                                           WorldContext)
 {
 	if (UConfigPropertyBool* Property = GetPropertyByKey<UConfigPropertyBool>(Config, Key, WorldContext))
 	{
@@ -58,7 +58,7 @@ float UKBFL_ConfigTools::GetFloatFromConfig(TSubclassOf<UModConfiguration> Confi
 }
 
 void UKBFL_ConfigTools::SetFloatInConfig(TSubclassOf<UModConfiguration> Config, FString Key, float Value,
-                                         UObject* WorldContext)
+	UObject*                                                            WorldContext)
 {
 	if (UConfigPropertyFloat* Property = GetPropertyByKey<UConfigPropertyFloat>(Config, Key, WorldContext))
 	{
@@ -77,7 +77,7 @@ UClass* UKBFL_ConfigTools::GetClassFromConfig(TSubclassOf<UModConfiguration> Con
 }
 
 void UKBFL_ConfigTools::SetClassInConfig(TSubclassOf<UModConfiguration> Config, FString Key, UClass* Value,
-                                         UObject* WorldContext)
+	UObject*                                                            WorldContext)
 {
 	if (UConfigPropertyClass* Property = GetPropertyByKey<UConfigPropertyClass>(Config, Key, WorldContext))
 	{
@@ -93,7 +93,7 @@ int UKBFL_ConfigTools::GetIntFromConfig(TSubclassOf<UModConfiguration> Config, F
 }
 
 void UKBFL_ConfigTools::SetIntInConfig(TSubclassOf<UModConfiguration> Config, FString Key, int Value,
-                                       UObject* WorldContext)
+	UObject*                                                          WorldContext)
 {
 	if (UConfigPropertyInteger* Property = GetPropertyByKey<UConfigPropertyInteger>(Config, Key, WorldContext))
 	{
@@ -109,7 +109,7 @@ FName UKBFL_ConfigTools::GetNameFromConfig(TSubclassOf<UModConfiguration> Config
 }
 
 void UKBFL_ConfigTools::SetNameInConfig(TSubclassOf<UModConfiguration> Config, FString Key, FName Value,
-                                        UObject* WorldContext)
+	UObject*                                                           WorldContext)
 {
 	if (UConfigPropertyString* Property = GetPropertyByKey<UConfigPropertyString>(Config, Key, WorldContext))
 	{
@@ -119,14 +119,14 @@ void UKBFL_ConfigTools::SetNameInConfig(TSubclassOf<UModConfiguration> Config, F
 }
 
 FString UKBFL_ConfigTools::GetStringFromConfig(TSubclassOf<UModConfiguration> Config, FString Key,
-                                               UObject* WorldContext)
+	UObject*                                                                  WorldContext)
 {
 	return URuntimeBlueprintFunctionLibrary::Conv_ConfigPropertyToString(
 		GetConfigPropertyByKey(Config, Key, WorldContext));
 }
 
 void UKBFL_ConfigTools::SetStringInConfig(TSubclassOf<UModConfiguration> Config, FString Key, FString Value,
-                                          UObject* WorldContext)
+	UObject*                                                             WorldContext)
 {
 	if (UConfigPropertyString* Property = GetPropertyByKey<UConfigPropertyString>(Config, Key, WorldContext))
 	{
@@ -142,7 +142,7 @@ FText UKBFL_ConfigTools::GetTextFromConfig(TSubclassOf<UModConfiguration> Config
 }
 
 void UKBFL_ConfigTools::SetTextInConfig(TSubclassOf<UModConfiguration> Config, FString Key, FText Value,
-                                        UObject* WorldContext)
+	UObject*                                                           WorldContext)
 {
 	if (UConfigPropertyString* Property = GetPropertyByKey<UConfigPropertyString>(Config, Key, WorldContext))
 	{

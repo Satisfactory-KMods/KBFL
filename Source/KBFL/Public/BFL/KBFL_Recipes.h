@@ -26,7 +26,7 @@ public:
 	/** Get all recipes in game from a Building */
 	UFUNCTION(BlueprintPure, Category="KMods|Recipes", meta = (WorldContext = "WorldContext"))
 	static TArray<TSubclassOf<UFGRecipe>> GetAllRecipesFromBuilding(UObject* WorldContext,
-	                                                                TSubclassOf<AFGBuildableManufacturer> Building);
+		TSubclassOf<AFGBuildableManufacturer>                                Building);
 
 	/** Get all recipes in game from a Mod */
 	UFUNCTION(BlueprintPure, Category="KMods|Recipes", meta = (WorldContext = "WorldContext"))
@@ -47,7 +47,7 @@ public:
 	/** Moves all Recipes from a building to a other */
 	UFUNCTION(BlueprintCallable, Category="KMods|Recipes", meta = (WorldContext = "WorldContext"))
 	static void CDO_MoveRecipesFromBuilding(UObject* WorldContext, TSoftClassPtr<UObject> From,
-	                                        TSoftClassPtr<UObject> To,
-	                                        TArray<TSubclassOf<UFGItemCategory>> IgnoreCategory,
-	                                        TArray<TSubclassOf<UFGRecipe>> IgnoreRecipe);
+		TSoftClassPtr<UObject>                       To,
+		TArray<TSubclassOf<UFGItemCategory>>         IgnoreCategory,
+		TArray<TSubclassOf<UFGRecipe>>               IgnoreRecipe);
 };

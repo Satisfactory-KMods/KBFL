@@ -2,10 +2,6 @@
 
 #include "CoreMinimal.h"
 
-#include "FGSaveInterface.h"
-#include "BFL/KBFL_Struct.h"
-#include "BFL/KBFL_Util.h"
-#include "Buildables/FGBuildableFactory.h"
 #include "ResourceNodes/KBFLResourceNodeDescriptor_ResourceNode.h"
 #include "Subsystem/ModSubsystem.h"
 
@@ -51,7 +47,7 @@ public:
 	FString mAddFilePath = "../KMods/";
 
 	UPROPERTY(EditDefaultsOnly, Category="RSS Subsystems")
-	TArray<FString> mCheckParameter = {"Struc", "mTransforms"};
+	TArray<FString> mCheckParameter = { "Struc", "mTransforms" };
 
 	UPROPERTY()
 	TMap<UClass*, FKBFLTransformArray> Mapping;

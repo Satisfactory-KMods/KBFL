@@ -28,9 +28,7 @@ struct KBFL_API FKBFLRegistry
 {
 	GENERATED_BODY()
 
-	FKBFLRegistry()
-	{
-	};
+	FKBFLRegistry() {};
 
 	FKBFLRegistry(FString InPath)
 	{
@@ -73,9 +71,7 @@ struct KBFL_API FKBFLCdoRegistry
 {
 	GENERATED_BODY()
 
-	FKBFLCdoRegistry()
-	{
-	};
+	FKBFLCdoRegistry() {};
 
 	FKBFLCdoRegistry(FString InPath)
 	{

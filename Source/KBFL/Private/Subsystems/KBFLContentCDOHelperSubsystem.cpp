@@ -1,25 +1,19 @@
 #include "Subsystems/KBFLContentCDOHelperSubsystem.h"
 
-#include "FGCheatManager.h"
 #include "FGGameState.h"
-#include "BFL/KBFL_Player.h"
+#include "KBFLLogging.h"
+#include "Engine/GameInstance.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Module/WorldModuleManager.h"
 #include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Recipes.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(ContentCDOHelperSubsystem, Log, All)
 
-DEFINE_LOG_CATEGORY(ContentCDOHelperSubsystem)
 
 void UKBFLContentCDOHelperSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Collection.InitializeDependency(UKBFLAssetDataSubsystem::StaticClass());
 
 	Super::Initialize(Collection);
-
-#if WITH_EDITOR
-#endif
 }
 
 void UKBFLContentCDOHelperSubsystem::Deinitialize()
@@ -43,8 +37,8 @@ UKBFLContentCDOHelperSubsystem* UKBFLContentCDOHelperSubsystem::Get(UObject* Con
 }
 
 void UKBFLContentCDOHelperSubsystem::MoveRecipesFromBuilding(TSoftClassPtr<> From, TSoftClassPtr<> To,
-                                                             TArray<TSubclassOf<UFGItemCategory>> IgnoreCategory,
-                                                             TArray<TSubclassOf<UFGRecipe>> IgnoreRecipe)
+	TArray<TSubclassOf<UFGItemCategory>>                                     IgnoreCategory,
+	TArray<TSubclassOf<UFGRecipe>>                                           IgnoreRecipe)
 {
 	TSubclassOf<UObject> SubFrom = nullptr;
 	TSubclassOf<UObject> SubTo = nullptr;
@@ -68,7 +62,7 @@ void UKBFLContentCDOHelperSubsystem::MoveRecipesFromBuilding(TSoftClassPtr<> Fro
 		UKBFLAssetDataSubsystem* AssetDataSubsystem = UKBFLAssetDataSubsystem::Get(GetWorld());
 
 		TArray<TSubclassOf<UFGRecipe>> Recipes;
-		AssetDataSubsystem->GetRecipesOfProducer({SubFrom}, Recipes);
+		AssetDataSubsystem->GetRecipesOfProducer({ SubFrom }, Recipes);
 
 		for (auto Recipe : Recipes)
 		{
@@ -83,7 +77,7 @@ void UKBFLContentCDOHelperSubsystem::MoveRecipesFromBuilding(TSoftClassPtr<> Fro
 						Default->mProducedIn.Remove(From);
 						Default->mProducedIn.Add(To);
 						UE_LOG(LogTemp, Error, TEXT("CDO_MoveRecipesFromBuilding -> Move Recipe %s : %s -> %s"),
-						       *Default->GetName(), *From->GetName(), *To->GetName());
+							*Default->GetName(), *From->GetName(), *To->GetName());
 
 						Default->MarkPackageDirty();
 					}
@@ -96,21 +90,21 @@ void UKBFLContentCDOHelperSubsystem::MoveRecipesFromBuilding(TSoftClassPtr<> Fro
 void UKBFLContentCDOHelperSubsystem::BeginCDOForModule(UModModule* Module, ELifecyclePhase Phase)
 {
 	UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("BeginCDOForModule > Was Called - Mod: %s"),
-	       *Module->GetOwnerModReference().ToString());
+		*Module->GetOwnerModReference().ToString());
 	if (UKismetSystemLibrary::DoesImplementInterface(Module, UKBFLContentCDOHelperInterface::StaticClass()))
 	{
 		if (!WasCDOForModuleCalled(Module, Phase))
 		{
 			UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("Try to get information for mod: %s"),
-			       *Module->GetOwnerModReference().ToString());
-			bool HasPhase;
+				*Module->GetOwnerModReference().ToString());
+			bool                HasPhase;
 			FKBFLCDOInformation Info = IKBFLContentCDOHelperInterface::Execute_GetCDOInformationFromPhase(
 				Module, Phase, HasPhase);
 			if (HasPhase)
 			{
 				UE_LOG(ContentCDOHelperSubsystem, Log,
-				       TEXT("BeginCDOForModule > HasPhase (Start CDO on Phase: %s) - Mod: %s"),
-				       *Module->LifecyclePhaseToString(Phase), *Module->GetOwnerModReference().ToString());
+					TEXT("BeginCDOForModule > HasPhase (Start CDO on Phase: %s) - Mod: %s"),
+					*Module->LifecyclePhaseToString(Phase), *Module->GetOwnerModReference().ToString());
 				DoCDOFromInfo(Info);
 				if (!mCDOCalled.Contains(Module))
 				{
@@ -121,13 +115,13 @@ void UKBFLContentCDOHelperSubsystem::BeginCDOForModule(UModModule* Module, ELife
 			else
 			{
 				UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("Scrip phase - Mod: %s"),
-				       *Module->GetOwnerModReference().ToString());
+					*Module->GetOwnerModReference().ToString());
 			}
 		}
 		else
 		{
 			UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("CDO Was Called for this phase: %s"),
-			       *Module->GetOwnerModReference().ToString());
+				*Module->GetOwnerModReference().ToString());
 		}
 	}
 }
@@ -154,60 +148,6 @@ void UKBFLContentCDOHelperSubsystem::ResetCDOCallFromModule(UModModule* Module)
 		}
 	}
 }
-
-/*
-void UKBFLContentCDOHelperSubsystem::OnWorldBeginPlay()
-{
-	if (!Initialized)
-	{
-		UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("World Begin Play! ContentCDOHelperSubsystem > DoCDOs"));
-		DoCDOs();
-	
-		Initialized = true;
-	}
-}
-
-void UKBFLContentCDOHelperSubsystem::RedoCDOs()
-{
-	UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("RedoCDOs! ContentCDOHelperSubsystem > RedoCDOs"));
-	Initialized = false;
-	mCDOCalled.Empty();
-	OnWorldBeginPlay();
-}
-
-void UKBFLContentCDOHelperSubsystem::DoCDOs()
-{
-	#if !WITH_EDITOR
-		UWorldModuleManager * Subsystem = Cast<UWorldModuleManager>(GetWorld()->GetSubsystem<UWorldModuleManager>());
-		for(UWorldModule* Module : Subsystem->RootModuleList)
-		{
-			const bool bImplementsInterface = Module->GetClass()->ImplementsInterface(UKBFLContentCDOHelperInterface::StaticClass());
-			if (bImplementsInterface)
-			{
-				UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOs > %s"), *Module->GetName());
-				if(Module)
-					for(int i = 0; i < 3; ++i)
-					{
-						ELifecyclePhase Phase = i == 0 ? ELifecyclePhase::CONSTRUCTION : i == 1 ? ELifecyclePhase::INITIALIZATION : ELifecyclePhase::POST_INITIALIZATION;
-						UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOs > Phase > %d"), i);
-						
-						bool HasPhase;
-						FKBFLCDOInformation Info = IKBFLContentCDOHelperInterface::Execute_GetCDOInformationFromPhase(Module, Phase, HasPhase);
-
-						if(HasPhase && !WasCDOForModuleCalled(Module, Phase))
-						{
-							DoCDOFromInfo(Info);
-						}
-						else
-						{
-							UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOs > Phase > Cannot find Phase!"));
-						}
-					}
-			}
-		}
-	#endif
-}
-*/
 
 void UKBFLContentCDOHelperSubsystem::DoCDOFromInfo(FKBFLCDOInformation Info)
 {
@@ -240,7 +180,7 @@ void UKBFLContentCDOHelperSubsystem::DoSetNewStackSize(TSubclassOf<UFGItemDescri
 		if (UFGItemDescriptor* Default = GetAndStoreDefaultObject_Native<UFGItemDescriptor>(Item))
 		{
 			UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("ContentCDOHelperSubsystem > DoSetNewStackSize for item %s"),
-			       *Item->GetName());
+				*Item->GetName());
 			Default->mStackSize = StackSize;
 			Default->mCachedStackSize = UFGItemDescriptor::GetStackSize(Item);
 			Default->MarkPackageDirty();
@@ -249,7 +189,7 @@ void UKBFLContentCDOHelperSubsystem::DoSetNewStackSize(TSubclassOf<UFGItemDescri
 }
 
 void UKBFLContentCDOHelperSubsystem::CallCDOHelper(TSubclassOf<UKBFL_CDOHelperClass_Base> CDOHelperClass,
-                                                   bool IgnoreCallCheck)
+	bool                                                                                  IgnoreCallCheck)
 {
 	if (IsValid(CDOHelperClass))
 	{

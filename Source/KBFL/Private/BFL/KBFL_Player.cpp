@@ -3,37 +3,6 @@
 #include "FGLocalPlayer.h"
 #include "FGPlayerController.h"
 
-FString UKBFL_Player::GetPlayerId(AFGPlayerState* PlayerState)
-{
-	if (IsValid(PlayerState))
-	{
-		if (PlayerState->IsInPlayerArray())
-		{
-			if (IsValid(PlayerState->GetOwningController()))
-			{
-				UFGLocalPlayer* LocalPlayer = Cast<
-					UFGLocalPlayer>(PlayerState->GetOwningController()->GetLocalPlayer());
-				if (IsValid(LocalPlayer))
-				{
-					const TSharedPtr<const FUniqueNetId> EpicID = LocalPlayer->GetPlayerId();
-
-					if (EpicID && EpicID->ToString() != "UnknownId")
-					{
-						return EpicID->ToString();
-					}
-				}
-			}
-			if (PlayerState->GetUserID() != "UnknownId")
-			{
-				return PlayerState->GetUserID();
-			}
-			return PlayerState->GetPlayerName();
-		}
-	}
-
-	return FString("Invalid");
-}
-
 AFGBuildGun* UKBFL_Player::GetBuildingGun(UObject* WorldContext)
 {
 	const auto Character = GetFGCharacter(WorldContext);
@@ -76,7 +45,7 @@ AFGPlayerState* UKBFL_Player::GetFgPlayerState(UObject* WorldContext)
 }
 
 void UKBFL_Player::GetBuildingGunHitResult(UObject* WorldContext, bool& IsInBuildOrDismantleState,
-                                           FHitResult& HitResult)
+	FHitResult&                                     HitResult)
 {
 	const auto BuildGun = GetBuildingGun(WorldContext);
 	if (IsValid(BuildGun))

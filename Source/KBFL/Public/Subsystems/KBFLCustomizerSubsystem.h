@@ -3,12 +3,9 @@
 #include "CoreMinimal.h"
 #include "FGFactoryColoringTypes.h"
 #include "FGSwatchGroup.h"
-#include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Interfaces/KBFLCustomizerInterface.h"
-#include "Module/ModModule.h"
 
 #include "Module/WorldModule.h"
-#include "Resources/FGResourceNode.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "KBFLCustomizerSubsystem.generated.h"
 
@@ -21,7 +18,7 @@ class KBFL_API UKBFLCustomizerSubsystem : public UWorldSubsystem, public FTickab
 {
 	GENERATED_BODY()
 
-	virtual void Tick(float DeltaTime) override;
+	virtual void    Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override;
 
 	/** Implement this for initialization of instances of the system */
@@ -52,8 +49,8 @@ public:
 	* otherwise it will crash
 	*/
 	UFUNCTION(BlueprintCallable, Category="KMods|Customizer Subsystem")
-	bool SetDefaultToSwatchGroup(TSubclassOf<UFGSwatchGroup> SwatchGroup,
-	                             TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch> Swatch);
+	bool SetDefaultToSwatchGroup(TSubclassOf<UFGSwatchGroup>  SwatchGroup,
+		TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch> Swatch);
 
 	UFUNCTION(BlueprintPure, Category="KMods|Customizer Subsystem")
 	FORCEINLINE TMap<uint8, TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch>> GetSwatchMap() const
@@ -69,8 +66,8 @@ private:
 	TArray<UWorldModule*> mCalled;
 
 	TMap<uint8, TSubclassOf<UFGFactoryCustomizationDescriptor_Swatch>> mSwatchIDMap;
-	TSubclassOf<UFGFactoryCustomizationCollection> mDefaultSwatchCollection;
-	TSubclassOf<UFGFactoryCustomizationCollection> mDefaultMaterialCollection;
-	TSubclassOf<UFGFactoryCustomizationCollection> mDefaultPatternCollection;
-	TSubclassOf<UFGFactoryCustomizationCollection> mDefaultSkinCollection;
+	TSubclassOf<UFGFactoryCustomizationCollection>                     mDefaultSwatchCollection;
+	TSubclassOf<UFGFactoryCustomizationCollection>                     mDefaultMaterialCollection;
+	TSubclassOf<UFGFactoryCustomizationCollection>                     mDefaultPatternCollection;
+	TSubclassOf<UFGFactoryCustomizationCollection>                     mDefaultSkinCollection;
 };
