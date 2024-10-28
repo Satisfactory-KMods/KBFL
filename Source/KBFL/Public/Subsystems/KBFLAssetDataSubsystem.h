@@ -4,10 +4,12 @@
 #include "FGDriveablePawn.h"
 #include "FGResearchTree.h"
 #include "FGSchematic.h"
+#include "KBFLLogging.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Module/WorldModule.h"
 #include "ResourceNodes/KBFLActorSpawnDescriptorBase.h"
 #include "ResourceNodes/KBFLSubLevelSpawning.h"
+#include "Resources/FGResourceDescriptor.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 
 #include "KBFLAssetDataSubsystem.generated.h"
@@ -115,6 +117,9 @@ class KBFL_API UKBFLAssetDataSubsystem : public UGameInstanceSubsystem
 
 	virtual void Deinitialize() override;
 
+	UFUNCTION()
+	void ScanOnInitialize();
+
 public:
 	UFUNCTION(BlueprintCallable, Category="Asset Data Subsystem")
 	void DoScan(bool Force = false);
@@ -142,6 +147,9 @@ public:
 	static UKBFLAssetDataSubsystem* Get(const UObject* WorldContext);
 
 	void PrintFound();
+
+	template<class T>
+	void PrintArray(TSet<T> List);
 
 	void InitAssetFinder();
 
@@ -311,7 +319,7 @@ private:
 	TSet<TSubclassOf<UKBFL_CDOHelperClass_Base>> mAllFoundedCDOHelpers;
 
 	UPROPERTY()
-	TSet<TSubclassOf<UFGItemDescriptor>> mAllFoundedResourceDescriptors;
+	TSet<TSubclassOf<UFGResourceDescriptor>> mAllFoundedResourceDescriptors;
 
 	UPROPERTY()
 	TSet<TSubclassOf<UObject>> mAllFoundedObjects;
@@ -328,6 +336,15 @@ public:
 	// Small fix for PassiveMode
 	TArray<FString> mPreventStrings = { "/PassiveMode/" };
 };
+
+template <class T>
+void UKBFLAssetDataSubsystem::PrintArray(TSet<T> List) {
+	return; // Disbaled for debug reasons
+	for (UClass* Class : List)
+	{
+		UE_LOG(AssetDataSubsystemLog, Log, TEXT("Class: %s"), *Class->GetClassPathName().ToString());
+	}
+}
 
 template <class T>
 void UKBFLAssetDataSubsystem::GetObjectsOfChilds_Internal(const TArray<UClass*> Childs,
@@ -359,6 +376,25 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 {
 	for (const FAssetData& AssetData : AllAssets)
 	{
+		if(AssetData.AssetClassPath == FTopLevelAssetPath(UBlueprintGeneratedClass::StaticClass()))
+		{
+			TSoftClassPtr< UObject > SoftClass = TSoftClassPtr( FSoftObjectPath( AssetData.GetObjectPathString( ) ) );
+			if( SoftClass.IsPending( ) || SoftClass.IsValid( ) ) {
+				UClass* Test = SoftClass.LoadSynchronous( );
+				if( Test ) {
+					if( Test->IsChildOf( T::StaticClass( ) ) ) {
+						 OutClasses.Add(Test);
+					}
+				} else
+				{
+					UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid IsChildOf! %s"), *AssetData.AssetName.ToString());
+				}
+			} else
+			{
+					UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid SoftClass! %s"), *AssetData.AssetName.ToString());
+			}
+		}
+		
 		//Make sure found asset is a blueprint
 		if (AssetData.AssetClassPath != FTopLevelAssetPath(UBlueprint::StaticClass()))
 		{
@@ -367,8 +403,9 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 
 		//Retrieve GeneratedClass tag containing a text path to generated class
 		FString GeneratedClassExportedPath;
-		if (!AssetData.GetTagValue(FBlueprintTags::GeneratedClassPath, GeneratedClassExportedPath))
+		if (!AssetData.GetTagValue(FBlueprintTags::GeneratedClassPath, GeneratedClassExportedPath) && AssetData.AssetClassPath != FTopLevelAssetPath(UBlueprintGeneratedClass::StaticClass()))
 		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid GeneratedClassPath! %s"), *AssetData.AssetName.ToString());
 			continue;
 		}
 
@@ -376,6 +413,7 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 		FString GeneratedClassPath;
 		if (!FPackageName::ParseExportTextPath(GeneratedClassExportedPath, nullptr, &GeneratedClassPath))
 		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid ParseExportTextPath! %s"), *AssetData.AssetName.ToString());
 			continue;
 		}
 
@@ -383,6 +421,7 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 		UClass* ClassObject = LoadObject<UClass>(nullptr, *GeneratedClassPath);
 		if (ClassObject == nullptr)
 		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid ClassObject! %s"), *AssetData.AssetName.ToString());
 			continue;
 		}
 

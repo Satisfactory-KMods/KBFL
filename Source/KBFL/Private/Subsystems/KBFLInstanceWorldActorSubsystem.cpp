@@ -22,6 +22,9 @@ AKBFLInstanceWorldActorSubsystem* AKBFLInstanceWorldActorSubsystem::Get(UObject*
 
 void AKBFLInstanceWorldActorSubsystem::AddInstances(UStaticMesh* Mesh, TArray<FTransform> Locations)
 {
+	UE_LOG(LogKBFLModule, Log, TEXT("AddInstances is disabled for now!"))
+	return;
+	
 	for (FTransform Transform : Locations)
 	{
 		FInstanceData Data;

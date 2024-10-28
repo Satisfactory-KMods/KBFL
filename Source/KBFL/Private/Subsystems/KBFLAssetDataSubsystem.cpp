@@ -22,6 +22,17 @@
 void UKBFLAssetDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(FName("AssetRegistry"));
+	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
+	
+	// Must wait until all assets are discovered before populating list of assets.
+	if (AssetRegistry.IsLoadingAssets()) {
+		AssetRegistry.OnFilesLoaded().AddUObject(this, &UKBFLAssetDataSubsystem::ScanOnInitialize);
+	}
+	else {
+		ScanOnInitialize();
+	}
 }
 
 void UKBFLAssetDataSubsystem::Deinitialize()
@@ -49,6 +60,11 @@ void UKBFLAssetDataSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+void UKBFLAssetDataSubsystem::ScanOnInitialize() {
+	DoScan();
+	bWasInit = false;
+}
+
 void UKBFLAssetDataSubsystem::DoScan(bool Force)
 {
 	if (!bWasInit || Force)
@@ -72,19 +88,30 @@ UKBFLAssetDataSubsystem* UKBFLAssetDataSubsystem::Get(const UObject* WorldContex
 void UKBFLAssetDataSubsystem::PrintFound()
 {
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("--------------------------------------------"));
-	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllSubLevelSpawningClasses: %d"), mAllSubLevelSpawningClasses.Num());
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("Successful Initialize UKBFLAssetDataSubsystem"));
+	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllSubLevelSpawningClasses: %d"), mAllSubLevelSpawningClasses.Num());
+	PrintArray(mAllSubLevelSpawningClasses);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedSchematics: %d"), mAllFoundedSchematics.Num());
+	PrintArray(mAllFoundedSchematics);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedBuildables: %d"), mAllFoundedBuildables.Num());
+	PrintArray(mAllFoundedBuildables);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedItems: %d"), mAllFoundedItems.Num());
+	PrintArray(mAllFoundedItems);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedRecipes: %d"), mAllFoundedRecipes.Num());
+	PrintArray(mAllFoundedRecipes);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedDriveablePawns: %d"), mAllFoundedDriveablePawns.Num());
+	PrintArray(mAllFoundedDriveablePawns);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedHolograms: %d"), mAllFoundedHolograms.Num());
+	PrintArray(mAllFoundedHolograms);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedModModules: %d"), mAllFoundedModModules.Num());
+	PrintArray(mAllFoundedModModules);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedCDOHelpers: %d"), mAllFoundedCDOHelpers.Num());
+	PrintArray(mAllFoundedCDOHelpers);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedResourceDescriptors: %d"),
 		mAllFoundedResourceDescriptors.Num());
+	PrintArray(mAllFoundedResourceDescriptors);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("mAllFoundedObjects: %d"), mAllFoundedObjects.Num());
+	PrintArray(mAllFoundedObjects);
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("--------------------------------------------"));
 }
 
@@ -136,7 +163,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder()
 		GetAllClassesOfSubclass(AssetData, mAllFoundedModModules);
 		GetAllClassesOfSubclass(AssetData, mAllFoundedCDOHelpers);
 		GetAllClassesOfSubclass(AssetData, mAllFoundedResourceDescriptors);
-		GetAllClassesOfSubclass(AssetData, mAllFoundedObjects);
+	//	GetAllClassesOfSubclass(AssetData, mAllFoundedObjects);
 		GetAllClassesOfSubclass(AssetData, mAllFoundResearchTrees);
 
 		for (UClass* data : mAllFoundedSchematics)
