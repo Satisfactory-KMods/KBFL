@@ -124,7 +124,7 @@ void UKBFLContentCDOHelperSubsystem::BeginCDOForModule(UModModule* Module, ELife
 				*Module->GetOwnerModReference().ToString());
 		}
 	}
-}
+} 
 
 bool UKBFLContentCDOHelperSubsystem::WasCDOForModuleCalled(UModModule* Module, ELifecyclePhase Phase) const
 {
@@ -153,6 +153,12 @@ void UKBFLContentCDOHelperSubsystem::DoCDOFromInfo(FKBFLCDOInformation Info)
 {
 	UE_LOG(ContentCDOHelperSubsystem, Log, TEXT("DoCDOFromInfo"));
 
+	Info.mCDOHelperClasses.Sort([&](const TSubclassOf<UKBFL_CDOHelperClass_Base> A,
+		const TSubclassOf<UKBFL_CDOHelperClass_Base> B)
+	{
+		return A.GetDefaultObject()->mCallOrder > B.GetDefaultObject()->mCallOrder;
+	});
+	
 	for (TSubclassOf<UKBFL_CDOHelperClass_Base> CDOHelper : Info.mCDOHelperClasses)
 	{
 		if (IsValid(CDOHelper))

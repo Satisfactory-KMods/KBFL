@@ -58,4 +58,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	class UKBFLContentCDOHelperSubsystem* mSubsystem = nullptr;
+	
+	/** must be set for CDO */
+	UPROPERTY(EditDefaultsOnly, Category="CDO Helper")
+	int32 mCallOrder = 0;
 };

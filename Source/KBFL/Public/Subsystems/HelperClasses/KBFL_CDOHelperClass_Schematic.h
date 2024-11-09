@@ -14,12 +14,21 @@ class KBFL_API UKBFL_CDOHelperClass_Schematic : public UKBFL_CDOHelperClass_Base
 	GENERATED_BODY()
 
 public:
-	virtual void            DoCDO() override;
+	virtual void            DoCDO() override; 
 	virtual TArray<UClass*> GetClasses() override;
 
 	/** must be set for CDO */
 	UPROPERTY(EditDefaultsOnly, Category="CDO Helper")
 	TArray<TSoftClassPtr<UFGSchematic>> mSchematics;
+	 
+	UPROPERTY(EditDefaultsOnly, Category="CDO Helper")
+	TSoftClassPtr<UFGSchematic> mAllOfSubclass;
+	
+	UPROPERTY(EditDefaultsOnly, Category="CDO Helper")
+	FString mOfPath = FString();
+	
+	UPROPERTY(EditDefaultsOnly, Category="CDO Helper")
+	TArray<TSubclassOf<UFGSchematic>> mExcludeSchematics;
 
 	UPROPERTY(meta=(NoAutoJson = true))
 	bool mTypeOverride;
@@ -33,7 +42,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = ( EditCondition = mDisplayNameOverride ),
 		Category="FG Schematic")
 	FText mDisplayName = FText::GetEmpty();
-
+ 
 	UPROPERTY(meta=(NoAutoJson = true))
 	bool mDescriptionOverride;
 

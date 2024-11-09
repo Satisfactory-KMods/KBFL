@@ -2,6 +2,7 @@
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Schematic.h"
 
 #include "FGSchematicCategory.h"
+#include "Subsystems/KBFLAssetDataSubsystem.h"
 #include "Unlocks/FGUnlock.h"
 
 
@@ -142,9 +143,39 @@ TArray<UClass*> UKBFL_CDOHelperClass_Schematic::GetClasses()
 {
 	TArray<UClass*> Re;
 
+	if(UKBFLAssetDataSubsystem* AssetDataSubsystem = UKBFLAssetDataSubsystem::Get(GetWorld()))
+	{
+		if(!mOfPath.IsEmpty())
+		{
+			TArray<TSubclassOf<UFGSchematic>> Schematics = AssetDataSubsystem->GetAllSchematics();
+			for (TSubclassOf<UFGSchematic> Schematic : Schematics)
+			{
+				if(Schematic && Schematic->GetPathName().StartsWith(mOfPath) && !mExcludeSchematics.Contains(Schematic))
+				{
+					Re.Add(Schematic);
+				}
+			}
+		}
+		
+		if(IsValidSoftClass(mAllOfSubclass))
+		{
+			TSubclassOf<UFGSchematic> Subclass = mAllOfSubclass.LoadSynchronous();
+			if (Subclass)
+			{
+				for (TSubclassOf<UFGSchematic> Schematic : AssetDataSubsystem->GetAllSchematics())
+				{
+					if(Schematic && Schematic->IsChildOf(Subclass) && !mExcludeSchematics.Contains(Schematic))
+					{
+						Re.Add(Schematic);
+					}
+				}
+			}
+		}
+	}
+
 	for (TSoftClassPtr<UFGSchematic> Class : mSchematics)
 	{
-		if (IsValidSoftClass(Class))
+		if (IsValidSoftClass(Class) && !mExcludeSchematics.Contains(Class.LoadSynchronous()))
 		{
 			Re.Add(Class.LoadSynchronous());
 		}
