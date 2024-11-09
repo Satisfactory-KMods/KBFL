@@ -5,11 +5,13 @@
 #include "FGResearchTree.h"
 #include "FGSchematic.h"
 #include "KBFLLogging.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 #include "Interfaces/KBFLContentCDOHelperInterface.h"
 #include "Module/WorldModule.h"
 #include "ResourceNodes/KBFLActorSpawnDescriptorBase.h"
 #include "ResourceNodes/KBFLSubLevelSpawning.h"
 #include "Resources/FGResourceDescriptor.h"
+#include "SessionSettings/SessionSetting.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 
 #include "KBFLAssetDataSubsystem.generated.h"
@@ -31,6 +33,7 @@ struct FKBFLAssetData
 		mAllFoundedResourceDescriptors.Empty();
 		mAllFoundedSchematics.Empty();
 		mAllFoundResearchTrees.Empty();
+		mAllFoundAGS.Empty();
 	}
 
 	void WriteClass(UClass* Class, int32 Type)
@@ -66,11 +69,29 @@ struct FKBFLAssetData
 				break;
 			case 10:
 				mAllFoundResearchTrees.Add(Class);
-				break;
+			break;
 			default:
 				break;
 		}
 	}
+
+	void WriteObject(UObject* Object, int32 Type)
+	{
+		switch (Type)
+		{
+			case 11:
+				if(USMLSessionSetting* SessionSetting = Cast<USMLSessionSetting>(Object))
+				{
+					mAllFoundAGS.Add(SessionSetting);
+				}
+			break;
+			default:
+				break;
+		}
+	}
+
+	UPROPERTY(BlueprintReadOnly)
+	TSet<USMLSessionSetting*> mAllFoundAGS = {};
 
 	UPROPERTY(BlueprintReadOnly)
 	TSet<UClass*> mAllFoundResearchTrees = {};
@@ -139,6 +160,25 @@ public:
 		{
 			FKBFLAssetData KBFLAssetData = FKBFLAssetData();
 			KBFLAssetData.WriteClass(Class, Type);
+			mDirectoryMappings.Add(FName(ModName.ToLower()), KBFLAssetData);
+		}
+	}
+
+	void setMapClass(UObject* Object, int32 Type)
+	{
+		TArray<FString> DirectoryArray;
+		Object->GetFullName().ParseIntoArray(DirectoryArray, TEXT("/"));
+		FString ModName = DirectoryArray[1];
+		// UE_LOG( LogTemp, Warning, TEXT("setMapClass: %s > %s > %d"), *ModName, *Class->GetFullName( ), Type );
+
+		if (FKBFLAssetData* AssetData = mDirectoryMappings.Find(FName(ModName.ToLower())))
+		{
+			AssetData->WriteObject(Object, Type);
+		}
+		else
+		{
+			FKBFLAssetData KBFLAssetData = FKBFLAssetData();
+			KBFLAssetData.WriteObject(Object, Type);
 			mDirectoryMappings.Add(FName(ModName.ToLower()), KBFLAssetData);
 		}
 	}
@@ -293,6 +333,19 @@ public:
 	UPROPERTY()
 	TSet<TSubclassOf<UKBFLSubLevelSpawning>> mAllSubLevelSpawningClasses;
 
+
+public:
+	/**
+	 * Find all data assets of a specific class
+	 * @param OutDataAssets - Set of data assets
+	 * @return true if found any data assets
+	 */
+	template<class T>
+	static bool FindAllDataAssetsOfClass(TSet<T*>& OutDataAssets);
+	
+	template<class T>
+	static bool FindFirstDataAssetsOfClass(T*& OutDataAssets);
+	
 private:
 	UPROPERTY()
 	TSet<TSubclassOf<UFGSchematic>> mAllFoundedSchematics;
@@ -326,6 +379,9 @@ private:
 
 	UPROPERTY()
 	TSet<TSubclassOf<UFGResearchTree>> mAllFoundResearchTrees;
+
+	UPROPERTY()
+	TSet<USMLSessionSetting*> mAllFoundAGS;
 
 	UPROPERTY()
 	TMap<FName, FKBFLAssetData> mDirectoryMappings;
@@ -433,4 +489,46 @@ bool UKBFLAssetDataSubsystem::GetAllClassesOfSubclass(TArray<FAssetData> AllAsse
 	}
 
 	return !OutClasses.IsEmpty();
+}
+
+template <class T>
+bool UKBFLAssetDataSubsystem::FindAllDataAssetsOfClass(TSet<T*>& OutDataAssets)
+{
+	OutDataAssets.Empty();
+	
+	// Find list of all UStat, and USkill assets in Content Browser.
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>(FName("AssetRegistry"));
+	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
+
+	TArray<FAssetData> AssetList;
+	AssetRegistry.GetAssetsByClass(T::StaticClass()->GetClassPathName(), AssetList, true);
+
+	// Split assets into separate arrays.
+	for (const FAssetData& Asset : AssetList) {
+		UObject* Obj = Asset.GetAsset();
+		
+		T* CastedAsset = Cast<T>(Obj);
+		if(!CastedAsset)
+		{
+			UE_LOG(AssetDataSubsystemLog, Warning, TEXT("Invalid asset type: %s"), *Asset.AssetName.ToString());
+			continue;
+		}
+
+		OutDataAssets.Add(CastedAsset);
+	}
+
+	UE_LOG(LogKBFLModule, Warning, TEXT("Found %d of: %s"), OutDataAssets.Num(), *T::StaticClass()->GetPathName());
+	return OutDataAssets.Num() > 0;
+}
+
+template <class T>
+bool UKBFLAssetDataSubsystem::FindFirstDataAssetsOfClass(T*& OutDataAssets)
+{
+	OutDataAssets = nullptr;
+	TSet<T*> DataAssets;
+	if(UKBFLAssetDataSubsystem::FindAllDataAssetsOfClass(DataAssets))
+	{
+		OutDataAssets = *DataAssets.CreateConstIterator();
+	}
+	return IsValid(OutDataAssets);
 }

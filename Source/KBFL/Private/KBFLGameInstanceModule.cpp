@@ -165,4 +165,21 @@ void UKBFLGameInstanceModule::PostInitPhase_Implementation() {}
 
 void UKBFLGameInstanceModule::InitPhase_Implementation() {}
 
-void UKBFLGameInstanceModule::ConstructionPhase_Implementation() {}
+void UKBFLGameInstanceModule::ConstructionPhase_Implementation()
+{
+	if(!mUseAssetRegistry || !mRegisterAGS) return;
+	if (UKBFLAssetDataSubsystem* AssetDataSubsystem = UKBFLAssetDataSubsystem::Get(GetWorld()))
+	{
+		FKBFLAssetData Data = AssetDataSubsystem->GetModRelatedData(this);
+		if(!Data.mAllFoundAGS.IsEmpty())
+		{
+			SessionSettings.Append(Data.mAllFoundAGS.Array());
+		}
+	}
+	else
+	{
+		UE_LOG(KBFLGameInstanceModuleLog, Log,
+			TEXT("WARNING INVALID UKBFLAssetDataSubsystem : %s as phase ConstructionPhase"),
+			*GetOwnerModReference().ToString());
+	}
+}

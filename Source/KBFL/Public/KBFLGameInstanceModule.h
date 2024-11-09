@@ -69,6 +69,10 @@ public:
 		meta = ( EditCondition = mUseAssetRegistry ))
 	bool mRegisterCDOs = true;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="KMods|AssetRegistry",
+		meta = ( EditCondition = mUseAssetRegistry ))
+	bool mRegisterAGS = true;
+
 	bool bScanForCDOsDone = false;
 
 	/**

@@ -165,6 +165,7 @@ void UKBFLAssetDataSubsystem::InitAssetFinder()
 		GetAllClassesOfSubclass(AssetData, mAllFoundedResourceDescriptors);
 	//	GetAllClassesOfSubclass(AssetData, mAllFoundedObjects);
 		GetAllClassesOfSubclass(AssetData, mAllFoundResearchTrees);
+		FindAllDataAssetsOfClass(mAllFoundAGS);
 
 		for (UClass* data : mAllFoundedSchematics)
 		{
@@ -205,6 +206,10 @@ void UKBFLAssetDataSubsystem::InitAssetFinder()
 		for (UClass* data : mAllFoundResearchTrees)
 		{
 			setMapClass(data, 10);
+		}
+		for (UObject* data : mAllFoundAGS)
+		{
+			setMapClass(data, 11);
 		}
 	}
 	else UE_LOG(AssetDataSubsystemLog, Error, TEXT("FAIL TO FIND ASSET PATH"));
