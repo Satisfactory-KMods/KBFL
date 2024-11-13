@@ -93,6 +93,14 @@ void UKBFLGameInstanceModule::DispatchLifecycleEvent(ELifecyclePhase Phase)
 	Super::DispatchLifecycleEvent(Phase);
 }
 
+bool UKBFLGameInstanceModule::IsOwnerModObject(UObject* Object) const {
+	TArray<FString> DirectoryArray;
+	Object->GetFullName().ParseIntoArray(DirectoryArray, TEXT("/"));
+	FName ModName = FName();
+	ModName.AppendString(DirectoryArray[1]);
+	return ModName == GetOwnerModReference();
+}
+
 void UKBFLGameInstanceModule::ConstructionPhase_Delayed()
 {
 	FindAllCDOs();
@@ -168,18 +176,18 @@ void UKBFLGameInstanceModule::InitPhase_Implementation() {}
 void UKBFLGameInstanceModule::ConstructionPhase_Implementation()
 {
 	if(!mUseAssetRegistry || !mRegisterAGS) return;
-	if (UKBFLAssetDataSubsystem* AssetDataSubsystem = UKBFLAssetDataSubsystem::Get(GetWorld()))
+	
+	TSet<USMLSessionSetting*> AllSessionSettings;
+	UKBFLAssetDataSubsystem::FindAllDataAssetsOfClass(AllSessionSettings);
+	SessionSettings.Empty();
+
+	for (USMLSessionSetting* AGS : AllSessionSettings)
 	{
-		FKBFLAssetData Data = AssetDataSubsystem->GetModRelatedData(this);
-		if(!Data.mAllFoundAGS.IsEmpty())
-		{
-			SessionSettings.Append(Data.mAllFoundAGS.Array());
-		}
+		if(!IsOwnerModObject(AGS)) continue;
+		SessionSettings.Add(AGS);
 	}
-	else
-	{
-		UE_LOG(KBFLGameInstanceModuleLog, Log,
-			TEXT("WARNING INVALID UKBFLAssetDataSubsystem : %s as phase ConstructionPhase"),
-			*GetOwnerModReference().ToString());
-	}
+	
+	UE_LOG(KBFLGameInstanceModuleLog, Log,
+		TEXT("UKBFLAssetDataSubsystem : %s added %d AGS to SessionSettings"),
+		*GetOwnerModReference().ToString(), SessionSettings.Num());
 }

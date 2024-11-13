@@ -169,7 +169,7 @@ public:
 		TArray<FString> DirectoryArray;
 		Object->GetFullName().ParseIntoArray(DirectoryArray, TEXT("/"));
 		FString ModName = DirectoryArray[1];
-		// UE_LOG( LogTemp, Warning, TEXT("setMapClass: %s > %s > %d"), *ModName, *Class->GetFullName( ), Type );
+		UE_LOG( LogTemp, Warning, TEXT("setMapClass (OBJECT): %s > %s > %d"), *ModName, *Object->GetFullName( ), Type );
 
 		if (FKBFLAssetData* AssetData = mDirectoryMappings.Find(FName(ModName.ToLower())))
 		{

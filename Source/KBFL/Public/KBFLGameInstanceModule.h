@@ -29,8 +29,9 @@ public:
 
 	// BEGIN UGameInstanceModule
 	virtual void DispatchLifecycleEvent(ELifecyclePhase Phase) override;
-
 	// END UGameInstanceModule
+
+	bool IsOwnerModObject(UObject* Object) const;
 
 	UFUNCTION(BlueprintNativeEvent, Category="LifecyclePhase")
 	void ConstructionPhase();
