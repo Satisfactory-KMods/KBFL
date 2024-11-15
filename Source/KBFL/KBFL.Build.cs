@@ -13,7 +13,6 @@ public class KBFL : ModuleRules
 			{
 				"Core", "CoreUObject",
 				"Engine",
-				"EditorSubsystem",
 				"DeveloperSettings",
 				"PhysicsCore",
 				"InputCore",

@@ -95,9 +95,8 @@ void UKBFLGameInstanceModule::DispatchLifecycleEvent(ELifecyclePhase Phase)
 
 bool UKBFLGameInstanceModule::IsOwnerModObject(UObject* Object) const {
 	TArray<FString> DirectoryArray;
-	Object->GetFullName().ParseIntoArray(DirectoryArray, TEXT("/"));
-	FName ModName = FName();
-	ModName.AppendString(DirectoryArray[1]);
+	Object->GetPathName().ParseIntoArray(DirectoryArray, TEXT("/"));
+	FName ModName = FName(DirectoryArray[0]);
 	return ModName == GetOwnerModReference();
 }
 
@@ -188,6 +187,6 @@ void UKBFLGameInstanceModule::ConstructionPhase_Implementation()
 	}
 	
 	UE_LOG(KBFLGameInstanceModuleLog, Log,
-		TEXT("UKBFLAssetDataSubsystem : %s added %d AGS to SessionSettings"),
+		TEXT("UKBFLGameInstanceModule::ConstructionPhase : %s added %d AGS to SessionSettings"),
 		*GetOwnerModReference().ToString(), SessionSettings.Num());
 }
