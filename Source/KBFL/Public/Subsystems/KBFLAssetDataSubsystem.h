@@ -517,7 +517,6 @@ bool UKBFLAssetDataSubsystem::FindAllDataAssetsOfClass(TSet<T*>& OutDataAssets)
 		OutDataAssets.Add(CastedAsset);
 	}
 
-	UE_LOG(LogKBFLModule, Warning, TEXT("Found %d of: %s"), OutDataAssets.Num(), *T::StaticClass()->GetPathName());
 	return OutDataAssets.Num() > 0;
 }
 
