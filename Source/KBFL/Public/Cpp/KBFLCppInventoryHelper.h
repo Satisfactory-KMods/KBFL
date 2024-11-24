@@ -82,6 +82,7 @@ public:
 	static void PullBeltChildClass(UFGInventoryComponent* Inventory, float dt,
 		TSubclassOf<UFGItemDescriptor>                    AllowedItemClass,
 		UFGFactoryConnectionComponent*                    BeltInput);
+	static void PullBelt(UFGInventoryComponent* Inventory, float dt, UFGFactoryConnectionComponent* BeltInput);
 
 	/** Pull Items with ChildClass Ref */
 	static void PullAllFromPipe(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,

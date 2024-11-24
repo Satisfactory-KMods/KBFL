@@ -120,6 +120,38 @@ void UKBFLCppInventoryHelper::StoreItemStackInInventory(UFGInventoryComponent* i
 	StoreItemAmountInInventory(inventory, InvIndex, ItemStack.Item.GetItemClass(), ItemStack.NumItems);
 }
 
+void UKBFLCppInventoryHelper::PullBelt(UFGInventoryComponent* Inventory, float dt, UFGFactoryConnectionComponent* BeltInput)
+{
+	if(!IsValid(BeltInput) || !IsValid(Inventory)) return;
+	if(!BeltInput->IsConnected()) return;
+
+	TArray<FInventoryItem> Items;
+	if (BeltInput->Factory_PeekOutput(Items))
+	{
+		for (FInventoryItem InventoryItem : Items)
+		{
+			if(!IsValid(InventoryItem.GetItemClass())) continue;
+
+			if (Inventory->HasEnoughSpaceForItem(InventoryItem))
+			{
+				FInventoryItem Item;
+				float          offset;
+				uint8          maxGrab = FMath::Min(static_cast<uint8>(1), BeltInput->MaxNumGrab(dt));
+				for (uint8 i = 0; i < maxGrab; i++)
+				{
+					if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
+					{
+						FInventoryStack itemStack;
+						itemStack.NumItems = 1;
+						itemStack.Item = Item;
+						Inventory->AddStack(itemStack, true);
+					}
+				}
+			}
+		}
+	}
+}
+
 void UKBFLCppInventoryHelper::AddItemsInInventory(UFGInventoryComponent* inventory,
 	TSubclassOf<UFGItemDescriptor>                                       itemClass, int Amount)
 {
@@ -403,31 +435,27 @@ void UKBFLCppInventoryHelper::PullBeltChildClass(UFGInventoryComponent* Inventor
 	TSubclassOf<UFGItemDescriptor>                                      AllowedItemClass,
 	UFGFactoryConnectionComponent*                                      BeltInput)
 {
-	if (BeltInput && Inventory && AllowedItemClass)
+	if(!IsValid(BeltInput) || !IsValid(Inventory) || !IsValid(AllowedItemClass)) return;
+	if(!BeltInput->IsConnected()) return;
+
+	TArray<FInventoryItem> Items;
+	if (BeltInput->Factory_PeekOutput(Items))
 	{
-		if (BeltInput->IsConnected())
+		for (FInventoryItem InventoryItem : Items)
 		{
-			TArray<FInventoryItem> Items;
-			if (BeltInput->Factory_PeekOutput(Items))
+			if(!IsValid(InventoryItem.GetItemClass())) return;
+
+			if (InventoryItem.GetItemClass()->IsChildOf(AllowedItemClass) && Inventory->
+				HasEnoughSpaceForItem(InventoryItem))
 			{
-				for (FInventoryItem InventoryItem : Items)
+				FInventoryItem Item;
+				float          offset;
+				uint8          maxGrab = FMath::Min(static_cast<uint8>(1), BeltInput->MaxNumGrab(dt));
+				for (uint8 i = 0; i < maxGrab; i++)
 				{
-					if (InventoryItem.GetItemClass())
+					if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
 					{
-						if (InventoryItem.GetItemClass()->IsChildOf(AllowedItemClass) && Inventory->
-							HasEnoughSpaceForItem(InventoryItem))
-						{
-							FInventoryItem Item;
-							float          offset;
-							uint8          maxGrab = FMath::Min(static_cast<uint8>(1), BeltInput->MaxNumGrab(dt));
-							for (uint8 i = 0; i < maxGrab; i++)
-							{
-								if (BeltInput->Factory_GrabOutput(Item, offset, InventoryItem.GetItemClass()))
-								{
-									AddItemsInInventory(Inventory, InventoryItem.GetItemClass());
-								}
-							}
-						}
+						AddItemsInInventory(Inventory, InventoryItem.GetItemClass());
 					}
 				}
 			}
