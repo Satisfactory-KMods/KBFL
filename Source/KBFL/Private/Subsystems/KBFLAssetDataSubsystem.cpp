@@ -85,6 +85,13 @@ UKBFLAssetDataSubsystem* UKBFLAssetDataSubsystem::Get(const UObject* WorldContex
 	return nullptr;
 }
 
+UKBFLAssetDataSubsystem* UKBFLAssetDataSubsystem::GetChecked(const UObject* WorldContext)
+{
+	UKBFLAssetDataSubsystem* Subsystem = Get(WorldContext);
+	fgcheck(Subsystem);
+	return Subsystem;
+}
+
 void UKBFLAssetDataSubsystem::PrintFound()
 {
 	UE_LOG(AssetDataSubsystemLog, Log, TEXT("--------------------------------------------"));

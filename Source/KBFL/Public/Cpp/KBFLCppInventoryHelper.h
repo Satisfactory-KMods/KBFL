@@ -74,7 +74,11 @@ public:
 		TSubclassOf<UFGItemDescriptor>          AllowedItem, UFGFactoryConnectionComponent* BeltInput);
 	static void PullBelt(UFGInventoryComponent* Inventory, int                              InventoryIndex, float dt,
 		TArray<TSubclassOf<UFGItemDescriptor>>  AllowedItem, UFGFactoryConnectionComponent* BeltInput);
+	void PullBeltChildClass(UFGInventoryComponent* Inventory, int                                   InventoryIndex,
+		TSubclassOf<UFGItemDescriptor>             AllowedItemClass, UFGFactoryConnectionComponent* BeltInput); 
 
+	void PullBeltChildClass(UFGInventoryComponent* Inventory, TSubclassOf<UFGItemDescriptor> AllowedItemClass,
+		UFGFactoryConnectionComponent*             BeltInput);
 	/** Pull Items with ChildClass Ref */
 	static void PullBeltChildClass(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,
 		TSubclassOf<UFGItemDescriptor>                    AllowedItemClass,
@@ -82,7 +86,7 @@ public:
 	static void PullBeltChildClass(UFGInventoryComponent* Inventory, float dt,
 		TSubclassOf<UFGItemDescriptor>                    AllowedItemClass,
 		UFGFactoryConnectionComponent*                    BeltInput);
-	static void PullBelt(UFGInventoryComponent* Inventory, float dt, UFGFactoryConnectionComponent* BeltInput);
+	static void PullBelt(UFGInventoryComponent* Inventory, UFGFactoryConnectionComponent* BeltInput);
 
 	/** Pull Items with ChildClass Ref */
 	static void PullAllFromPipe(UFGInventoryComponent* Inventory, int InventoryIndex, float dt,

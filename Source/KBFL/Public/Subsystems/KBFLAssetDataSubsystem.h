@@ -185,6 +185,7 @@ public:
 
 	// NATIVE GETTER
 	static UKBFLAssetDataSubsystem* Get(const UObject* WorldContext);
+	static UKBFLAssetDataSubsystem* GetChecked(const UObject* WorldContext);
 
 	void PrintFound();
 
