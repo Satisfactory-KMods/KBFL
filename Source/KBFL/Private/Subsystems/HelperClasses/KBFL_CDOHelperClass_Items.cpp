@@ -4,6 +4,7 @@
 #include "FGCategory.h"
 #include "FGQuickSwitchGroup.h"
 #include "Resources/FGItemDescriptorNuclearFuel.h"
+#include "Resources/FGPowerShardDescriptor.h"
 #include "Resources/FGResourceDescriptor.h"
 
 void UKBFL_CDOHelperClass_Items::DoCDO()
@@ -168,6 +169,22 @@ void UKBFL_CDOHelperClass_Items::DoCDO()
 					if (mAmountOfWasteOverride)
 					{
 						NuclearFuelDefault->mAmountOfWaste = this->mAmountOfWaste;
+					}
+				}
+				
+				if (UFGPowerShardDescriptor* ShardDescriptor = Cast<UFGPowerShardDescriptor>(DefaultObject))
+				{
+					if (this->mPowerShardTypeOverride)
+					{
+						ShardDescriptor->mPowerShardType = this->mPowerShardType;
+					}
+					if (this->mExtraPotentialOverride)
+					{
+						ShardDescriptor->mExtraPotential = this->mExtraPotential;
+					}
+					if (this->mExtraProductionBoostOverride)
+					{
+						ShardDescriptor->mExtraProductionBoost = this->mExtraProductionBoost;
 					}
 				}
 			}

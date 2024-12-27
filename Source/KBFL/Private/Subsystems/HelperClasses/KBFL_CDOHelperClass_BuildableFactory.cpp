@@ -37,6 +37,11 @@ void UKBFL_CDOHelperClass_BuildableFactory::DoCDO()
 					DefaultObject->mMinimumProducingTime = this->mMinimumProducingTime;
 				}
 
+				if (mFluidStackSizeMultiplierOverride)
+				{
+					DefaultObject->mFluidStackSizeMultiplier = this->mFluidStackSizeMultiplier;
+				}
+
 				if (mMinimumStoppedTimeOverride)
 				{
 					DefaultObject->mMinimumStoppedTime = this->mMinimumStoppedTime;

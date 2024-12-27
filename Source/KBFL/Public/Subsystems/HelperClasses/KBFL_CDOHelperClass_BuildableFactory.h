@@ -75,7 +75,7 @@ public:
 	UPROPERTY(meta=(NoAutoJson = true))
 	bool mBaseProductionBoostOverride;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mMaxPotentialIncreasePerCrystalOverride ),
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mBaseProductionBoostOverride ),
 		Category="FGBuildableFactory")
 	float mBaseProductionBoost;
 	//-------------------------------------------------------------------------------------------------------------------------------------
@@ -85,6 +85,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mFluidStackSizeDefaultOverride ),
 		Category="FGBuildableFactory")
 	EStackSize mFluidStackSizeDefault = EStackSize::SS_FLUID;
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	UPROPERTY(meta=(NoAutoJson = true))
+	bool mFluidStackSizeMultiplierOverride;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mFluidStackSizeMultiplierOverride ),
+		Category="FGBuildableFactory")
+	int32 mFluidStackSizeMultiplier = 4;
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	UPROPERTY(meta=(NoAutoJson = true))
 	bool mAddToSignificanceManagerOverride;
@@ -126,13 +133,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mOverridePotentialShardSlotsOverride ),
 		Category="FGBuildableFactory")
-	uint8 mOverridePotentialShardSlots;
+	uint8 mOverridePotentialShardSlots : 1;
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	UPROPERTY(meta=(NoAutoJson = true))
 	bool mOverrideProductionShardSlotSizeOverride;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mOverrideProductionShardSlotSizeOverride ),
 		Category="FGBuildableFactory")
-	uint8 mOverrideProductionShardSlotSize;
+	uint8 mOverrideProductionShardSlotSize : 1;
 	//-------------------------------------------------------------------------------------------------------------------------------------
 };

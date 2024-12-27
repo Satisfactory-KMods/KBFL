@@ -1,8 +1,8 @@
 {
 	"FileVersion": 3,
 	"Version": 3,
-	"VersionName": "3.0.2",
-	"SemVersion": "3.0.2",
+	"VersionName": "3.1.0",
+	"SemVersion": "3.1.0",
 	"FriendlyName": "KBFL",
 	"Description": "Lib for Kyris Mods",
 	"Category": "Modding",
@@ -36,5 +36,5 @@
 		}
 	],
 	"AcceptsAnyRemoteVersion": false,
-	"GameVersion": ">=377620"
+	"GameVersion": ">=382498"
 }

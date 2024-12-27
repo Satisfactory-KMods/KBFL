@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "KBFL_CDOHelperClass_Base.h"
 #include "Resources/FGItemDescriptor.h"
+#include "Resources/FGPowerShardDescriptor.h"
 #include "KBFL_CDOHelperClass_Items.generated.h"
 
 /**
@@ -182,4 +183,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mAmountOfWasteOverride ),
 		Category="FG Nuclear Fuel Descriptor")
 	int32 mAmountOfWaste = 1;
+
+	// Power Shard
+	UPROPERTY(meta=(NoAutoJson = true))
+	bool mPowerShardTypeOverride;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mPowerShardTypeOverride ),
+		Category="FG Power Shard Descriptor")
+	EPowerShardType mPowerShardType;
+
+	UPROPERTY(meta=(NoAutoJson = true))
+	bool mExtraPotentialOverride;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mExtraPotentialOverride ),
+		Category="FG Power Shard Descriptor")
+	float mExtraPotential = 0.2f;
+
+	UPROPERTY(meta=(NoAutoJson = true))
+	bool mExtraProductionBoostOverride;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = ( EditCondition = mExtraProductionBoostOverride ),
+		Category="FG Power Shard Descriptor")
+	float mExtraProductionBoost = 0.2f;
 };
