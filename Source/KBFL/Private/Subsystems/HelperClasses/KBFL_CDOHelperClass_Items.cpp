@@ -3,69 +3,96 @@
 
 #include "FGCategory.h"
 #include "FGQuickSwitchGroup.h"
+#include "Resources/FGItemDescriptorNuclearFuel.h"
+#include "Resources/FGPowerShardDescriptor.h"
 #include "Resources/FGResourceDescriptor.h"
 
-void UKBFL_CDOHelperClass_Items::DoCDO() {
-	for(TSubclassOf<UFGItemDescriptor> Class: GetClasses()) {
-		if(Class) {
-			if(UFGItemDescriptor* DefaultObject = Class.GetDefaultObject()) {
+void UKBFL_CDOHelperClass_Items::DoCDO()
+{
+	for (TSubclassOf<UFGItemDescriptor> Class : GetClasses())
+	{
+		if (Class)
+		{
+			if (UFGItemDescriptor* DefaultObject = Class.GetDefaultObject())
+			{
 				//DefaultObject->AddToRoot();
-				if(mDisplayNameOverride) {
+				if (mDisplayNameOverride)
+				{
 					DefaultObject->mDisplayName = this->mDisplayName;
 				}
 
-				if(mDescriptionOverride) {
+				if (mDescriptionOverride)
+				{
 					DefaultObject->mDescription = this->mDescription;
 				}
 
-				if(mStackSizeOverride) {
+				if (mAbbreviatedDisplayNameOverride)
+				{
+					DefaultObject->mAbbreviatedDisplayName = this->mAbbreviatedDisplayName;
+				}
+
+				if (mStackSizeOverride)
+				{
 					DefaultObject->mStackSize = this->mStackSize;
 					DefaultObject->mCachedStackSize = UFGItemDescriptor::GetStackSize(Class);
 				}
 
-				if(mRememberPickUpOverride) {
+				if (mRememberPickUpOverride)
+				{
 					DefaultObject->mRememberPickUp = this->mRememberPickUp;
 				}
 
-				if(mCanBeDiscardedOverride) {
+				if (mCanBeDiscardedOverride)
+				{
 					DefaultObject->mCanBeDiscarded = this->mCanBeDiscarded;
 				}
 
-				if(mRadioactiveDecayOverride) {
+				if (mRadioactiveDecayOverride)
+				{
 					DefaultObject->mRadioactiveDecay = this->mRadioactiveDecay;
 				}
 
-				if(mEnergyValueOverride) {
+				if (mEnergyValueOverride)
+				{
 					DefaultObject->mEnergyValue = this->mEnergyValue;
 				}
 
-				if(mFormOverride) {
+				if (mFormOverride)
+				{
 					DefaultObject->mForm = this->mForm;
 				}
 
-				if(mConveyorMeshOverride) {
+				if (mConveyorMeshOverride)
+				{
 					DefaultObject->mConveyorMesh = this->mConveyorMesh;
 				}
 
-				if(mSmallIconOverride) {
+				if (mSmallIconOverride)
+				{
 					DefaultObject->mSmallIcon = this->mSmallIcon;
 				}
 
-				if(mPersistentBigIconOverride) {
+				if (mPersistentBigIconOverride)
+				{
 					DefaultObject->mPersistentBigIcon = this->mPersistentBigIcon;
 				}
 
-				if(mCategoryOverride) {
-					if(IsValid(mCategory)) {
+				if (mCategoryOverride)
+				{
+					if (IsValid(mCategory))
+					{
 						//mCategory->AddToRoot();
 					}
 
 					DefaultObject->mCategory = this->mCategory;
 				}
 
-				if(mSubCategoriesOverride) {
-					for(UClass* SubCategory: this->mSubCategories) {
-						if(IsValid(SubCategory)) {
+				if (mSubCategoriesOverride)
+				{
+					for (UClass* SubCategory : this->mSubCategories)
+					{
+						if (IsValid(SubCategory))
+						{
 							//SubCategory->AddToRoot();
 						}
 					}
@@ -73,66 +100,96 @@ void UKBFL_CDOHelperClass_Items::DoCDO() {
 					DefaultObject->mSubCategories = this->mSubCategories;
 				}
 
-				if(mQuickSwitchGroupOverride) {
-					if(IsValid(mQuickSwitchGroup)) {
+				if (mQuickSwitchGroupOverride)
+				{
+					if (IsValid(mQuickSwitchGroup))
+					{
 						//mQuickSwitchGroup->AddToRoot();
 					}
 
 					DefaultObject->mQuickSwitchGroup = this->mQuickSwitchGroup;
 				}
 
-				if(mFluidColorOverride) {
+				if (mFluidColorOverride)
+				{
 					DefaultObject->mFluidColor = this->mFluidColor;
 				}
 
-				if(mGasColorOverride) {
+				if (mGasColorOverride)
+				{
 					DefaultObject->mGasColor = this->mGasColor;
 				}
 
-
 				UFGResourceDescriptor* ResDefault = Cast<UFGResourceDescriptor>(DefaultObject);
-				if(ResDefault) {
-					if(mDepositMeshOverride) {
+				if (ResDefault)
+				{
+					if (mDepositMeshOverride)
+					{
 						ResDefault->mDepositMesh = this->mDepositMesh;
 					}
 
-					if(mDepositMaterialOverride) {
-						if(IsValid(mDepositMaterial)) {
+					if (mDepositMaterialOverride)
+					{
+						if (IsValid(mDepositMaterial))
+						{
 							//mDepositMaterial->AddToRoot();
 						}
 
 						ResDefault->mDepositMaterial = this->mDepositMaterial;
 					}
 
-					if(mDecalSizeOverride) {
+					if (mDecalSizeOverride)
+					{
 						ResDefault->mDecalSize = this->mDecalSize;
 					}
 
-					if(mCompassTextureOverride) {
-						if(IsValid(mCompassTexture)) {
+					if (mCompassTextureOverride)
+					{
+						if (IsValid(mCompassTexture))
+						{
 							//mCompassTexture->AddToRoot();
 						}
 
 						ResDefault->mCompassTexture = this->mCompassTexture;
 					}
 
-					if(mCollectSpeedMultiplierOverride) {
+					if (mCollectSpeedMultiplierOverride)
+					{
 						ResDefault->mCollectSpeedMultiplier = this->mCollectSpeedMultiplier;
 					}
 				}
 
-				UFGItemDescriptorNuclearFuel* NuclearFuelDefault = Cast<UFGItemDescriptorNuclearFuel>(DefaultObject);
-				if(NuclearFuelDefault) {
-					if(mSpentFuelClassOverride) {
-						if(IsValid(mSpentFuelClass)) {
+				if (UFGItemDescriptorNuclearFuel* NuclearFuelDefault = Cast<UFGItemDescriptorNuclearFuel>(DefaultObject))
+				{
+					if (mSpentFuelClassOverride)
+					{
+						if (IsValid(mSpentFuelClass))
+						{
 							//mSpentFuelClass->AddToRoot();
 						}
 
 						NuclearFuelDefault->mSpentFuelClass = this->mSpentFuelClass;
 					}
 
-					if(mAmountOfWasteOverride) {
+					if (mAmountOfWasteOverride)
+					{
 						NuclearFuelDefault->mAmountOfWaste = this->mAmountOfWaste;
+					}
+				}
+				
+				if (UFGPowerShardDescriptor* ShardDescriptor = Cast<UFGPowerShardDescriptor>(DefaultObject))
+				{
+					if (this->mPowerShardTypeOverride)
+					{
+						ShardDescriptor->mPowerShardType = this->mPowerShardType;
+					}
+					if (this->mExtraPotentialOverride)
+					{
+						ShardDescriptor->mExtraPotential = this->mExtraPotential;
+					}
+					if (this->mExtraProductionBoostOverride)
+					{
+						ShardDescriptor->mExtraProductionBoost = this->mExtraProductionBoost;
 					}
 				}
 			}
@@ -142,11 +199,14 @@ void UKBFL_CDOHelperClass_Items::DoCDO() {
 	Super::DoCDO();
 }
 
-TArray<UClass*> UKBFL_CDOHelperClass_Items::GetClasses() {
+TArray<UClass*> UKBFL_CDOHelperClass_Items::GetClasses()
+{
 	TArray<UClass*> Re;
 
-	for(TSoftClassPtr<UFGItemDescriptor> Class: mItems) {
-		if(IsValidSoftClass(Class)) {
+	for (TSoftClassPtr<UFGItemDescriptor> Class : mItems)
+	{
+		if (IsValidSoftClass(Class))
+		{
 			Re.Add(Class.LoadSynchronous());
 		}
 	}

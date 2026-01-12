@@ -12,7 +12,8 @@
  * 
  */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLSchematicArray {
+struct KBFL_API FKBFLSchematicArray
+{
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -23,17 +24,19 @@ struct KBFL_API FKBFLSchematicArray {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLRegistry {
+struct KBFL_API FKBFLRegistry
+{
 	GENERATED_BODY()
 
-	FKBFLRegistry() {
-	};
+	FKBFLRegistry() {};
 
-	FKBFLRegistry(FString InPath) {
+	FKBFLRegistry(FString InPath)
+	{
 		Path = InPath;
 	};
 
-	FKBFLRegistry(FString InPath, bool InRecursive) {
+	FKBFLRegistry(FString InPath, bool InRecursive)
+	{
 		Path = InPath;
 		Recursive = InRecursive;
 	};
@@ -53,7 +56,8 @@ struct KBFL_API FKBFLRegistry {
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bRegisterRecipes = false;
 
-	FName GetPath() {
+	FName GetPath()
+	{
 		Path.RemoveFromEnd("/", ESearchCase::IgnoreCase);
 		return FName(Path);
 	}
@@ -63,17 +67,19 @@ struct KBFL_API FKBFLRegistry {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLCdoRegistry {
+struct KBFL_API FKBFLCdoRegistry
+{
 	GENERATED_BODY()
 
-	FKBFLCdoRegistry() {
-	};
+	FKBFLCdoRegistry() {};
 
-	FKBFLCdoRegistry(FString InPath) {
+	FKBFLCdoRegistry(FString InPath)
+	{
 		Path = InPath;
 	};
 
-	FKBFLCdoRegistry(FString InPath, bool InRecursive) {
+	FKBFLCdoRegistry(FString InPath, bool InRecursive)
+	{
 		Path = InPath;
 		Recursive = InRecursive;
 	};
@@ -93,7 +99,8 @@ struct KBFL_API FKBFLCdoRegistry {
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bFindCDOHelpers = true;
 
-	FName GetPath() {
+	FName GetPath()
+	{
 		Path.RemoveFromEnd("/", ESearchCase::IgnoreCase);
 		return FName(Path);
 	}
@@ -103,7 +110,8 @@ struct KBFL_API FKBFLCdoRegistry {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLDescArray {
+struct KBFL_API FKBFLDescArray
+{
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -114,7 +122,8 @@ struct KBFL_API FKBFLDescArray {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLDescInfo {
+struct KBFL_API FKBFLDescInfo
+{
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -128,7 +137,8 @@ struct KBFL_API FKBFLDescInfo {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLSchematicInfo {
+struct KBFL_API FKBFLSchematicInfo
+{
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -142,7 +152,8 @@ struct KBFL_API FKBFLSchematicInfo {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLRecipeInfo {
+struct KBFL_API FKBFLRecipeInfo
+{
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -156,7 +167,8 @@ struct KBFL_API FKBFLRecipeInfo {
 * 
 */
 USTRUCT(BlueprintType)
-struct KBFL_API FKBFLRecipeArray {
+struct KBFL_API FKBFLRecipeArray
+{
 	GENERATED_BODY()
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

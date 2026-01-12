@@ -3,22 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FGSchematic.h"
 #include "Module/ModModule.h"
-#include "Resources/FGResourceDescriptor.h"
-#include "Resources/FGResourceNode.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Items.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_RecipeRemover.h"
 #include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Recipes.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_RemoverBase.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_ResearchTreeRemover.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_Schematic.h"
-#include "Subsystems/HelperClasses/KBFL_CDOHelperClass_SchematicRemover.h"
 #include "UObject/Interface.h"
 #include "KBFLContentCDOHelperInterface.generated.h"
 
 USTRUCT(BlueprintType)
-struct FKBFLItemArray {
+struct FKBFLItemArray
+{
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -26,14 +18,17 @@ struct FKBFLItemArray {
 };
 
 USTRUCT(BlueprintType)
-struct FKBFLPhases {
+struct FKBFLPhases
+{
 	GENERATED_BODY()
 
-	FKBFLPhases() {
+	FKBFLPhases()
+	{
 		mCalledPhases = {};
 	};
 
-	FKBFLPhases(TArray<ELifecyclePhase> Phases) {
+	FKBFLPhases(TArray<ELifecyclePhase> Phases)
+	{
 		mCalledPhases = Phases;
 	};
 
@@ -42,10 +37,12 @@ struct FKBFLPhases {
 };
 
 USTRUCT(BlueprintType)
-struct FKBFLCDOInformation {
+struct FKBFLCDOInformation
+{
 	GENERATED_BODY()
 
-	FKBFLCDOInformation() {
+	FKBFLCDOInformation()
+	{
 		mItemStackSizeCDO.Add(EStackSize::SS_ONE, FKBFLItemArray());
 		mItemStackSizeCDO.Add(EStackSize::SS_SMALL, FKBFLItemArray());
 		mItemStackSizeCDO.Add(EStackSize::SS_MEDIUM, FKBFLItemArray());
@@ -58,12 +55,13 @@ struct FKBFLCDOInformation {
 	TArray<TSubclassOf<UKBFL_CDOHelperClass_Base>> mCDOHelperClasses = {};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<EStackSize , FKBFLItemArray> mItemStackSizeCDO;
+	TMap<EStackSize, FKBFLItemArray> mItemStackSizeCDO;
 };
 
 
 UINTERFACE()
-class UKBFLContentCDOHelperInterface: public UInterface {
+class UKBFLContentCDOHelperInterface : public UInterface
+{
 	GENERATED_BODY()
 };
 
@@ -71,10 +69,11 @@ class UKBFLContentCDOHelperInterface: public UInterface {
 /**
  * 
  */
-class KBFL_API IKBFLContentCDOHelperInterface {
+class KBFL_API IKBFLContentCDOHelperInterface
+{
 	GENERATED_BODY()
 
-	public:
-		UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|ContentCDOHelper Interface")
-		FKBFLCDOInformation GetCDOInformationFromPhase(ELifecyclePhase Phase, bool& HasPhase);
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "KMods|ContentCDOHelper Interface")
+	FKBFLCDOInformation GetCDOInformationFromPhase(ELifecyclePhase Phase, bool& HasPhase);
 };

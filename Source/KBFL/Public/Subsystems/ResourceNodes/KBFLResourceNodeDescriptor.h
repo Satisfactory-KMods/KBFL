@@ -11,27 +11,34 @@
 * 
 */
 UCLASS(Blueprintable, EditInlineNew, abstract, DefaultToInstanced)
-class KBFL_API UKBFLResourceNodeDescriptor: public UKBFLActorSpawnDescriptorBase {
+class KBFL_API UKBFLResourceNodeDescriptor : public UKBFLActorSpawnDescriptorBase
+{
 	GENERATED_BODY()
 
-	public:
-		UKBFLResourceNodeDescriptor() {
-			mActorFreeClass = AFGResourceNodeBase::StaticClass();
-		}
+public:
+	UKBFLResourceNodeDescriptor()
+		: mLastPur()
+	{
+		mActorFreeClass = AFGResourceNodeBase::StaticClass();
+	}
 
-		virtual bool                IsAllowedToRemoveActor(AActor* InActor) override;
-		virtual TSubclassOf<AActor> GetActorFreeClass() override { return mActorFreeClass ? mActorFreeClass : TSubclassOf<AActor>{AFGResourceNodeBase::StaticClass()}; }
+	virtual bool IsAllowedToRemoveActor(AActor* InActor) override;
 
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Resource Node")
-		TSubclassOf<UFGResourceDescriptor> mResourceClass = nullptr;
+	virtual TSubclassOf<AActor> GetActorFreeClass() override
+	{
+		return mActorFreeClass ? mActorFreeClass : TSubclassOf<AActor>{ AFGResourceNodeBase::StaticClass() };
+	}
 
-		// Bool
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Config", meta=(editcondition = "mRemoveOld"))
-		bool mRemoveOccupied = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Resource Node")
+	TSubclassOf<UFGResourceDescriptor> mResourceClass = nullptr;
 
-		// Floats
-		UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Config")
-		TEnumAsByte<EResourceAmount> mAmount = RA_Infinite;
+	// Bool
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Config", meta=(editcondition = "mRemoveOld"))
+	bool mRemoveOccupied = false;
 
-		EResourcePurity mLastPur;
+	// Floats
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Config")
+	TEnumAsByte<EResourceAmount> mAmount = RA_Infinite;
+
+	EResourcePurity mLastPur;
 };
